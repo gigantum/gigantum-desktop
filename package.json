@@ -17,7 +17,7 @@
     "publish": {
         "provider": "github",
         "owner": "gigantum",
-        "repo": "electron-releases"
+        "repo": "gigantum-desktop"
     },
     "build": {
         "dmg": {
@@ -68,11 +68,11 @@
             "electronInstallerRedhat": {},
             "windowsStoreConfig": {
                 "packageName": "Gigantum",
-                "name": "gigantumelectronui"
+                "name": "gigantum-desktop"
             },
             "github_repository": {
                 "owner": "gigantum",
-                "name": "electron-releases"
+                "name": "gigantum-desktop"
             }
         }
     },

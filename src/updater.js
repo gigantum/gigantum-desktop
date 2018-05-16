@@ -15,14 +15,14 @@ autoUpdater.on('error', (error) => {
 });
 
 autoUpdater.on('update-available', (info) => {
-  if(info){
-    let tag = info.releaseNotes.split('\n')[0].split(':')[1].slice(1, -4)
-    newImageSize = info.releaseNotes.split('\n')[1].split(':')[1].slice(1, -4)
+  setTimeout(() =>{
+    let tag = info.releaseNotes.split('\n')[2].split(': ')[1].split(' ')[0]
+    newImageSize = info.releaseNotes.split('\n')[2].split(': ')[1].split(' ')[1].slice(1, -5)
     uiController.handleAppEvent({
       window: 'updateInfo',
       sendWindow: {message: 'message', content: info}
     });
-  }
+  }, 0)
 });
 
 autoUpdater.on('update-not-available', () => {
