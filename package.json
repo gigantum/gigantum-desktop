@@ -1,14 +1,15 @@
 {
     "name": "gigantum",
     "productName": "Gigantum",
-    "version": "0.0.2",
+    "version": "0.0.1",
     "description": "Gigantum",
     "main": "src/main.js",
     "scripts": {
-        "start": "electron-forge start",
-        "inspect": "electron-forge start --inspect-electron",
-        "package": "electron-forge package",
-        "make": "electron-forge make",
+        "start": "electron ./src/main",
+        "build-mac": "build -m",
+        "build-win": "build -w",
+        "build-lin": "build -l",
+        "build-all": "build -m -l -w",
         "lint": "eslint src"
     },
     "keywords": [],
@@ -41,50 +42,13 @@
             ]
         }
     },
-    "config": {
-        "forge": {
-            "make_targets": {
-                "win32": [
-                    "squirrel"
-                ],
-                "darwin": [
-                    "zip",
-                    "dmg"
-                ],
-                "linux": [
-                    "deb"
-                ]
-            },
-            "electronPackagerConfig": {
-                "packageManager": "npm",
-                "icon": "./src/assets/blue-g.icns"
-            },
-            "electronWinstallerConfig": {
-                "name": "gigantum_electron_ui"
-            },
-            "electronInstallerDebian": {
-                "icon": "./src/assets/blue-g.png"
-            },
-            "electronInstallerRedhat": {},
-            "windowsStoreConfig": {
-                "packageName": "Gigantum",
-                "name": "gigantum-desktop"
-            },
-            "github_repository": {
-                "owner": "gigantum",
-                "name": "gigantum-desktop"
-            }
-        }
-    },
     "dependencies": {
         "command-exists": "^1.2.2",
         "docker-remote-api": "^5.0.0",
         "dockerode": "^2.5.5",
-        "electron-compile": "^6.4.2",
         "electron-is-dev": "^0.3.0",
         "electron-log": "^2.2.14",
-        "electron-packager": "^12.0.0",
-        "electron-updater": "^2.21.4",
+        "electron-updater": "^2.21.10",
         "marked": "^0.3.19",
         "node-fetch": "^2.1.2",
         "npm": "^5.7.1",
@@ -95,15 +59,14 @@
     "devDependencies": {
         "babel-plugin-transform-async-to-generator": "^6.24.1",
         "babel-preset-env": "^1.6.1",
-        "babel-preset-flow": "^6.23.0",
         "babel-preset-react": "^6.24.1",
-        "electron-forge": "^5.1.2",
+        "electron": "^2.0.1",
+        "electron-builder": "^20.13.4",
         "electron-prebuilt-compile": "1.8.2",
         "eslint": "3",
         "eslint-config-airbnb": "15",
         "eslint-plugin-import": "^2.10.0",
         "eslint-plugin-jsx-a11y": "5",
-        "eslint-plugin-react": "7",
-        "flow-bin": "^0.67.1"
+        "eslint-plugin-react": "7"
     }
 }
