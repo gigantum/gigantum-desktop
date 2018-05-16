@@ -1,4 +1,3 @@
-// @flow
 import path from 'path';
 import fs from 'fs';
 import os from 'os';
@@ -24,11 +23,6 @@ export default class GigDockerClient {
     this.testPing = this.testPing.bind(this);
     this.purposelyStopped = false;
     this.removePreviousVersion = false;
-
-    // XXX Note that there is some similar logic below in setupDocker()
-    // I leave it to Maz whether to keep docker initiation here or in a
-    // separate function. I think separate function at this point complicates
-    // the API
 
     // I'm duplicating option dictionaries for now, as there are mildly
     // incompatible syntaxes

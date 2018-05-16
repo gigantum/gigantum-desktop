@@ -10,8 +10,7 @@ const envHost = isWindows ? 'WINDOWS_HOST=1' : `LOCAL_USER_ID=${os.userInfo().ui
 // gigantum image name
 const imageLabel = 'gigantum/labmanager';
 const imageTag = '4f92a88d';
-// XXX testing to see if this image tag is breaking things
-// const imageTag = '7014f045';
+
 //env constants
 const condaDir = "CONDA_DIR=/opt/conda";
 const shell = "SHELL=/bin/bash";

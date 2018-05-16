@@ -1,4 +1,3 @@
-// @flow
 import { ipcRenderer } from 'electron';
 
 const tryAgainButton = document.getElementById('tryAgainButton');

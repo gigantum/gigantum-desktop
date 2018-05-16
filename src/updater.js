@@ -16,12 +16,16 @@ autoUpdater.on('error', (error) => {
 
 autoUpdater.on('update-available', (info) => {
   setTimeout(() =>{
-    let tag = info.releaseNotes.split('\n')[2].split(': ')[1].split(' ')[0]
-    newImageSize = info.releaseNotes.split('\n')[2].split(': ')[1].split(' ')[1].slice(1, -5)
-    uiController.handleAppEvent({
-      window: 'updateInfo',
-      sendWindow: {message: 'message', content: info}
-    });
+    if(info){
+      let tag = info.releaseNotes.split('\n')[2].split(': ')[1].split(' ')[0]
+      newImageSize = info.releaseNotes.split('\n')[2].split(': ')[1].split(' ')[1].slice(1, -5)
+      uiController.handleAppEvent({
+        window: 'updateInfo',
+        sendWindow: {message: 'message', content: info}
+      });
+    } else {
+      autoUpdater.checkForUpdates();
+    }
   }, 0)
 });
 
@@ -32,8 +36,6 @@ autoUpdater.on('update-not-available', () => {
       message: 'Current version is up-to-date.',
     });
   }
-  // updater.enabled = true;
-  // updater = null;
 });
 
 autoUpdater.on('download-progress', (progress) => {

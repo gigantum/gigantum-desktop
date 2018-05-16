@@ -1,6 +1,40 @@
-Gigantum Desktop App
-====================
+# Gigantum Desktop
+A desktop application created using Electron to install and operate the [Gigantum](http://www.gigantum.com) client.
 
-Gigantum is currently in alpha and releases published to this repo are not approved for use.
 
-For a stable way of running Gigantum, follow the instructions here: https://docs.gigantum.io/
+## Introduction
+
+This application is provided as a method to install and run the Gigantum Client, locally on your computer. It provides a simple interface to install, update, start and stop the client. If you are looking to use the desktop application, it is highly recommended that you download the existing latest build for your operating system [here](http://www.gigantum.com/download).
+
+
+## Getting Started
+
+### Pre-requisites
+This project requires [Node.js](https://nodejs.org/en/)
+
+
+#### Quick-start
+
+```
+git clone https://github.com/gigantum/gigantum-desktop.git
+cd gigantum-desktop
+npm install
+npm start
+```
+
+### NPM scripts
+`npm start`
+> Starts the electron process on `src/main.js` and begins running the desktop application
+
+`npm run build-mac`
+> Starts the electron-builder process and creates a build for Mac OSX, generating a .dmg and .zip.
+
+`npm run build-win`
+> Starts the electron-builder process and creates a build for Windows, generating an .exe nsis installer.
+
+`npm run build-lin`
+> Starts the electron-builder process and creates a build for Linux, generating an .AppImage and .snap.
+
+`npm run build-all`
+> Starts the electron-builder process for all of the above operating systems.
+

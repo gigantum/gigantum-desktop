@@ -1,4 +1,3 @@
-// @flow
 import { ipcRenderer } from 'electron';
 
 const updateButton = document.getElementById('updateButton');

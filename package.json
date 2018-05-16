@@ -58,9 +58,8 @@
     "devDependencies": {
         "babel-plugin-transform-async-to-generator": "^6.24.1",
         "babel-preset-env": "^1.6.1",
-        "electron": "^2.0.1",
         "electron-builder": "^20.13.4",
-        "electron-prebuilt-compile": "1.8.2",
+        "electron-prebuilt-compile": "1.8.4",
         "eslint": "3",
         "eslint-config-airbnb": "15",
         "eslint-plugin-import": "^2.10.0",

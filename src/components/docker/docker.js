@@ -1,4 +1,3 @@
-// @flow
 import { ipcRenderer, shell } from 'electron';
 import os from 'os';
 

@@ -1,6 +1,4 @@
-// @flow
 import path from 'path';
-
 import {
   app,
   Menu,
@@ -11,14 +9,12 @@ import {
 } from 'electron';
 import isDev from 'electron-is-dev';
 import { autoUpdater } from 'electron-updater';
-
 import fs from 'fs';
 
 import config from './config';
 import GigDockerClient from './dockerClient';
 import UiManager from './uiManager';
 import trayIcons from './trayIcons';
-
 import checkForUpdates from './updater';
 
 let windows;
@@ -105,9 +101,6 @@ app.on('ready', () => {
       visible: false,
     },
     {
-      type: 'separator',
-    },
-    {
       label: 'Error: Docker is not running',
       id: 'dockerNotRunning',
       visible: false,
@@ -135,6 +128,9 @@ app.on('ready', () => {
       click: () => {
         windows.portInUse.show();
       },
+    },
+    {
+      type: 'separator',
     },
     {
       id: 'openWindow',
