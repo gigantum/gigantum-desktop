@@ -6,10 +6,10 @@
     "main": "src/main.js",
     "scripts": {
         "start": "electron ./src/main",
-        "build-mac": "build -m",
-        "build-win": "build -w",
-        "build-lin": "build -l",
-        "build-all": "build -m -l -w",
+        "build-mac": "electron-builder -m",
+        "build-win": "electron-builder -w",
+        "build-lin": "electron-builder -l",
+        "build-all": "electron-builder -m -l -w",
         "lint": "eslint src"
     },
     "keywords": [],
@@ -43,7 +43,6 @@
         }
     },
     "dependencies": {
-        "command-exists": "^1.2.2",
         "docker-remote-api": "^5.0.0",
         "dockerode": "^2.5.5",
         "electron-is-dev": "^0.3.0",
@@ -59,7 +58,6 @@
     "devDependencies": {
         "babel-plugin-transform-async-to-generator": "^6.24.1",
         "babel-preset-env": "^1.6.1",
-        "babel-preset-react": "^6.24.1",
         "electron": "^2.0.1",
         "electron-builder": "^20.13.4",
         "electron-prebuilt-compile": "1.8.2",
