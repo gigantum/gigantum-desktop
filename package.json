@@ -1,0 +1,109 @@
+{
+    "name": "gigantum",
+    "productName": "Gigantum",
+    "version": "0.0.2",
+    "description": "Gigantum",
+    "main": "src/main.js",
+    "scripts": {
+        "start": "electron-forge start",
+        "inspect": "electron-forge start --inspect-electron",
+        "package": "electron-forge package",
+        "make": "electron-forge make",
+        "lint": "eslint src"
+    },
+    "keywords": [],
+    "author": "Gigantum <hello@gigantum.com>",
+    "license": "MIT",
+    "publish": {
+        "provider": "github",
+        "owner": "gigantum",
+        "repo": "electron-releases"
+    },
+    "build": {
+        "dmg": {
+            "iconSize": 276,
+            "iconTextSize": 1,
+            "window": {
+                "width": 1000,
+                "height": 600
+            },
+            "contents": [
+                {
+                    "x": 250,
+                    "y": 350
+                },
+                {
+                    "x": 750,
+                    "y": 350,
+                    "type": "link",
+                    "path": "/Applications"
+                }
+            ]
+        }
+    },
+    "config": {
+        "forge": {
+            "make_targets": {
+                "win32": [
+                    "squirrel"
+                ],
+                "darwin": [
+                    "zip",
+                    "dmg"
+                ],
+                "linux": [
+                    "deb"
+                ]
+            },
+            "electronPackagerConfig": {
+                "packageManager": "npm",
+                "icon": "./src/assets/blue-g.icns"
+            },
+            "electronWinstallerConfig": {
+                "name": "gigantum_electron_ui"
+            },
+            "electronInstallerDebian": {
+                "icon": "./src/assets/blue-g.png"
+            },
+            "electronInstallerRedhat": {},
+            "windowsStoreConfig": {
+                "packageName": "Gigantum",
+                "name": "gigantumelectronui"
+            },
+            "github_repository": {
+                "owner": "gigantum",
+                "name": "electron-releases"
+            }
+        }
+    },
+    "dependencies": {
+        "command-exists": "^1.2.2",
+        "docker-remote-api": "^5.0.0",
+        "dockerode": "^2.5.5",
+        "electron-compile": "^6.4.2",
+        "electron-is-dev": "^0.3.0",
+        "electron-log": "^2.2.14",
+        "electron-packager": "^12.0.0",
+        "electron-updater": "^2.21.4",
+        "marked": "^0.3.19",
+        "node-fetch": "^2.1.2",
+        "npm": "^5.7.1",
+        "pump": "^3.0.0",
+        "through-json": "^1.1.0",
+        "through2": "^2.0.3"
+    },
+    "devDependencies": {
+        "babel-plugin-transform-async-to-generator": "^6.24.1",
+        "babel-preset-env": "^1.6.1",
+        "babel-preset-flow": "^6.23.0",
+        "babel-preset-react": "^6.24.1",
+        "electron-forge": "^5.1.2",
+        "electron-prebuilt-compile": "1.8.2",
+        "eslint": "3",
+        "eslint-config-airbnb": "15",
+        "eslint-plugin-import": "^2.10.0",
+        "eslint-plugin-jsx-a11y": "5",
+        "eslint-plugin-react": "7",
+        "flow-bin": "^0.67.1"
+    }
+}
