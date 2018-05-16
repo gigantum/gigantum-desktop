@@ -65,7 +65,7 @@ export default class GigDockerClient {
     autoUpdater.on('update-downloaded', (info) => {
       this.uiManager.updateInstallImageWindow({ isDownloaded: true }, 'update');
       if (this.updatedImageDownloaded) {
-        const tag = info.releaseNotes.split('\n')[0].split(':')[1].slice(1, 9);
+        const tag = info.releaseNotes.split('\n')[2].split(': ')[1].split(' ')[0];
         if (tag !== config.imageTag) {
           this.removePreviousVersion = true;
         }

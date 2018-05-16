@@ -18,5 +18,5 @@ installUpdateButton.addEventListener('click', () => {
 ipcRenderer.on('message', (event, incoming) => {
   version.innerHTML = `New Version: ${incoming.version}`;
   releaseNotes.innerHTML = incoming.releaseNotes;
-  tag = incoming.releaseNotes.split('\n')[0].split(':')[1].slice(1,9)
+  tag = incoming.releaseNotes.split('\n')[2].split(': ')[1].split(' ')[0]
 });
