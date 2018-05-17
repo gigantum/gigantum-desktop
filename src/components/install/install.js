@@ -10,10 +10,10 @@ ipcRenderer.on('message', (event, incoming) => {
   let usedSize;
   if (!incoming.doneDownloading) {
     usedSize = incoming.downloadSize;
-    installHeader.innerHTML = 'Downloading Gigantum Image';
+    installHeader.innerHTML = 'Downloading Gigantum Client';
   } else {
     usedSize = incoming.extractSize < config.fileSize ? incoming.extractSize : config.fileSize;
-    installHeader.innerHTML = 'Extracting Gigantum Image';
+    installHeader.innerHTML = 'Extracting Gigantum Client';
   }
 
   const fileSize = (Math.log10(usedSize) / 3);
