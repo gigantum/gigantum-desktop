@@ -2,7 +2,7 @@
 
 ### Gigantum Client (0.8.0)
 
-Image ID: 4f92a88d (449013336)
+Image ID: 9de7af05 (459914384)
 
 
 * Added
