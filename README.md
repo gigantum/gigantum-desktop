@@ -6,6 +6,8 @@ A desktop application created using Electron to install and operate the [Gigantu
 
 This application is provided as a method to install and run the Gigantum Client, locally on your computer. It provides a simple interface to install, update, start and stop the client. If you are looking to use the desktop application, it is highly recommended that you download the existing latest build for your operating system [here](http://www.gigantum.com/download).
 
+For more information regarding the application, view our documentation [here](https://docs.gigantum.com/docs/what-is-gigantum).
+
 
 ## Getting Started
 

@@ -115,7 +115,7 @@ app.on('ready', () => {
       visible: false,
     },
     {
-      label: 'Error: Gigantum image not installed',
+      label: 'Error: Gigantum client not installed',
       id: 'imageNotInstalled',
       visible: false,
       click: () => {
