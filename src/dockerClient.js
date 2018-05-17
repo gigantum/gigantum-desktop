@@ -23,6 +23,7 @@ export default class GigDockerClient {
     this.testPing = this.testPing.bind(this);
     this.purposelyStopped = false;
     this.removePreviousVersion = false;
+    this.ranOnce = false;
 
     // I'm duplicating option dictionaries for now, as there are mildly
     // incompatible syntaxes
@@ -116,6 +117,10 @@ export default class GigDockerClient {
 
     this.dockerode.ping()
     .then(() => {
+      if(!this.ranOnce) {
+        checkForUpdates(this.uiManager, false);
+        this.ranOnce = true;
+      }
       this.attemptingReconnect = false;
       this.ensureLocalContainer();
     })

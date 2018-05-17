@@ -2,7 +2,7 @@
 
 ### Gigantum Client (0.8.0)
 
-Image ID: HASH (bytes)
+Image ID: 4f92a88d (449013336)
 
 
 * Added

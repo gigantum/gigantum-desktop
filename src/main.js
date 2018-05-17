@@ -6,6 +6,7 @@ import {
   BrowserWindow,
   ipcMain,
   shell,
+  dialog,
 } from 'electron';
 import isDev from 'electron-is-dev';
 import { autoUpdater } from 'electron-updater';
@@ -144,7 +145,16 @@ app.on('ready', () => {
       label: 'Check for Updates',
       id: 'update',
       click: () => {
-        checkForUpdates(dockerClient, uiManager, true);
+        dockerClient.dockerConnectionTest().then((res) => {
+          if (res) {
+          checkForUpdates(uiManager, true);
+          } else {
+            dialog.showMessageBox({
+              title: 'Unable to check for Updates',
+              message: 'Docker connection must be established to check for updates.',
+            });
+          }
+        });
       },
     },
     {
@@ -201,7 +211,6 @@ app.on('ready', () => {
   uiManager = new UiManager(contextMenu, tray, windows, dockerClient);
   dockerClient.setUiManager(uiManager);
   dockerClient.setupDocker();
-  checkForUpdates(this, uiManager, false);
 });
 
 

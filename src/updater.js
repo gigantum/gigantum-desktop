@@ -1,7 +1,6 @@
 import {dialog} from 'electron';
 import {autoUpdater} from 'electron-updater';
 
-let dockerConn;
 let updater;
 let uiController;
 let newImageSize;
@@ -51,9 +50,8 @@ autoUpdater.on('update-downloaded', (progress) => {
 });
 
 // export this to MenuItem click callback
-export default (dockerClient, uiManager, showUpToDate) => {
+export default (uiManager, showUpToDate) => {
   checkUpToDate = showUpToDate;
-  dockerConn = dockerClient;
   uiController = uiManager;
   autoUpdater.checkForUpdates();
 };
