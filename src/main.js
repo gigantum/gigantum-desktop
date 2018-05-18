@@ -11,6 +11,7 @@ import {
 import isDev from 'electron-is-dev';
 import { autoUpdater } from 'electron-updater';
 import fs from 'fs';
+import internetAvailable from 'internet-available'
 
 import config from './config';
 import GigDockerClient from './dockerClient';
@@ -147,7 +148,15 @@ app.on('ready', () => {
       click: () => {
         dockerClient.dockerConnectionTest().then((res) => {
           if (res) {
-          checkForUpdates(uiManager, true);
+            internetAvailable().then(() => {
+              checkForUpdates(this.uiManager, true);
+            })
+            .catch(() => {
+              dialog.showMessageBox({
+                title: 'Unable to check for Updates',
+                message: 'A valid internet connection must be established to check for updates.',
+              });
+            })
           } else {
             dialog.showMessageBox({
               title: 'Unable to check for Updates',
@@ -185,7 +194,8 @@ app.on('ready', () => {
               } else {
                 uiManager.setupApp();
               }
-            });
+            })
+            .catch(()=> uiManager.setupApp());
           } else {
             uiManager.setupApp();
           }
