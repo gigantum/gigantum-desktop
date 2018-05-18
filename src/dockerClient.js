@@ -434,10 +434,8 @@ export default class GigDockerClient {
               this.uiManager.updateInstallImageWindow({ isDownloaded: true }, 'update');
               if (tag !== config.imageTag) {
                 this.removePreviousVersion = true;
-                this.uiManager.updateReady();
-              } else {
-                this.uiManager.updateReady();
               }
+              this.uiManager.updateReady();
             } else if (type !== 'update') {
               this.uiManager.setupApp();
             } else {
