@@ -8,6 +8,8 @@ const byteDictionary = ['Bytes', 'Kb', 'Mb', 'Gb', 'Tb'];
 let isDownloaded = false;
 let newImageSize;
 
+let allowChangeUsedSize = null;
+let usedSize = 0;
 
 ipcRenderer.on('message', (event, incoming) => {
   if(incoming.newImageSize) {
@@ -17,21 +19,27 @@ ipcRenderer.on('message', (event, incoming) => {
     isDownloaded = true;
   }
   if(isDownloaded){
-    let usedSize;
     if (!incoming.doneDownloading) {
-      usedSize = incoming.downloadSize;
+      usedSize = incoming.downloadSize > newImageSize ? newImageSize : incoming.downloadSize > usedSize ? incoming.downloadSize : usedSize;
       installHeader.innerHTML = 'Downloading New Gigantum Client';
 
     } else {
-      usedSize = incoming.extractSize < newImageSize ? incoming.extractSize : newImageSize;
+      if(allowChangeUsedSize === null){
+        allowChangeUsedSize = true;
+      }
+      usedSize = incoming.extractSize > newImageSize ? newImageSize : ((allowChangeUsedSize) || (incoming.extractSize > usedSize)) ? incoming.extractSize : usedSize;
       installHeader.innerHTML = 'Extracting New Gigantum Client';
+      allowChangeUsedSize = false;
     }
 
     const fileSize = (Math.log10(usedSize) / 3);
     const maxSize = (Math.log10(newImageSize) / 3);
+    let percentage = Math.floor((usedSize / newImageSize) * 100)
+    percentage = percentage > 100 ? 100 : percentage;
+
     progressBar.value = usedSize;
     progressBar.max = newImageSize;
-    progressText.innerHTML = `${(usedSize / (Math.pow(1000, Math.floor(fileSize)))).toFixed(2)} / ${(newImageSize / (Math.pow(1000, Math.floor(maxSize)))).toFixed(2)} ${byteDictionary[~~(maxSize)]} - ${Math.floor((usedSize / newImageSize) * 100)}%`;
+    progressText.innerHTML = `${(usedSize / (Math.pow(1000, Math.floor(fileSize)))).toFixed(2)} / ${(newImageSize / (Math.pow(1000, Math.floor(maxSize)))).toFixed(2)} ${byteDictionary[~~(maxSize)]} - ${percentage}%`;
   } else {
     if(!incoming.downloadSize) {
     installHeader.innerHTML = 'Downloading Updated App';

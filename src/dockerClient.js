@@ -13,6 +13,7 @@ import pump from 'pump';
 import throughJSON from 'through-json';
 import through from 'through2';
 import {autoUpdater} from 'electron-updater'
+import internetAvailable from 'internet-available'
 
 import checkForUpdates from './updater';
 import config from './config';
@@ -118,7 +119,12 @@ export default class GigDockerClient {
     this.dockerode.ping()
     .then(() => {
       if(!this.ranOnce) {
-        checkForUpdates(this.uiManager, false);
+        internetAvailable().then(() => {
+          checkForUpdates(this.uiManager, false);
+        })
+        .catch(() => {
+          console.log('internet not available')
+        })
         this.ranOnce = true;
       }
       this.attemptingReconnect = false;
@@ -333,112 +339,124 @@ export default class GigDockerClient {
   }
 
   pullGigantum(type = 'install', tag = config.imageTag) {
-    if (type === 'install') {
-      this.uiManager.handleAppEvent({
-        toolTip: 'Gigantum is installing...',
-        status: 'starting',
-        id: 'imageNotInstalled',
-        window: 'install',
-      });
-    } else {
-      this.uiManager.handleAppEvent({
-        toolTip: 'Gigantum is updating...',
-        window: 'update',
-      });
-    }
-    const dataObj = {};
-    const extractObj = {};
-    let extractInARow = 0;
-    const handlePull = (data, enc, cb) => {
-      if (data.error) return cb(new Error(data.error.trim()));
-      if (!data.id || !data.progressDetail || !data.progressDetail.current) {
-        return cb();
-      }
-      let downloadSize = 0;
-      let extractSize = 0;
-      if (data.status === 'Downloading' && extractInARow < 10) {
-        extractInARow = 0;
-        dataObj[data.id] = {
-          transferred: data.progressDetail.current,
-          total: data.progressDetail.total,
-          iterationsUnmodified: -1,
-        };
-        Object.keys(dataObj).forEach((layer) => {
-          if (dataObj[layer].transferred) {
-            if (dataObj[layer].iterationsUnmodified < 10) {
-              downloadSize += dataObj[layer].transferred;
-            } else {
-              downloadSize += dataObj[layer].total;
-            }
-            dataObj[layer].iterationsUnmodified += 1;
-          }
+    internetAvailable().then(() => {
+      if (type === 'install') {
+        this.uiManager.handleAppEvent({
+          toolTip: 'Gigantum is installing...',
+          status: 'starting',
+          id: 'imageNotInstalled',
+          window: 'install',
         });
-        this.uiManager.updateInstallImageWindow(
-          { downloadSize },
-          type,
-        );
-      } else if (data.status === 'Extracting') {
-        extractInARow += 1;
-        if (!extractObj[data.id]) {
-          extractObj[data.id] = {
-            transferred: data.progressDetail.current,
-          };
-        } else {
-          extractObj[data.id] = {
-            transferred: data.progressDetail.current > extractObj[data.id].transferred ? data.progressDetail.current : extractObj[data.id].transferred,
-          };
+      } else {
+        this.uiManager.handleAppEvent({
+          toolTip: 'Gigantum is updating...',
+          window: 'update',
+        });
+      }
+      const dataObj = {};
+      const extractObj = {};
+      let extractInARow = 0;
+      const handlePull = (data, enc, cb) => {
+        if (data.error) return cb(new Error(data.error.trim()));
+        if (!data.id || !data.progressDetail || !data.progressDetail.current) {
+          return cb();
         }
-        if (extractInARow > 10) {
-          Object.keys(extractObj).forEach((layer) => {
-            if (extractObj[layer].transferred) {
-              extractSize += extractObj[layer].transferred;
-            }
-          });
+        let downloadSize = 0;
+        let extractSize = 0;
+        if (data.status === 'Downloading' && extractInARow < 10) {
+          extractInARow = 0;
+          dataObj[data.id] = {
+            transferred: data.progressDetail.current,
+            total: data.progressDetail.total,
+            iterationsUnmodified: -1,
+          };
           Object.keys(dataObj).forEach((layer) => {
             if (dataObj[layer].transferred) {
-              downloadSize += dataObj[layer].total;
+              if (dataObj[layer].iterationsUnmodified < 10) {
+                downloadSize += dataObj[layer].transferred;
+              } else {
+                downloadSize += dataObj[layer].total;
+              }
+              dataObj[layer].iterationsUnmodified += 1;
             }
           });
           this.uiManager.updateInstallImageWindow(
-            { downloadSize, extractSize, doneDownloading: true },
+            { downloadSize },
             type,
           );
-        }
-      }
-      cb();
-    };
-    this.dockerRequest.post(
-      '/images/create', {
-        qs: {
-          fromImage: config.imageName,
-          tag,
-        },
-        body: null,
-      },
-      (err, response) => {
-        if (err) {
-          console.log(err);
-        }
-        pump(response, throughJSON(), through.obj(handlePull), (error) => {
-          if (error) {
-            console.log(error);
-          }
-          if (type === 'update' && this.electronAppDownloaded) {
-            this.uiManager.updateInstallImageWindow({ isDownloaded: true }, 'update');
-            if (tag !== config.imageTag) {
-              this.removePreviousVersion = true;
-              this.uiManager.updateReady();
-            } else {
-              this.uiManager.updateReady();
-            }
-          } else if (type !== 'update') {
-            this.uiManager.setupApp();
+        } else if (data.status === 'Extracting') {
+          extractInARow += 1;
+          if (!extractObj[data.id]) {
+            extractObj[data.id] = {
+              transferred: data.progressDetail.current,
+            };
           } else {
-            this.updatedImageDownloaded = true;
+            extractObj[data.id] = {
+              transferred: data.progressDetail.current > extractObj[data.id].transferred ? data.progressDetail.current : extractObj[data.id].transferred,
+            };
           }
+          if (extractInARow > 10) {
+            Object.keys(extractObj).forEach((layer) => {
+              if (extractObj[layer].transferred) {
+                extractSize += extractObj[layer].transferred;
+              }
+            });
+            Object.keys(dataObj).forEach((layer) => {
+              if (dataObj[layer].transferred) {
+                downloadSize += dataObj[layer].total;
+              }
+            });
+            this.uiManager.updateInstallImageWindow(
+              { downloadSize, extractSize, doneDownloading: true },
+              type,
+            );
+          }
+        }
+        cb();
+      };
+      this.dockerRequest.post(
+        '/images/create', {
+          qs: {
+            fromImage: config.imageName,
+            tag,
+          },
+          body: null,
+        },
+        (err, response) => {
+          if (err) {
+            console.log(err);
+          }
+          pump(response, throughJSON(), through.obj(handlePull), (error) => {
+            if (error) {
+              console.log(error);
+            }
+            if (type === 'update' && this.electronAppDownloaded) {
+              this.uiManager.updateInstallImageWindow({ isDownloaded: true }, 'update');
+              if (tag !== config.imageTag) {
+                this.removePreviousVersion = true;
+              }
+              this.uiManager.updateReady();
+            } else if (type !== 'update') {
+              this.uiManager.setupApp();
+            } else {
+              this.updatedImageDownloaded = true;
+            }
+          });
+        },
+      );
+    })
+    .catch(() => {
+      if (type === 'install') {
+        this.uiManager.handleAppEvent({
+          toolTip: 'Gigantum is not running.',
+          status: 'notRunning',
         });
-      },
-    );
+      }
+      dialog.showMessageBox({
+        title: `Unable to ${type} Gigantum Client.`,
+        message: `A valid internet connection must be established to ${type} the Gigantum Client.`,
+      });
+    })
   }
 
   removeGigantumImage() {
