@@ -149,7 +149,7 @@ app.on('ready', () => {
         dockerClient.dockerConnectionTest().then((res) => {
           if (res) {
             internetAvailable().then(() => {
-              checkForUpdates(this.uiManager, true);
+              checkForUpdates(uiManager, true);
             })
             .catch(() => {
               dialog.showMessageBox({
