@@ -167,9 +167,9 @@ export default class GigDockerClient {
     const self = this;
     //setTimeout is used due to a bug during runtime
     setTimeout(() => {
-      return fetch(config.defaultUrl,
+      return fetch('http://localhost:10001/ping/',
         {
-          method: 'OPTIONS',
+          'method': 'GET'
         })
         .then(() => {
           this.uiManager.handleAppEvent({
