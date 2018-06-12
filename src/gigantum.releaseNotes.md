@@ -1,3 +1,38 @@
+## 2018-06-12
+
+### Gigantum Client (0.8.2)
+
+Image Tag: 779847b0 (209566418)
+
+Image ID: 7582a9bfc1f5
+
+* Added
+  - Initial support for R in JupyterLab
+
+* Improved
+  - Updated file uploads to "batch" into a single activity record
+  - Updated date widget to stick to the top of the activity feed
+  - Updated Activity bundling interface
+  - Updated LabBook submenu to be visible when scrolling through activity feed
+  - Updated LabBook listing page to load progressively
+  - Reorganized filters and added search to LabBook listing page
+
+* Fixed
+  - Minor bugs and UI clean up
+  - When deleting a Cloud LabBook that still exists locally, the git configuration is now updated so you can re-publish without error
+  - An error during publish no longer breaks future LabBook syncs
+
+* Known Issues
+  - "Latest Version" lookup for packages has been temporarily removed from the "Environment" tab
+  - Adding Conda packages is very slow
+
+
+### Gigantum Desktop App (0.3.0)
+
+* New
+  - Updated Gigantum Client container to latest release 0.8.2
+
+
 ## 2018-05-25
 
 ### Gigantum Client (0.8.1)
