@@ -423,25 +423,31 @@ export default class GigDockerClient {
           body: null,
         },
         (err, response) => {
-          if (err) {
-            console.log(err);
-          }
-          pump(response, throughJSON(), through.obj(handlePull), (error) => {
-            if (error) {
-              console.log(error);
-            }
-            if (type === 'update' && this.electronAppDownloaded) {
-              this.uiManager.updateInstallImageWindow({ isDownloaded: true }, 'update');
-              if (tag !== config.imageTag) {
-                this.removePreviousVersion = true;
+          if (response) {
+            pump(response, throughJSON(), through.obj(handlePull), (error) => {
+              if (error) {
+                console.log(error);
               }
-              this.uiManager.updateReady();
-            } else if (type !== 'update') {
-              this.uiManager.setupApp();
-            } else {
-              this.updatedImageDownloaded = true;
-            }
-          });
+              if (type === 'update' && this.electronAppDownloaded) {
+                this.uiManager.updateInstallImageWindow({ isDownloaded: true }, 'update');
+                if (tag !== config.imageTag) {
+                  this.removePreviousVersion = true;
+                }
+                this.uiManager.updateReady();
+              } else if (type !== 'update') {
+                this.uiManager.setupApp();
+              } else {
+                this.updatedImageDownloaded = true;
+              }
+            });
+          } else {
+            self.uiManager.handleAppEvent({
+              toolTip: 'ERROR: Docker is not running',
+              status: 'notRunning',
+              id: 'dockerNotRunning',
+              window: 'docker',
+            });
+          }
         },
       );
     })
