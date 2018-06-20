@@ -1,17 +1,25 @@
 # Gigantum Desktop
-A desktop application created using Electron to install and operate the [Gigantum](http://www.gigantum.com) client.
+
+A desktop application created using Electron to install and operate the
+[Gigantum](http://www.gigantum.com) client.
 
 
 ## Introduction
 
-This application is provided as a method to install and run the Gigantum Client, locally on your computer. It provides a simple interface to install, update, start and stop the client. If you are looking to use the desktop application, it is highly recommended that you download the existing latest build for your operating system [here](http://www.gigantum.com/download).
+This application is provided as a method to install and run the Gigantum
+Client, locally on your computer. It provides a simple interface to install,
+update, start and stop the client. If you are looking to use the desktop
+application, it is highly recommended that you download the existing latest
+build for your operating system [here](http://www.gigantum.com/download).
 
-For more information regarding the application, view our documentation [here](https://docs.gigantum.com/docs/what-is-gigantum).
+For more information regarding the application, view our documentation
+[here](https://docs.gigantum.com/docs/what-is-gigantum).
 
 
 ## Getting Started
 
 ### Pre-requisites
+
 This project requires [Node.js](https://nodejs.org/en/)
 
 
