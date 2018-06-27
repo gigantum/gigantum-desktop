@@ -61,6 +61,6 @@ export default {
     'updateReady',
     'releaseNotes',
   ],
-  fileSize: 209566418,
+  fileSize: 268290698,
   version,
 };
