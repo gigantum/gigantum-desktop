@@ -1,3 +1,39 @@
+## 2018-06-27
+
+### Gigantum Client (0.9.0)
+
+Image Tag: df4dbd9a (268290698)
+
+Image ID: 4a55a8dcedc8
+
+* Added
+  - All traffic now runs behind an HTTP proxy, allowing the application and all jupyter servers to run on a single port
+
+* Improved
+  - Package manager add and remove operations are now batched into a single Activity Record
+  - Package manager version lookups are now batched
+  - Improved the LabBook listing filter and search UI
+
+* Fixed
+  - Fixed a session caching bug, which caused an error on load if token has expired
+  - Added a temporary patch for running JupyterLab in python2
+  - Fixed bug so containers are re-built on rollback
+  - Minor bugs and UI clean up
+
+* Known Issues
+  - "Latest Version" lookup for packages has been temporarily removed from the "Environment" tab
+  - Maximum size of an individual file upload is currently limited to 1.8GB
+
+
+### Gigantum Desktop App (0.4.0)
+
+* New
+  - Updated Gigantum Client container to latest release 0.9.0
+
+* Fixed
+  - Gigantum Desktop no longer blocks a restart on macOS
+
+
 ## 2018-06-12
 
 ### Gigantum Client (0.8.2)
