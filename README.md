@@ -1,17 +1,25 @@
 # Gigantum Desktop
-A desktop application created using Electron to install and operate the [Gigantum](http://www.gigantum.com) client.
+
+A desktop application created using Electron to install and operate the
+[Gigantum](http://www.gigantum.com) client.
 
 
 ## Introduction
 
-This application is provided as a method to install and run the Gigantum Client, locally on your computer. It provides a simple interface to install, update, start and stop the client. If you are looking to use the desktop application, it is highly recommended that you download the existing latest build for your operating system [here](http://www.gigantum.com/download).
+This application is provided as a method to install and run the Gigantum
+Client, locally on your computer. It provides a simple interface to install,
+update, start and stop the client. If you are looking to use the desktop
+application, it is highly recommended that you download the existing latest
+build for your operating system [here](http://www.gigantum.com/download).
 
-For more information regarding the application, view our documentation [here](https://docs.gigantum.com/docs/what-is-gigantum).
+For more information regarding the application, view our documentation
+[here](https://docs.gigantum.com/docs/what-is-gigantum).
 
 
 ## Getting Started
 
 ### Pre-requisites
+
 This project requires [Node.js](https://nodejs.org/en/)
 
 
@@ -40,3 +48,16 @@ npm start
 `npm run build-all`
 > Starts the electron-builder process for all of the above operating systems.
 
+## Contributing
+
+Gigantum uses the [Developer Certificate of Origin](https://developercertificate.org/). 
+This is lightweight approach that doesn't require submission and review of a
+separate contributor agreement.  Code is signed directly by the developer using
+facilities built into git.
+
+Please see [`docs/contributing.md`  in the gtm
+repository](https://github.com/gigantum/gtm/tree/integration/docs/contributing.md).
+
+## Credits
+
+TODO

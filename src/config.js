@@ -27,7 +27,6 @@ export default {
     Image: `${imageLabel}:${imageTag}`,
     ExposedPorts: {
       '10000/tcp': {},
-      '10001/tcp': {},
     },
     HostConfig: {
       Init: true,
@@ -39,9 +38,6 @@ export default {
       PortBindings: {
         '10000/tcp': [{
           HostPort: '10000',
-        }],
-        '10001/tcp': [{
-          HostPort: '10001',
         }],
       },
       Volumes: {},
