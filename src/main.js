@@ -43,6 +43,10 @@ if (isSecondInstance) {
   app.quit();
 }
 
+app.on('before-quit', () => {
+  app.quitting = true;
+})
+
 app.on('ready', () => {
   windows = {};
   tray = new Tray(trayIcons('busy'));

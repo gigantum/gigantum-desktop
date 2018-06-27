@@ -163,27 +163,36 @@ export default class GigDockerClient {
     return this.dockerode.ping().then(() => true, () => false);
   }
 
-  testPing(options, attemptcount = 0) {
+  testPing(options, attemptCount = 0) {
+    let nextAttempt = attemptCount + 1;
     const self = this;
     //setTimeout is used due to a bug during runtime
-    if(attemptCount > 15){
+    if(attemptCount < 25){
       setTimeout(() => {
         return fetch('http://localhost:10000/api/ping/',
           {
             'method': 'GET'
           })
-          .then(() => {
-            this.uiManager.handleAppEvent({
-              toolTip: 'Gigantum is running',
-              status: 'running',
-            });
-            if (options.openPopup) {
-              shell.openExternal(config.defaultUrl);
-            }
+          .then((res) => {
+            res.json()
+            .then(()=>{
+              if (options.openPopup) {
+                shell.openExternal(config.defaultUrl);
+              }
+              this.uiManager.handleAppEvent({
+                toolTip: 'Gigantum is running',
+                status: 'running',
+              });
+            })
+            .catch(() =>{
+              setTimeout(() => {
+                self.testPing(options, nextAttempt);
+              }, 1000);
+            })
           })
           .catch(() => {
             setTimeout(() => {
-              self.testPing(options, ++attemptcount);
+              self.testPing(options, nextAttempt);
             }, 1000);
           });
       }, 0)
