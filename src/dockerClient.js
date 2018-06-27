@@ -163,29 +163,38 @@ export default class GigDockerClient {
     return this.dockerode.ping().then(() => true, () => false);
   }
 
-  testPing(options) {
+  testPing(options, attemptcount = 0) {
     const self = this;
     //setTimeout is used due to a bug during runtime
-    setTimeout(() => {
-      return fetch('http://localhost:10001/ping/',
-        {
-          'method': 'GET'
-        })
-        .then(() => {
-          this.uiManager.handleAppEvent({
-            toolTip: 'Gigantum is running',
-            status: 'running',
+    if(attemptCount > 15){
+      setTimeout(() => {
+        return fetch('http://localhost:10000/api/ping/',
+          {
+            'method': 'GET'
+          })
+          .then(() => {
+            this.uiManager.handleAppEvent({
+              toolTip: 'Gigantum is running',
+              status: 'running',
+            });
+            if (options.openPopup) {
+              shell.openExternal(config.defaultUrl);
+            }
+          })
+          .catch(() => {
+            setTimeout(() => {
+              self.testPing(options, ++attemptcount);
+            }, 1000);
           });
-          if (options.openPopup) {
-            shell.openExternal(config.defaultUrl);
-          }
-        })
-        .catch(() => {
-          setTimeout(() => {
-            self.testPing(options);
-          }, 1000);
-        });
-    }, 0)
+      }, 0)
+    } else {
+      self.uiManager.handleAppEvent({
+        toolTip: 'ERROR: Docker is not running',
+        status: 'notRunning',
+        id: 'dockerNotRunning',
+        window: 'docker',
+      });
+    }
   }
 
   startGigantum() {
