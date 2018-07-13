@@ -33,7 +33,7 @@ export default {
       Binds: [
         'labmanager_share_vol:/mnt/share:rw',
         '/var/run/docker.sock:/var/run/docker.sock:rw',
-        `${containerDirectory}:/mnt/gigantum:cached`,
+        `${containerDirectory}:/mnt/gigantum:${os.platform() === 'darwin' ? 'cached': 'rw'}`,
       ],
       PortBindings: {
         '10000/tcp': [{
