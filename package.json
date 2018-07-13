@@ -43,6 +43,7 @@
         }
     },
     "dependencies": {
+        "@sentry/electron": "^0.5.5",
         "docker-remote-api": "^5.0.0",
         "dockerode": "^2.5.5",
         "electron-compile": "^6.4.2",
