@@ -9,7 +9,7 @@ const envHost = isWindows ? 'WINDOWS_HOST=1' : `LOCAL_USER_ID=${os.userInfo().ui
 
 // gigantum image name
 const imageLabel = 'gigantum/labmanager';
-const imageTag = 'df4dbd9a';
+const imageTag = '6f19937d';
 
 //env constants
 const condaDir = "CONDA_DIR=/opt/conda";
@@ -33,7 +33,7 @@ export default {
       Binds: [
         'labmanager_share_vol:/mnt/share:rw',
         '/var/run/docker.sock:/var/run/docker.sock:rw',
-        `${containerDirectory}:/mnt/gigantum:cached`,
+        `${containerDirectory}:/mnt/gigantum:${os.platform() === 'darwin' ? 'cached': 'rw'}`,
       ],
       PortBindings: {
         '10000/tcp': [{
@@ -61,6 +61,6 @@ export default {
     'updateReady',
     'releaseNotes',
   ],
-  fileSize: 268290698,
+  fileSize: 246462735,
   version,
 };

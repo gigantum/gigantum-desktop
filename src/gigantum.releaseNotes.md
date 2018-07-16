@@ -1,3 +1,44 @@
+# 2018-07-16
+
+### Gigantum Client (0.9.1)
+
+Image Tag: 6f19937d (246462735)
+
+Image ID: 486bb97862d2
+
+* Added
+  - Help interface, providing quick access to docs, help, and guide
+  - Added real-time metadata to background jobs (improved UI in next release)
+  - LabBooks have been renamed to Projects
+  - Added latest version lookup and interface to update packages
+
+* Improved
+  - During file uploads, directories are automatically created without additional API calls, boosting upload performance
+  - .lbk files are now .zip to make it more clear they are simply archives
+  - User identity retrieval and local caching for offline use now done with JWTs
+
+* Fixed
+  - File based import/export uses improved archive method to fix issues seen when moving between windows and mac/linux
+  - Fixed issue that limited the cloud view from listing more than 20 projects
+  - Fixed bug that caused slow responses and high CPU when listing lots of files in the file brower widgets
+  - Fixed issues related to container build status UI
+  - Fixed additional minor bugs and UI clean up
+
+* Known Issues
+  - Maximum size of an individual file upload is currently limited to 1.8GB
+
+
+### Gigantum Desktop App (0.5.0)
+
+* New
+  - Updated Gigantum Client container to latest release 0.9.1
+  - Added crash reporting
+
+* Fixed
+  - Gigantum Desktop no longer blocks restart on macOS
+  - Bind mount mode is set to cached only on macOS
+
+
 ## 2018-06-27
 
 ### Gigantum Client (0.9.0)
