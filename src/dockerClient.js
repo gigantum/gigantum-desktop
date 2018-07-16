@@ -163,38 +163,45 @@ export default class GigDockerClient {
     return this.dockerode.ping().then(() => true, () => false);
   }
 
-  testPing(options, attemptcount = 0) {
+  testPing(options, attemptCount = 0) {
+    let nextAttempt = attemptCount + 1;
     const self = this;
     //setTimeout is used due to a bug during runtime
-    if(attemptCount > 15){
-      setTimeout(() => {
-        return fetch('http://localhost:10000/api/ping/',
-          {
-            'method': 'GET'
-          })
-          .then(() => {
-            this.uiManager.handleAppEvent({
-              toolTip: 'Gigantum is running',
-              status: 'running',
+    setTimeout(() => {
+      if(attemptCount < 25){
+          return fetch('http://localhost:10000/api/ping/',
+            {
+              'method': 'GET'
+            })
+            .then((res) => {
+              if(res.status === 200 && (res.headers.get('content-type') === 'application/json')){
+                if (options.openPopup) {
+                  shell.openExternal(config.defaultUrl);
+                }
+                this.uiManager.handleAppEvent({
+                  toolTip: 'Gigantum is running',
+                  status: 'running',
+                });
+              } else{
+                setTimeout(() => {
+                  self.testPing(options, nextAttempt);
+                }, 1000);
+              }
+            })
+            .catch(() => {
+              setTimeout(() => {
+                self.testPing(options, nextAttempt);
+              }, 1000);
             });
-            if (options.openPopup) {
-              shell.openExternal(config.defaultUrl);
-            }
-          })
-          .catch(() => {
-            setTimeout(() => {
-              self.testPing(options, ++attemptcount);
-            }, 1000);
-          });
-      }, 0)
-    } else {
-      self.uiManager.handleAppEvent({
-        toolTip: 'ERROR: Docker is not running',
-        status: 'notRunning',
-        id: 'dockerNotRunning',
-        window: 'docker',
-      });
-    }
+      } else {
+        self.uiManager.handleAppEvent({
+          toolTip: 'ERROR: Docker is not running',
+          status: 'notRunning',
+          id: 'dockerNotRunning',
+          window: 'docker',
+        });
+      }
+    }, 0)
   }
 
   startGigantum() {

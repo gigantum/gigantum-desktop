@@ -1,7 +1,7 @@
 {
     "name": "gigantum",
     "productName": "Gigantum",
-    "version": "0.3.0",
+    "version": "0.5.0",
     "description": "Gigantum",
     "main": "src/main.js",
     "scripts": {
@@ -43,6 +43,7 @@
         }
     },
     "dependencies": {
+        "@sentry/electron": "^0.5.5",
         "docker-remote-api": "^5.0.0",
         "dockerode": "^2.5.5",
         "electron-compile": "^6.4.2",
@@ -62,7 +63,7 @@
         "babel-plugin-transform-async-to-generator": "^6.24.1",
         "babel-preset-env": "^1.6.1",
         "electron-builder": "^20.13.4",
-        "electron-prebuilt-compile": "1.8.4",
+        "electron-prebuilt-compile": "2.0.3",
         "eslint": "3",
         "eslint-config-airbnb": "15",
         "eslint-plugin-import": "^2.10.0",

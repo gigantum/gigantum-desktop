@@ -19,6 +19,15 @@ import UiManager from './uiManager';
 import trayIcons from './trayIcons';
 import checkForUpdates from './updater';
 
+import {
+  init
+} from '@sentry/electron';
+
+init({
+  dsn: 'https://165a5c668fe141a7a25e84b5eb05c02b@sentry.io/1243058',
+  enableNative: false,
+});
+
 let windows;
 let tray;
 let contextMenu;
@@ -42,6 +51,10 @@ const isSecondInstance = app.makeSingleInstance(
 if (isSecondInstance) {
   app.quit();
 }
+
+app.on('before-quit', () => {
+  app.quitting = true;
+})
 
 app.on('ready', () => {
   windows = {};
