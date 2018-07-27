@@ -1,7 +1,7 @@
 {
     "name": "gigantum",
     "productName": "Gigantum",
-    "version": "0.5.1",
+    "version": "0.5.2",
     "description": "Gigantum",
     "main": "src/main.js",
     "scripts": {

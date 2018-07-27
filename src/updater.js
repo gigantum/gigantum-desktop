@@ -30,7 +30,7 @@ autoUpdater.on('update-available', (info) => {
 
 autoUpdater.on('update-not-available', () => {
   if (checkUpToDate) {
-    let index = dialog.showMessageBox({
+    dialog.showMessageBox({
       title: 'No Updates',
       message: 'Gigantum is already up to date.',
       buttons: ['Close']
