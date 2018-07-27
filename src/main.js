@@ -168,12 +168,14 @@ app.on('ready', () => {
               dialog.showMessageBox({
                 title: 'Unable to check for Updates',
                 message: 'A valid internet connection must be established to check for updates.',
+                buttons: ['Close']
               });
             })
           } else {
             dialog.showMessageBox({
               title: 'Unable to check for Updates',
               message: 'Docker connection must be established to check for updates.',
+              buttons: ['Close']
             });
           }
         });

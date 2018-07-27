@@ -33,6 +33,7 @@ autoUpdater.on('update-not-available', () => {
     dialog.showMessageBox({
       title: 'No Updates',
       message: 'Gigantum is already up to date.',
+      buttons: ['Close']
     });
   }
 });
