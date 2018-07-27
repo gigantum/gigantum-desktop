@@ -1,3 +1,32 @@
+## 2018-07-20
+
+### Gigantum Client (0.9.2)
+
+Image Tag: 9ad016cd (244522922)
+
+Image ID: 3f7dd645acac
+
+* Added
+
+
+* Improved
+  - Updated Base selection UI and detail view
+
+* Fixed
+  - Fixed bug that was silently blocking container build when installing conda packages due to a race condition with latest version lookups
+  - Fixed bug that sometimes made drag-and-drop to import a project fail to start uploading, requiring multiple attempts to drag-and-drop
+  - Fixed bug that caused the add package widget to get stuck in an unusable state if you added a single package twice in a row
+
+* Known Issues
+  - Maximum size of an individual file upload is currently limited to 1.8GB
+
+
+### Gigantum Desktop App (0.5.1)
+
+* New
+  - Updated Gigantum Client container to latest release 0.9.2
+
+
 # 2018-07-16
 
 ### Gigantum Client (0.9.1)
