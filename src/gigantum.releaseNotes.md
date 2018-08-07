@@ -1,3 +1,59 @@
+## 2018-07-27
+
+### Gigantum Client (0.9.3)
+
+Image Tag: 8bcd4c2f (245020714)
+
+Image ID: ae1d455bb34e
+
+* Improved
+  - Auto-commit skipped on Jupyter Save Hook when any kernels related to the Project are still busy. This eliminates excessive versioning during long-running cells that write data to disk.
+  - Added styling to Dockerfile snippet rendering
+
+* Fixed
+  - Fixed latest version lookups for package managers to complete more efficiently and not block builds. This was particularly an issue when using conda.
+  - Fix bug that resulted in Activity Records being set to "Project" type instead of a more specific type (e.g. Code, Input Data)
+  - When deleting a remote Project, it is removed from the list without needing a refresh
+
+* Known Issues
+  - Maximum size of an individual file upload is currently limited to 1.8GB
+
+
+### Gigantum Desktop App (0.5.2)
+
+* New
+  - Updated Gigantum Client container to latest release 0.9.3
+
+
+## 2018-07-20
+
+### Gigantum Client (0.9.2)
+
+Image Tag: 9ad016cd (244522922)
+
+Image ID: 3f7dd645acac
+
+* Added
+
+
+* Improved
+  - Updated Base selection UI and detail view
+
+* Fixed
+  - Fixed bug that was silently blocking container build when installing conda packages due to a race condition with latest version lookups
+  - Fixed bug that sometimes made drag-and-drop to import a project fail to start uploading, requiring multiple attempts to drag-and-drop
+  - Fixed bug that caused the add package widget to get stuck in an unusable state if you added a single package twice in a row
+
+* Known Issues
+  - Maximum size of an individual file upload is currently limited to 1.8GB
+
+
+### Gigantum Desktop App (0.5.1)
+
+* New
+  - Updated Gigantum Client container to latest release 0.9.2
+
+
 # 2018-07-16
 
 ### Gigantum Client (0.9.1)

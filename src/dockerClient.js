@@ -477,6 +477,7 @@ export default class GigDockerClient {
       dialog.showMessageBox({
         title: `Unable to ${type} Gigantum Client.`,
         message: `A valid internet connection must be established to ${type} the Gigantum Client.`,
+        buttons: ['Close']
       });
     })
   }
