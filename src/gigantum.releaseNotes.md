@@ -1,3 +1,41 @@
+## 2018-08-10
+
+### Gigantum Client (0.9.4)
+
+Image Tag: 75efef53 (244853862)
+
+Image ID: ba10850e1beb
+
+* New
+	* Added notification tray that provides a better display of messages along with the ability to see previous messages
+	* Added the ability to view build output from Docker in the notification tray
+	* Added additional hashing of the environment configuration to avoid unnecessary container re-builds on things like sync and checkout
+	* Added link to feedback form accessible from help menu
+
+* Improved
+  * Improved utiliziation of the Docker build cache by adjusting the order of some build instructions added to containers by the Gigantum Client
+  * Authentication token refresh now happens automatically in the background, reducing the number of times a user needs to log in to access cloud resources
+  * Improved API down page text and help documentation
+
+* Fixed
+  * Fixed bug in Project sorting that resulted in wrong sort order
+  * Fixed bug that prevented the correct environment configuration from being displayed in the UI after switching branches
+  * Starting a container while editing the environment is now properly blocked during package validation
+  * Fixed bug that was causing any uploaded zip file to trigger an import
+
+* Known Issues
+  * Container builds with conda packages are not yet optimized and can be slow
+  * Maximum size of an individual file upload is currently limited to 1.8GB
+
+
+### Gigantum Desktop App (0.5.3)
+
+* New
+  * Updated Gigantum Client container to latest release 0.9.4
+
+* Improved
+  * Clarified version information in About window
+
 ## 2018-07-27
 
 ### Gigantum Client (0.9.3)
