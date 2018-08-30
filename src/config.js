@@ -62,6 +62,7 @@ export default {
     'acknowledgements',
     'updateReady',
     'releaseNotes',
+    'failed',
   ],
   fileSize: 244853862,
   version,
