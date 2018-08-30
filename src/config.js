@@ -20,7 +20,7 @@ const lc = "LC_ALL=C.UTF-8";
 const lang = "LANG=C.UTF-8";
 
 export default {
-  containerName: `${imageLabel}-${imageTag}`.replace(/\/|:/g, '-'),
+  containerName: `${imageLabel}-${imageTag}`.replace(/\/|:/g, '.'),
   imageName: `${imageLabel}:${imageTag}`,
   imageLabel,
   imageTag,
