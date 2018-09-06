@@ -168,7 +168,7 @@ export default class GigDockerClient {
     const self = this;
     // setTimeout is used due to a bug during runtime
     setTimeout(() => {
-      if(attemptCount < 25){
+      if(attemptCount < 45){
           return fetch('http://localhost:10000/api/ping/',
             {
               'method': 'GET'
@@ -195,7 +195,7 @@ export default class GigDockerClient {
             });
       } else {
         this.inspectGigantum().then(res=> {
-          if(!res && res.State && res.State.Status === 'running'){
+          if(res && res.State && res.State.Status === 'running'){
               if (options.openPopup) {
                 shell.openExternal(config.defaultUrl);
               }
