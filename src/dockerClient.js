@@ -14,6 +14,7 @@ import throughJSON from 'through-json';
 import through from 'through2';
 import {autoUpdater} from 'electron-updater'
 import internetAvailable from 'internet-available'
+import uuidv4 from 'uuid/v4'
 
 import checkForUpdates from './updater';
 import config from './config';
@@ -166,10 +167,10 @@ export default class GigDockerClient {
   testPing(options, attemptCount = 0) {
     let nextAttempt = attemptCount + 1;
     const self = this;
-    //setTimeout is used due to a bug during runtime
+    // setTimeout is used due to a bug during runtime
     setTimeout(() => {
-      if(attemptCount < 25){
-          return fetch('http://localhost:10000/api/ping/',
+      if(attemptCount < 45){
+          return fetch(`http://localhost:10000/api/ping?v=${uuidv4()}`,
             {
               'method': 'GET'
             })
@@ -194,12 +195,30 @@ export default class GigDockerClient {
               }, 1000);
             });
       } else {
-        self.uiManager.handleAppEvent({
-          toolTip: 'ERROR: Docker is not running',
-          status: 'notRunning',
-          id: 'dockerNotRunning',
-          window: 'docker',
-        });
+        this.inspectGigantum().then(res=> {
+          if(res && res.State && res.State.Status === 'running'){
+              if (options.openPopup) {
+                shell.openExternal(config.defaultUrl);
+              }
+              this.uiManager.handleAppEvent({
+                toolTip: 'Gigantum is running',
+                status: 'running',
+              });
+          } else{
+            self.uiManager.handleAppEvent({
+              toolTip: 'ERROR: Client Failed To Start',
+              status: 'notRunning',
+              window: 'failed',
+            });
+          }
+        })
+        .catch(()=>{
+            self.uiManager.handleAppEvent({
+              toolTip: 'ERROR: Client Failed To Start',
+              status: 'notRunning',
+              window: 'failed',
+            });
+        })
       }
     }, 0)
   }

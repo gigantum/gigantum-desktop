@@ -9,8 +9,8 @@ const envHost = isWindows ? 'WINDOWS_HOST=1' : `LOCAL_USER_ID=${os.userInfo().ui
 
 // gigantum image name
 const imageLabel = 'gigantum/labmanager';
-const imageTag = '75efef53';
-const clientVersion = '0.9.4';
+const imageTag = '36e27262';
+const clientVersion = '0.10.0';
 
 //env constants
 const condaDir = "CONDA_DIR=/opt/conda";
@@ -20,7 +20,7 @@ const lc = "LC_ALL=C.UTF-8";
 const lang = "LANG=C.UTF-8";
 
 export default {
-  containerName: `${imageLabel}-${imageTag}`.replace(/\/|:/g, '-'),
+  containerName: `${imageLabel}-${imageTag}`.replace(/\/|:/g, '.'),
   imageName: `${imageLabel}:${imageTag}`,
   imageLabel,
   imageTag,
@@ -62,7 +62,8 @@ export default {
     'acknowledgements',
     'updateReady',
     'releaseNotes',
+    'failed',
   ],
-  fileSize: 244853862,
+  fileSize: 243665950,
   version,
 };

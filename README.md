@@ -50,7 +50,7 @@ npm start
 
 ## Contributing
 
-Gigantum uses the [Developer Certificate of Origin](https://developercertificate.org/). 
+Gigantum uses the [Developer Certificate of Origin](https://developercertificate.org/).
 This is lightweight approach that doesn't require submission and review of a
 separate contributor agreement.  Code is signed directly by the developer using
 facilities built into git.
@@ -61,3 +61,16 @@ repository](https://github.com/gigantum/gtm/tree/integration/docs/contributing.m
 ## Credits
 
 TODO
+
+
+## Deploying a Build
+Go to https://github.com/settings/tokens > personal access tokens > Generate new token
+
+```
+  declare -x GITHUB_TOKEN=${github_token}
+
+  declare -x WIN_CSC_LINK=${cert_directory}
+
+  declare -x WIN_CSC_KEY_PASSWORD=${cert_keyphrase}
+
+```
