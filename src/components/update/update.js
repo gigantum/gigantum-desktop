@@ -42,7 +42,7 @@ ipcRenderer.on('message', (event, incoming) => {
     progressText.innerHTML = `${(usedSize / (Math.pow(1000, Math.floor(fileSize)))).toFixed(2)} / ${(newImageSize / (Math.pow(1000, Math.floor(maxSize)))).toFixed(2)} ${byteDictionary[~~(maxSize)]} - ${percentage}%`;
   } else {
     if(!incoming.downloadSize) {
-    installHeader.innerHTML = 'Downloading Updated App';
+    installHeader.innerHTML = 'Downloading Gigantum Desktop';
     const fileSize = (Math.log10(incoming.transferred) / 3);
     const maxSize = (Math.log10(incoming.total) / 3);
     progressBar.value = incoming.transferred;
