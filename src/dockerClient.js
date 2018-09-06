@@ -14,6 +14,7 @@ import throughJSON from 'through-json';
 import through from 'through2';
 import {autoUpdater} from 'electron-updater'
 import internetAvailable from 'internet-available'
+import uuidv4 from 'uuid/v4'
 
 import checkForUpdates from './updater';
 import config from './config';
@@ -169,7 +170,7 @@ export default class GigDockerClient {
     // setTimeout is used due to a bug during runtime
     setTimeout(() => {
       if(attemptCount < 45){
-          return fetch('http://localhost:10000/api/ping/',
+          return fetch(`http://localhost:10000/api/ping?v=${uuidv4()}`,
             {
               'method': 'GET'
             })
