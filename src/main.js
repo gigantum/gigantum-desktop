@@ -260,6 +260,9 @@ ipcMain.on('cancelClose', () => {
 ipcMain.on('cancelDockerWindow', () => {
   windows.docker.hide();
 });
+ipcMain.on('cancelFailedWindow', () => {
+  windows.failed.hide();
+});
 
 ipcMain.on('cancelInstallWindow', () => {
   windows.install.hide();

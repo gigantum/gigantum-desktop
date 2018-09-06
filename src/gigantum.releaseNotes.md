@@ -1,3 +1,42 @@
+## 2018-09-06
+
+### Gigantum Client (0.10.0)
+
+Image Tag: 36e27262 (243665950)
+
+Image ID: ace6c07d0b0b
+
+* New
+	* Added ability to publish both public and private projects
+
+* Improved
+  * Import projects now show build progress
+  * Base images updated to latest package versions
+  * Added additional error handling during environment component checkout
+
+* Fixed
+  * Membership is now properly enforced when listing cloud projects
+  * Fixed bug with using Gigantum Client offline when starting cold without an internet connection
+  * Added retry on remote project creation during publish
+  * Fixed issues related to latest package version lookups
+  * Sync and publish are now properly locked during export
+  * Readme editing is now properly locked during sync and publish
+
+* Known Issues
+  * Container builds with conda packages are not yet optimized and can be slow
+  * Maximum size of an individual file upload is currently limited to 1.8GB
+
+
+### Gigantum Desktop App (0.5.4)
+
+* New
+  * Updated Gigantum Client container to latest release 0.10.0
+
+* Fixed
+  * Fixed issue with container naming convention
+  * Fixed issue with docker being reported as not running when the Gigantum Client container fails to start
+
+
 ## 2018-08-10
 
 ### Gigantum Client (0.9.4)
