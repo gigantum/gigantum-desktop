@@ -1,4 +1,6 @@
 # Gigantum Desktop
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fgigantum%2Fgigantum-desktop.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fgigantum%2Fgigantum-desktop?ref=badge_shield)
+
 
 A desktop application created using Electron to install and operate the
 [Gigantum](http://www.gigantum.com) client.
@@ -74,3 +76,7 @@ Go to https://github.com/settings/tokens > personal access tokens > Generate new
   declare -x WIN_CSC_KEY_PASSWORD=${cert_keyphrase}
 
 ```
+
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fgigantum%2Fgigantum-desktop.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fgigantum%2Fgigantum-desktop?ref=badge_large)
