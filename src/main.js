@@ -53,7 +53,14 @@ if (isSecondInstance) {
 }
 
 app.on('before-quit', () => {
-  app.quitting = true;
+  dockerClient.inspectGigantum().then((response) => {
+    if (response) {
+      windows.closing.show();
+    }
+  })
+  .catch(() => {
+    dockerClient.handleAppQuit(false);
+  });
 })
 
 app.on('ready', () => {

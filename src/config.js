@@ -48,7 +48,7 @@ export default {
     Env: [`HOST_WORK_DIR=${containerDirectory}`, envHost, condaDir, shell, miniCondaVersion, lc, lang],
   },
   hostDirectory,
-  defaultUrl: 'http://localhost:10000/labbook/',
+  defaultUrl: 'http://localhost:10000/',
   docUrl: 'https://docs.gigantum.com/',
   windows: [
     'docker',
