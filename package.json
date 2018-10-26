@@ -11,11 +11,7 @@
         "build-lin": "electron-builder -l",
         "build-all": "electron-builder -m -l -w",
         "lint": "eslint src",
-        "deploy:github": "declare -x GITHUB_TOKEN=`cat secrets/config.json | json select '.github_token'`",
-        "deploy:cert": "declare -x WIN_CSC_LINK=`cat secrets/config.json | json select '.cert_directory'`",
-        "deploy:keyphrase": "declare -x WIN_CSC_KEY_PASSWORD=`cat secrets/config.json | json select '.cert_keyphrase'`",
-        "deploy:publish": "electron-builder -m -w -l appimage -p always",
-        "deploy": "npm run deploy:githubTemp && npm run deploy:certTemp && npm run deploy:keyphraseTemp && npm run deploy:publish"
+        "deploy": "GITHUB_TOKEN=`cat secrets/config.json | json select '.github_token'` WIN_CSC_LINK=`cat secrets/config.json | json select '.cert_directory'` WIN_CSC_KEY_PASSWORD=`cat secrets/config.json | json select '.cert_keyphrase'` electron-builder -m -w -l appimage -p always"
     },
     "keywords": [],
     "author": "Gigantum <hello@gigantum.com>",
