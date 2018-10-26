@@ -1,3 +1,43 @@
+## 2018-10-26
+
+### Gigantum Client (0.10.1)
+
+Image Tag: 2220baad (292827145)
+
+Image ID: a97c5ebe95f7
+
+* New
+	* Added ability to launch multiple development environments (currently JupyterLab and Classic Notebook) (#57)
+
+* Improved
+  * On build error, error message and build output message are now properly linked as one message (#5)
+  * On JupyterLab start, the user is automatically placed in the `/code` directory (#20)
+  * Import, publish, and sync now run as background jobs, supporting larger projects (#103)
+  * Improved zip handling for import/export (#99)
+  * Reduced excessive printing to build message during conda installs (#100)
+  * Added `--no-install-recommends` to apt packkages on install (#100)
+  * Updated cloud project listing tab to include more useful information and interactions (#74)
+  * Minor UI cleanup and improvements
+
+* Fixed
+  * Resolved issue for some users who would see a proxy error on JupyterLab start under certain circumstances (#102)
+  * Updated Auth0.js to resolve new vulnerability (#67)
+  * Fixed wrapping issues with long usernames, branch names, and descriptions
+
+* Known Issues
+  * Container builds with conda packages are not yet optimized and can be slow
+  * Maximum size of an individual file upload is currently limited to 1.8GB
+
+
+### Gigantum Desktop App (0.5.5)
+
+* New
+  * Updated Gigantum Client container to latest release 0.10.1
+
+* Fixed
+  * Quiting the app from the dock/taskbar now properly calls all cleanup methods
+
+
 ## 2018-09-06
 
 ### Gigantum Client (0.10.0)
