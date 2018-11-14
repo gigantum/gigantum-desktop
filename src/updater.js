@@ -9,7 +9,11 @@ let checkUpToDate;
 
 autoUpdater.on('error', (error) => {
   if(error) {
-    dialog.showErrorBox('Error: ', error == null ? 'unknown' : (error.stack || error).toString());
+    dialog.showMessageBox({
+      title: 'Error checking for updates',
+      message: 'Gigantum failed to check for updates. Please try again later.',
+      buttons: ['Close']
+    })
   }
 });
 

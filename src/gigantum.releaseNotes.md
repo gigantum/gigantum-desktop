@@ -1,10 +1,33 @@
+## 2018-11-12
+
+### Gigantum Client (0.10.2)
+
+Image Tag: 0a74d140 (292757703)
+
+Image ID: 018e65728a34
+
+* Fixed
+  * Fixed issue where some Projects would fail to sync and merge conflicts would not be automatically resolved.
+  * Container status widget now properly indicates publish and sync operations are in progress.
+
+* Known Issues
+  * Container builds with conda packages are not yet optimized and can be slow
+  * Maximum size of an individual file upload is currently limited to 1.8GB
+
+
+### Gigantum Desktop App (0.5.6)
+
+* New
+  * Updated Gigantum Client container to latest release 0.10.2
+
+
 ## 2018-10-26
 
 ### Gigantum Client (0.10.1)
 
-Image Tag: 2220baad (292827145)
+Image Tag: 0315279c (292684424)
 
-Image ID: a97c5ebe95f7
+Image ID: 569087af61ed
 
 * New
 	* Added ability to launch multiple development environments (currently JupyterLab and Classic Notebook) (#57)

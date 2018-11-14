@@ -119,15 +119,6 @@ export default class GigDockerClient {
 
     this.dockerode.ping()
     .then(() => {
-      if(!this.ranOnce) {
-        internetAvailable().then(() => {
-          checkForUpdates(this.uiManager, false);
-        })
-        .catch(() => {
-          console.log('internet not available')
-        })
-        this.ranOnce = true;
-      }
       this.attemptingReconnect = false;
       this.ensureLocalContainer();
     })
@@ -183,6 +174,17 @@ export default class GigDockerClient {
                   toolTip: 'Gigantum is running',
                   status: 'running',
                 });
+                setTimeout(() => {
+                  if(!this.ranOnce) {
+                    internetAvailable().then(() => {
+                      checkForUpdates(this.uiManager, false);
+                    })
+                    .catch(() => {
+                      console.log('internet not available')
+                    })
+                    this.ranOnce = true;
+                  }
+                }, 2000)
               } else{
                 setTimeout(() => {
                   self.testPing(options, nextAttempt);
