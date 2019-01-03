@@ -531,14 +531,22 @@ export default class GigDockerClient {
     const container = this.dockerode.getContainer(config.containerName);
     container.inspect().then((resContainer) => {
       this.trackedContainer = container;
-      if (resContainer.Config.Image === config.imageName) {
+      if (resContainer.Config.Image === config.imageName && resContainer.State.Running) {
         this.testPing({
           openPopup: true,
         });
       } else {
         this.stopGigantum()
           .then(() => this.stopLabbooks())
-          .then(() => this.runGigantum());
+          .then(() => this.dockerRequest.delete(
+            `/containers/${config.containerName}`,
+            (err, res) => {
+              if (err) {
+                console.log(err);
+              }
+              this.runGigantum()
+          }))
+          .catch(() => this.runGigantum())
       }
     })
     .catch(() => {
