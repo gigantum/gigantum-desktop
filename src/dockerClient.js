@@ -119,15 +119,6 @@ export default class GigDockerClient {
 
     this.dockerode.ping()
     .then(() => {
-      if(!this.ranOnce) {
-        internetAvailable().then(() => {
-          checkForUpdates(this.uiManager, false);
-        })
-        .catch(() => {
-          console.log('internet not available')
-        })
-        this.ranOnce = true;
-      }
       this.attemptingReconnect = false;
       this.ensureLocalContainer();
     })
@@ -183,6 +174,17 @@ export default class GigDockerClient {
                   toolTip: 'Gigantum is running',
                   status: 'running',
                 });
+                setTimeout(() => {
+                  if(!this.ranOnce) {
+                    internetAvailable().then(() => {
+                      checkForUpdates(this.uiManager, false);
+                    })
+                    .catch(() => {
+                      console.log('internet not available')
+                    })
+                    this.ranOnce = true;
+                  }
+                }, 2000)
               } else{
                 setTimeout(() => {
                   self.testPing(options, nextAttempt);
@@ -293,35 +295,27 @@ export default class GigDockerClient {
     if(this.removePreviousVersion && updating) {
       this.removeGigantumImage()
       .then(() => {
-        this.dockerRequest.post('/containers/prune', {body: null}, (err, res) =>{
-          app.quitting = true;
-          if(process.platform === 'linux'){
-            this.uiManager.destroyTray();
-          }
-          autoUpdater.quitAndInstall();
-        })
-      })
-    } else if(this.removePreviousVersion) {
-      this.removeGigantumImage()
-      .then(() => {
-        this.dockerRequest.post('/containers/prune', {body: null}, (err, res) =>{
-          app.quitting = true;
-          app.quit();
-        })
-      })
-    } else if (updating) {
-      this.dockerRequest.post('/containers/prune', {body: null}, (err, res) =>{
         app.quitting = true;
         if(process.platform === 'linux'){
           this.uiManager.destroyTray();
         }
         autoUpdater.quitAndInstall();
       })
-    } else {
-      this.dockerRequest.post('/containers/prune', {body: null}, (err, res) =>{
+    } else if(this.removePreviousVersion) {
+      this.removeGigantumImage()
+      .then(() => {
         app.quitting = true;
         app.quit();
-      });
+      })
+    } else if (updating) {
+      app.quitting = true;
+      if(process.platform === 'linux'){
+        this.uiManager.destroyTray();
+      }
+      autoUpdater.quitAndInstall();
+    } else {
+      app.quitting = true;
+      app.quit();
     }
   }
 
@@ -534,30 +528,23 @@ export default class GigDockerClient {
       //
     }
 
-    this.dockerRequest.post('/containers/prune', { body: null }, (err, res) => {
-      pump(res, throughJSON(), through.obj(null), (error) => {
-        if (error) {
-          console.log(error);
-        }
-
-        const container = this.dockerode.getContainer(config.containerName);
-        container.inspect().then((resContainer) => {
-          this.trackedContainer = container;
-          if (resContainer.Config.Image === config.imageName) {
-            this.testPing({
-              openPopup: true,
-            });
-          } else {
-            this.stopGigantum()
-              .then(() => this.stopLabbooks())
-              .then(() => this.runGigantum());
-          }
-        })
-        .catch(() => {
-          this.runGigantum();
+    const container = this.dockerode.getContainer(config.containerName);
+    container.inspect().then((resContainer) => {
+      this.trackedContainer = container;
+      if (resContainer.Config.Image === config.imageName) {
+        this.testPing({
+          openPopup: true,
         });
-      });
+      } else {
+        this.stopGigantum()
+          .then(() => this.stopLabbooks())
+          .then(() => this.runGigantum());
+      }
+    })
+    .catch(() => {
+      this.runGigantum();
     });
+
   }
 
   setUiManager(uiManager) {

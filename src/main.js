@@ -195,6 +195,12 @@ app.on('ready', () => {
       },
     },
     {
+      label: 'Feedback',
+      click: () => {
+        shell.openExternal('http://feedback.gigantum.com');
+      },
+    },
+    {
       label: 'About',
       click: () => {
         windows.about.show();

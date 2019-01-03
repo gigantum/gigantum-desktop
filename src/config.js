@@ -9,8 +9,8 @@ const envHost = isWindows ? 'WINDOWS_HOST=1' : `LOCAL_USER_ID=${os.userInfo().ui
 
 // gigantum image name
 const imageLabel = 'gigantum/labmanager';
-const imageTag = '2220baad';
-const clientVersion = '0.10.1';
+const imageTag = '99b76958';
+const clientVersion = '0.10.3';
 
 //env constants
 const condaDir = "CONDA_DIR=/opt/conda";
@@ -64,6 +64,6 @@ export default {
     'releaseNotes',
     'failed',
   ],
-  fileSize: 292827145,
+  fileSize: 293018113,
   version,
 };
