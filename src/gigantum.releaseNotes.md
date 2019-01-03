@@ -1,3 +1,37 @@
+## 2019-01-03
+
+### Gigantum Client (0.10.3)
+
+Image Tag: 99b76958 (293018113)
+
+Image ID: ba5793a22286
+
+* New
+  * Drastically new and improved file browser
+
+
+* Fixed
+  * Gigantum client now works when browser uses an adblocker.
+  * Corrupted projects no longer cause client to crash.
+  * Occasional UI glitch when querying for publish/sync status fixed.
+  * No more double-login problems.
+  * Backend code consolidations.
+
+
+* Known Issues
+  * Container builds with conda packages are not yet optimized and can be slow
+  * Maximum size of an individual file upload is currently limited to 1.8GB
+
+
+### Gigantum Desktop App (0.5.7)
+
+* Fixed
+  * On start/stop, only Gigantum-managed containers are cleaned up.
+
+* New
+  * Updated Gigantum Client container to latest release 0.10.3
+
+
 ## 2018-11-12
 
 ### Gigantum Client (0.10.2)
