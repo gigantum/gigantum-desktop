@@ -1,3 +1,25 @@
+## 2019-01-17
+
+### Gigantum Client (0.10.4)
+
+Image Tag: c10b08eb (293060979)
+
+Image ID: f44d6c555d3c
+
+* Fixed
+  * Fixed bug when logging into a Client instance for the first time. This prevented certain actions until the page was refreshed and also occasionally resulted in blocking the ability to publish and sync.
+
+* Known Issues
+  * Container builds with conda packages are not yet optimized and can be slow
+  * Maximum size of an individual file upload is currently limited to 1.8GB
+
+
+### Gigantum Desktop App (0.5.8)
+
+* New
+  * Updated Gigantum Client container to latest release 0.10.4
+
+
 ## 2019-01-03
 
 ### Gigantum Client (0.10.3)
