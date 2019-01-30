@@ -134,7 +134,7 @@ export default class GigDockerClient {
             const endPoint = stdout.slice(startPoint).indexOf(')')
             const size = stdout.slice(startPoint + 6, startPoint + endPoint);
             const difference = Number(size) - Number(fileSizeInBytes);
-            if (difference > 50000000000) {
+            if (difference < 5000000000) {
               this.uiManager.handleAppEvent({
                 window: 'diskSpace',
               });
@@ -142,19 +142,18 @@ export default class GigDockerClient {
           })
         })
       } else if (os.platform() === 'linux') {
-        exec('df /var/lib/docker', (err, stdout, stderr) => {
+        exec('df -h /var/lib/docker', (err, stdout, stderr) => {
           if(err) {
             return;
           }
-          const startPoint = stdout.indexOf('(size ')
-          const endPoint = stdout.slice(startPoint).indexOf(')')
-          const size = stdout.slice(startPoint + 6, startPoint + endPoint);
-          const difference = Number(size) - Number(fileSizeInBytes);
-          if (difference > 50000000000) {
+	  const splitOutput = stdout.split(' ');
+	  const difference = Number(splitOutput[splitOutput.length - 4].slice(0, -1))
+		console.log(difference)
+          if (difference < 5) {
             this.uiManager.handleAppEvent({
               window: 'diskSpace',
             });
-          }
+         }
         })
       }
     } catch (err) {
