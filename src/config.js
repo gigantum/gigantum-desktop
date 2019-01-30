@@ -63,6 +63,7 @@ export default {
     'updateReady',
     'releaseNotes',
     'failed',
+    'diskSpace',
   ],
   fileSize: 293060979,
   version,

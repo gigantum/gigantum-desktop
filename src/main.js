@@ -270,6 +270,9 @@ ipcMain.on('cancelClose', () => {
   windows.closing.hide();
 });
 
+ipcMain.on('cancelDiskSpaceWindow', () => {
+  windows.diskSpace.hide();
+});
 ipcMain.on('cancelDockerWindow', () => {
   windows.docker.hide();
 });

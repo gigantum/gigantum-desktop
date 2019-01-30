@@ -15,6 +15,7 @@ import through from 'through2';
 import {autoUpdater} from 'electron-updater'
 import internetAvailable from 'internet-available'
 import uuidv4 from 'uuid/v4'
+import { exec } from 'child_process'
 
 import checkForUpdates from './updater';
 import config from './config';
@@ -116,6 +117,50 @@ export default class GigDockerClient {
       },
       (err) =>  console.log(err)
     )
+
+    try {
+      if (os.platform() === 'darwin') {
+        fs.readFile(`${os.homedir()}/Library/Containers/com.docker.docker/Data/com.docker.driver.amd64-linux/hyperkit.json`, 'utf8', (err, data) => {
+          const parsedData = JSON.parse(data)
+          const { QcowToolPath, path } = parsedData.disks[0];
+          const bashScript = `eval ${QcowToolPath} info ${path}`;
+          const stats = fs.statSync(path);
+          const fileSizeInBytes = stats.size;
+          exec(bashScript, (err, stdout, stderr) => {
+            if(err) {
+              return;
+            }
+            const startPoint = stdout.indexOf('(size ')
+            const endPoint = stdout.slice(startPoint).indexOf(')')
+            const size = stdout.slice(startPoint + 6, startPoint + endPoint);
+            const difference = Number(size) - Number(fileSizeInBytes);
+            if (difference > 50000000000) {
+              this.uiManager.handleAppEvent({
+                window: 'diskSpace',
+              });
+            }
+          })
+        })
+      } else if (os.platform() === 'linux') {
+        exec('df /var/lib/docker', (err, stdout, stderr) => {
+          if(err) {
+            return;
+          }
+          const startPoint = stdout.indexOf('(size ')
+          const endPoint = stdout.slice(startPoint).indexOf(')')
+          const size = stdout.slice(startPoint + 6, startPoint + endPoint);
+          const difference = Number(size) - Number(fileSizeInBytes);
+          if (difference > 50000000000) {
+            this.uiManager.handleAppEvent({
+              window: 'diskSpace',
+            });
+          }
+        })
+      }
+    } catch (err) {
+      //
+    }
+
 
     this.dockerode.ping()
     .then(() => {
