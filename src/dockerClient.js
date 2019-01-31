@@ -16,7 +16,6 @@ import {autoUpdater} from 'electron-updater'
 import internetAvailable from 'internet-available'
 import uuidv4 from 'uuid/v4'
 import { exec } from 'child_process'
-import powershell from 'node-powershell'
 import sudo from 'sudo-prompt'
 
 import checkForUpdates from './updater';
@@ -129,7 +128,7 @@ export default class GigDockerClient {
           const stats = fs.statSync(path);
           const fileSizeInBytes = stats.size;
           exec(bashScript, (err, stdout, stderr) => {
-            if(err) {
+            if (err) {
               return;
             }
             const startPoint = stdout.indexOf('(size ')
@@ -145,34 +144,37 @@ export default class GigDockerClient {
         })
       } else if (os.platform() === 'linux') {
         exec('df -h /var/lib/docker', (err, stdout, stderr) => {
-          if(err) {
+          if (err) {
             return;
           }
-	  const splitOutput = stdout.split(' ');
-	  const difference = Number(splitOutput[splitOutput.length - 4].slice(0, -1))
-		console.log(difference)
+          const splitOutput = stdout.split(' ');
+          const difference = Number(splitOutput[splitOutput.length - 4].slice(0, -1))
           if (difference < 5) {
             this.uiManager.handleAppEvent({
               window: 'diskSpace',
             });
-         }
+          }
         })
       } else {
-	sudo.exec('Powershell.exe -Command "(Get-VM MobyLinuxVM).harddrives | get-vhd"', {}, (err, output, stderr) => {
-	if (output) {
-	const splitFields = output.split('\r\n');
-	const sizeUsed = Number(splitFields[6].split(': ')[1])
-	const size = Number(splitFields[7].split(': ')[1])
-	const difference = size - sizeUsed;
-console.log(difference)
+        const options = {
+          name: 'Gigantum',
+          icns: '../build/icon.icns'
+        }
+        sudo.exec('Powershell.exe -Command "(Get-VM MobyLinuxVM).harddrives | get-vhd"', options, (err, output, stderr) => {
+          if (output) {
+            const splitFields = output.split('\r\n');
+            const sizeUsed = Number(splitFields[6].split(': ')[1])
+            const size = Number(splitFields[7].split(': ')[1])
+            const difference = size - sizeUsed;
             if (difference < 5000000000) {
               this.uiManager.handleAppEvent({
                 window: 'diskSpace',
               });
             }
 
-}
-})	}
+          }
+        })
+      }
     } catch (err) {
       //
     }

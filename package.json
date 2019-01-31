@@ -56,7 +56,6 @@
         "json": "^9.0.6",
         "marked": "^0.3.19",
         "node-fetch": "^2.1.2",
-        "node-powershell": "^3.3.1",
         "npm": "^5.7.1",
         "pump": "^3.0.0",
         "sudo-prompt": "^8.2.5",
