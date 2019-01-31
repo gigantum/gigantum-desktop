@@ -59,6 +59,7 @@
         "node-powershell": "^3.3.1",
         "npm": "^5.7.1",
         "pump": "^3.0.0",
+        "sudo-prompt": "^8.2.5",
         "through-json": "^1.1.0",
         "through2": "^2.0.3"
     },

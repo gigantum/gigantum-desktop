@@ -17,6 +17,7 @@ import internetAvailable from 'internet-available'
 import uuidv4 from 'uuid/v4'
 import { exec } from 'child_process'
 import powershell from 'node-powershell'
+import sudo from 'sudo-prompt'
 
 import checkForUpdates from './updater';
 import config from './config';
@@ -157,10 +158,8 @@ export default class GigDockerClient {
          }
         })
       } else {
-	   let ps = new powershell({ executionPolicy: 'Bypass' , noProfile: true })
-ps.addCommand('(Get-VM MobyLinuxVM).harddrives | get-vhd')
-ps.invoke()
-.then((output) => {
+	sudo.exec('Powershell.exe -Command "(Get-VM MobyLinuxVM).harddrives | get-vhd"', {}, (err, output, stderr) => {
+	if (output) {
 	const splitFields = output.split('\r\n');
 	const sizeUsed = Number(splitFields[6].split(': ')[1])
 	const size = Number(splitFields[7].split(': ')[1])
@@ -172,8 +171,8 @@ console.log(difference)
               });
             }
 
-})
-	}
+}
+})	}
     } catch (err) {
       //
     }
