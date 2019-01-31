@@ -395,6 +395,7 @@ export default class GigDockerClient {
     this.inspectGigantum().then((valid) => {
       this.purposelyStopped = true;
       if (valid) {
+        this.stopLabbooks();
         this.trackedContainer
           .restart()
           .then(() => {
