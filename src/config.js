@@ -36,7 +36,7 @@ const lang = "LANG=C.UTF-8";
 const Env = [`HOST_WORK_DIR=${containerDirectory}`, envHost, condaDir, shell, miniCondaVersion, lc, lang]
 
 if (nvidiaConfig) {
-  env.push(nvidiaConfig);
+  Env.push(nvidiaConfig);
 }
 
 export default {
