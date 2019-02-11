@@ -1,6 +1,21 @@
 import path from 'path';
 import os from 'os';
 import { version } from '../package.json';
+import { execSync } from 'child_process';
+
+let nvidiaConfig;
+
+if (os.platform() === 'linux'){
+  try {
+    execSync('nvidia-smi --query-gpu=driver_version --format=csv,noheader', (err, stdout) => {
+      if(err) {
+      } else {
+        nvidiaConfig = `NVIDIA_DRIVER_VERSION=${stdout.split('\n')[0]}`
+      }
+    })
+  } catch (error) {
+  }
+}
 
 const isWindows = os.platform() === 'win32';
 const hostDirectory = path.join(os.homedir(), 'gigantum');
@@ -18,6 +33,11 @@ const shell = "SHELL=/bin/bash";
 const miniCondaVersion = "MINICONDA_VERSION=4.3.31";
 const lc = "LC_ALL=C.UTF-8";
 const lang = "LANG=C.UTF-8";
+const Env = [`HOST_WORK_DIR=${containerDirectory}`, envHost, condaDir, shell, miniCondaVersion, lc, lang]
+
+if (nvidiaConfig) {
+  env.push(nvidiaConfig);
+}
 
 export default {
   containerName: `${imageLabel}-${imageTag}`.replace(/\/|:/g, '.'),
@@ -45,7 +65,7 @@ export default {
       Volumes: {},
       Tty: false,
     },
-    Env: [`HOST_WORK_DIR=${containerDirectory}`, envHost, condaDir, shell, miniCondaVersion, lc, lang],
+    Env,
   },
   hostDirectory,
   defaultUrl: 'http://localhost:10000/',
