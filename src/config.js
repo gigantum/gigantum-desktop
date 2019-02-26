@@ -7,13 +7,12 @@ let nvidiaConfig;
 
 if (os.platform() === 'linux'){
   try {
-    execSync('nvidia-smi --query-gpu=driver_version --format=csv,noheader', (err, stdout) => {
-      if(err) {
-      } else {
-        nvidiaConfig = `NVIDIA_DRIVER_VERSION=${stdout.split('\n')[0]}`
-      }
-    })
+    const raw_nvidia_output = execSync('nvidia-smi --query-gpu=driver_version --format=csv,noheader').toString();
+    nvidiaConfig = `NVIDIA_DRIVER_VERSION=${raw_nvidia_output.split('\n')[0]}`;
   } catch (error) {
+      // TODO DC: Do we have a better standard way of reporting status?
+      // I think we should avoid bare catches
+      console.log('unable to run nvidia-smi - assuming no GPU')
   }
 }
 
