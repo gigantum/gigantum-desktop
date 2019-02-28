@@ -11,7 +11,6 @@ import {
 import isDev from 'electron-is-dev';
 import { autoUpdater } from 'electron-updater';
 import fs from 'fs';
-import internetAvailable from 'internet-available'
 
 import config from './config';
 import GigDockerClient from './dockerClient';
@@ -168,7 +167,7 @@ app.on('ready', () => {
       click: () => {
         dockerClient.dockerConnectionTest().then((res) => {
           if (res) {
-            internetAvailable().then(() => {
+            dockerClient.internetAvailable().then(() => {
               checkForUpdates(uiManager, true);
             })
             .catch(() => {
