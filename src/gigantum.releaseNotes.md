@@ -1,3 +1,49 @@
+## 2019-03-05
+
+### Gigantum Client (0.11.0)
+
+Image Tag: 01704121 (362604578)
+
+Image ID: 95ae3430e3
+
+* New
+  * Initial support for Gigantum-managed Datasets (!)
+  * New pull-only sync option to allow public users to roll in upstream changes.
+  * New permissions model for collaborators, including read-only, read/write, and admin.
+  * New reset-to-remote functionality to reset current branch to discard all local changes.
+  * New branch menu on project main page with more options.
+  * New counter widget showing how many commits current branch is ahead/behind remote.
+  * New default demo project loaded on first launch.
+  * Ability for project owner to migrate project to new schema.
+  * Backwards compatibility for old Gigantum projects
+
+* Changed
+  * Master branch is now project default branch.
+  * Updated Project data model to schema version 2.
+  * Arbitrary branches may now be shared among collaborators.
+  * Better options to select mine/theirs changes when conflicts occur.
+  * Better support for GPUs.
+  * Option to show/hide/ignore certain activity records.
+
+* Fixed
+  * Application styling and usability.
+  * Faster load times for Project and Project-listing pages.
+  * Anonymous users of public projects can receive upstream updates.
+  * Fixed race-condition issue when caching user identity.
+
+* Known Issues
+  * Certain adblockers may interfere with proper functioning of app.
+  * Do not switch to master branch before migration (causes project to become unusable).
+  * Publishing datasets from Project page can cause issues (suggested to publish dataset first).
+
+### Gigantum Desktop App (0.5.9)
+
+* New
+  * Updated Gigantum Client container to latest release 0.11.0
+  * GPU environment variable used while initializing docker image
+  * Changed how network connection is checked
+
+
 ## 2019-01-17
 
 ### Gigantum Client (0.10.4)
