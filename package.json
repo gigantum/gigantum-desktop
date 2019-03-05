@@ -21,6 +21,9 @@
         "owner": "gigantum",
         "repo": "gigantum-desktop"
     },
+    "win": {
+        "verifyUpdateCodeSignature": false
+    },
     "build": {
         "dmg": {
             "iconSize": 276,
