@@ -478,7 +478,7 @@ export default class GigDockerClient {
               }
             });
           } else {
-            self.uiManager.handleAppEvent({
+            this.uiManager.handleAppEvent({
               toolTip: 'ERROR: Docker is not running',
               status: 'notRunning',
               id: 'dockerNotRunning',
