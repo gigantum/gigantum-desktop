@@ -1,6 +1,20 @@
 import path from 'path';
 import os from 'os';
 import { version } from '../package.json';
+import { execSync } from 'child_process';
+
+let nvidiaConfig;
+
+if (os.platform() === 'linux'){
+  try {
+    const raw_nvidia_output = execSync('nvidia-smi --query-gpu=driver_version --format=csv,noheader').toString();
+    nvidiaConfig = `NVIDIA_DRIVER_VERSION=${raw_nvidia_output.split('\n')[0]}`;
+  } catch (error) {
+      // TODO DC: Do we have a better standard way of reporting status?
+      // I think we should avoid bare catches
+      console.log('unable to run nvidia-smi - assuming no GPU')
+  }
+}
 
 const isWindows = os.platform() === 'win32';
 const hostDirectory = path.join(os.homedir(), 'gigantum');
@@ -9,8 +23,8 @@ const envHost = isWindows ? 'WINDOWS_HOST=1' : `LOCAL_USER_ID=${os.userInfo().ui
 
 // gigantum image name
 const imageLabel = 'gigantum/labmanager';
-const imageTag = 'c10b08eb';
-const clientVersion = '0.10.4';
+const imageTag = '01704121';
+const clientVersion = '0.11.0';
 
 //env constants
 const condaDir = "CONDA_DIR=/opt/conda";
@@ -18,6 +32,11 @@ const shell = "SHELL=/bin/bash";
 const miniCondaVersion = "MINICONDA_VERSION=4.3.31";
 const lc = "LC_ALL=C.UTF-8";
 const lang = "LANG=C.UTF-8";
+const Env = [`HOST_WORK_DIR=${containerDirectory}`, envHost, condaDir, shell, miniCondaVersion, lc, lang]
+
+if (nvidiaConfig) {
+  Env.push(nvidiaConfig);
+}
 
 export default {
   containerName: `${imageLabel}-${imageTag}`.replace(/\/|:/g, '.'),
@@ -45,7 +64,7 @@ export default {
       Volumes: {},
       Tty: false,
     },
-    Env: [`HOST_WORK_DIR=${containerDirectory}`, envHost, condaDir, shell, miniCondaVersion, lc, lang],
+    Env,
   },
   hostDirectory,
   defaultUrl: 'http://localhost:10000/',
@@ -64,6 +83,6 @@ export default {
     'releaseNotes',
     'failed',
   ],
-  fileSize: 293060979,
+  fileSize: 362604578,
   version,
 };

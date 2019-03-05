@@ -13,7 +13,6 @@ import pump from 'pump';
 import throughJSON from 'through-json';
 import through from 'through2';
 import {autoUpdater} from 'electron-updater'
-import internetAvailable from 'internet-available'
 import uuidv4 from 'uuid/v4'
 
 import checkForUpdates from './updater';
@@ -150,7 +149,16 @@ export default class GigDockerClient {
       },
     );
   }
-
+  internetAvailable() {
+    return Promise.race([
+      fetch('https://www.google.com/', {
+        'method': 'GET'
+      }),
+      new Promise((_, reject) =>
+          setTimeout(() => reject(new Error('timeout')), 5000)
+      )
+    ]);
+  }
   dockerConnectionTest() {
     return this.dockerode.ping().then(() => true, () => false);
   }
@@ -176,7 +184,7 @@ export default class GigDockerClient {
                 });
                 setTimeout(() => {
                   if(!this.ranOnce) {
-                    internetAvailable().then(() => {
+                    this.internetAvailable().then(() => {
                       checkForUpdates(this.uiManager, false);
                     })
                     .catch(() => {
@@ -368,7 +376,7 @@ export default class GigDockerClient {
   }
 
   pullGigantum(type = 'install', tag = config.imageTag) {
-    internetAvailable().then(() => {
+    this.internetAvailable().then(() => {
       if (type === 'install') {
         this.uiManager.handleAppEvent({
           toolTip: 'Gigantum is installing...',
@@ -470,7 +478,7 @@ export default class GigDockerClient {
               }
             });
           } else {
-            self.uiManager.handleAppEvent({
+            this.uiManager.handleAppEvent({
               toolTip: 'ERROR: Docker is not running',
               status: 'notRunning',
               id: 'dockerNotRunning',
