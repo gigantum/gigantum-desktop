@@ -1,3 +1,35 @@
+## 2019-03-15
+
+### Gigantum Client (0.11.1)
+
+Image Tag: ced4b103 (362604578)
+
+Image ID: d2c9d0d0fc
+
+* New
+  * Not much! This release is all about usability enhancements!
+
+* Changed
+  * Better clean up when Linking Datasets.
+  * Importing large projects from remote is more clear.
+  * Better-performing package version lookups.
+
+* Fixed
+  * Linking Datasets on Windows machines.
+  * Fixed an endless-scrolling problem when viewing activity feed.
+  * Fixed many CSS and styling glitches.
+
+* Known Issues
+  * Certain adblockers may interfere with proper functioning of app.
+  * Do not switch to master branch before migration (causes project to become unusable).
+  * Publishing datasets from Project page can cause issues (suggested to publish dataset first).
+
+### Gigantum Desktop App (0.5.10)
+
+* New
+  * Updated Gigantum Client container to latest release 0.11.1
+
+
 ## 2019-03-05
 
 ### Gigantum Client (0.11.0)
