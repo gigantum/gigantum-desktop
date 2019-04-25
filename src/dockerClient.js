@@ -260,7 +260,7 @@ export default class GigDockerClient {
     const handleContainerList = (data) => {
       if (data) {
         data.forEach((container) => {
-          if (container && container.Image.slice(0, 5) === 'gmlb-') {
+          if (container && (container.Image.slice(0, 5) === 'gmlb-' || container.Image.slice(0, 10) === 'gmitmproxy')) {
             this.dockerRequest.delete(`/containers/${container.Id}`,
               {
                 qs: {
@@ -274,6 +274,12 @@ export default class GigDockerClient {
 
     this.dockerRequest.get(
       '/containers/json',
+      {
+        qs: {
+          all: true,
+        },
+        body: null,
+      },
       (err, res) => {
         if (err) {
           console.log('err');
