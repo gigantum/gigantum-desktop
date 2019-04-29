@@ -1,3 +1,25 @@
+## 2019-04-29
+
+### Gigantum Client (0.11.2)
+
+Image Tag: 906701a4 (368514377)
+
+Image ID: 8c5385e0ff
+
+* New
+  * Ability to cancel a container build.
+  * New query for system use such as memory and disk use
+
+* Changed
+  * Improved UI look-and-feel.
+
+* Fixed
+  * Fixed problem relating to dataset linking when doing branch reset or switch.
+  * Fixed problem when publishing private projects and datasets together with different collaborators.
+  * Improved management of remote branches.
+  * Fixed issue of endless paging through files in dataset.
+
+
 ## 2019-03-15
 
 ### Gigantum Client (0.11.1)
