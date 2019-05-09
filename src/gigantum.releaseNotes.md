@@ -1,3 +1,24 @@
+
+## 2019-05-09
+
+### Gigantum Client (0.11.3)
+
+Image Tag: 7458af46 (368515323)
+
+Image ID: 5bdb5f1f2b
+
+* Changed
+  * Improved UI look-and-feel and user experience.
+
+* Fixed
+  * Clarified error message when attempting to publish or sync with stale credentials.
+  * Updated Guide messaging for datasets.
+  * Datasets with no readme now indicate as such, rather than being blank
+  * Fixed text overflow when project names are very long.
+  * No longer have to refresh cloud page; updates are automatic.
+  * Many other miscellaneous styling updates.
+
+
 ## 2019-04-29
 
 ### Gigantum Client (0.11.2)
