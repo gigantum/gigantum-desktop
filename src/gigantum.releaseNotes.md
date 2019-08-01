@@ -1,3 +1,69 @@
+## 2019-07-20
+
+### Gigantum Client (0.13.1)
+
+Image Tag: c21042b3 (371961613)
+
+Image ID: a5a44a8e5c
+
+**Note: 0.13.0 (released on 2019-07-12) contained a bug that resulted in corruption of large files in some scenarios during upload. If you uploaded any files with this version over 16MB you should re-upload them or verify content. There is a chance those files are corrupt. This release fixes this issue and uploads of any supported file size are now reliable.**
+
+* Changed
+  * Added CUDA 10.1 driver support
+  * Client now remembers which development tool has been selected between sessions
+  * Added an "advanced configuration" accordion to the environment tab to reduce clutter for casual users
+
+* Fixed
+  * Fixed critical bug that resulted in corruption of large files in some scenarios during upload.
+  * Fixed issue that resulted in a page refresh being required to view new files in a Dataset after syncing
+  * Fixed save hook in Jupyter/Jupyterlab when using Python <3.5 (thanks @jjwatts!)
+  * Fixed worker configuration
+  * Fixed issue with computing Dataset file push batches when the manifest has been edited before the push occurs
+  * Fixed UI coloring during rollback interaction
+  * UI polish and CSS bug fixes
+
+
+## 2019-07-12
+
+### Gigantum Client (0.13.0)
+
+Image Tag: b1472a55 (371935285)
+
+Image ID: dc1b357ef7
+
+* Changed
+  * Enhanced and streamlined look-and-feel.
+  * Much more simplified package installation process.
+  * Ability to change and update a project's base.
+  * Support for sensitive files (such as credentials or keys).
+  * Better support for multi-user Gigantum client (Load balancing of workers).
+  * Can now drag-and-drop a requirements.txt file to quickly create an environment.
+  * Many optimizations to Datasets.
+  * Dramatic enhancement to file browser.
+
+
+* Fixed
+  * GPU support on certain platforms and base-images.
+  * Better support for publish/syncing on Projects with linked Datasets.
+  * Removed option for "Untracked" Projects.
+
+
+## 2019-05-29
+
+### Gigantum Client (0.12.0)
+
+Image Tag: 8697d47a (360444151)
+
+Image ID: f2e5a0af19
+
+* Changed
+  * Support for R-Studio!
+  * Many small UI improvements and fixes.
+  * Less-aggressive filename renaming.
+
+* Fixed
+  * Low disk warning appears properly when less than 3GB of Docker space remain.
+  * Inscrutable error message fixed to something clear when credentials have expired.
 
 ## 2019-05-09
 

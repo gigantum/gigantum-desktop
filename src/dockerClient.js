@@ -168,7 +168,7 @@ export default class GigDockerClient {
     const self = this;
     // setTimeout is used due to a bug during runtime
     setTimeout(() => {
-      if(attemptCount < 45){
+      if(attemptCount < 60){
           return fetch(`http://localhost:10000/api/ping?v=${uuidv4()}`,
             {
               'method': 'GET'
