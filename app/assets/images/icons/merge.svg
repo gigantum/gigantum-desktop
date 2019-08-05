@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="20px" height="12px" viewBox="0 0 20 12" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 49.3 (51167) - http://www.bohemiancoding.com/sketch -->
+    <title>icon/branch/merge</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="icon/branch/merge" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="round">
+        <g id="Group" transform="translate(2.000000, 3.000000)" stroke="#9B9C9E">
+            <path d="M9,0 L2.9999969,1.77635684e-15 C1.34314443,1.77635684e-15 0,1.30393075 0,2.96078348 L0,2.98039628 C0,4.637249 1.34314443,6 2.9999969,6 L9,6" id="Shape" stroke-linejoin="round" transform="translate(4.500000, 3.000000) rotate(-180.000000) translate(-4.500000, -3.000000) "></path>
+            <path d="M9,3 L14,3" id="Line"></path>
+            <polyline id="Shape" stroke-linejoin="round" points="13 1 14.8478261 3 13 5"></polyline>
+        </g>
+    </g>
+</svg>

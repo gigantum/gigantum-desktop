@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="22px" height="22px" viewBox="0 0 22 22" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 49.3 (51167) - http://www.bohemiancoding.com/sketch -->
+    <title>icon/activity/action-run</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="icon/activity/action-run" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <circle id="Oval-Copy" fill="#FFFFFF" cx="11" cy="11" r="11"></circle>
+        <circle id="Oval" stroke="#007EA8" stroke-width="2" fill="#FFFFFF" cx="11" cy="11" r="9"></circle>
+        <path d="M9.65368195,7.12279668 L14.6290578,10.3759274 C15.0791733,10.6702334 15.0791733,11.329767 14.6290578,11.624073 L9.65368195,14.8772033 C9.15775792,15.2014612 8.5,14.8456536 8.5,14.2531306 L8.5,7.74686943 C8.5,7.15434639 9.15775792,6.79853875 9.65368195,7.12279668 Z" id="Shape" stroke="#007EA8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+    </g>
+</svg>

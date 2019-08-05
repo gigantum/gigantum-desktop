@@ -1,0 +1,88 @@
+/*******************
+*
+*  color palette
+*
+*********************/
+
+/*********************
+*
+* primary colors
+*
+**********************/
+$turquise: #1ad8c1;
+$slateBlue: #364454;
+$jet: #1f2733;
+$azure: #007ea8;
+$slateBlueOpaque: rgba(54, 68, 84, 0.6);
+
+/*********************
+*
+* seconday colors
+*
+**********************/
+$crimson: #ef2231;
+$goldenLemon: #fcd430;
+
+$romanSilver: #9b9c9e;
+$grey: #b9babc;
+$lightGrey: #f3f5f7;
+$lightBlue: #97c0d5;
+$tintBlue: #007fa4;
+$backgroundGrey: rgb(196, 199, 201);
+$lightblue: #74a4bc;
+$selected-blue: #53667c;
+$mineShaft: #4a4a4a;
+$orange: rgb(236, 128, 11);
+
+/***********************
+*
+* temporary colors
+*
+***********************/
+
+$grey-light: rgb(244, 244, 244);
+$grey-background: rgb(227, 225, 226);
+$grey-border: #e3e4e5;
+$font-grey: #9c9b9b;
+$dark-blue: #334156;
+$background-color: rgb(240, 241, 245);
+$fileBrowserHover: #edf8fc;
+
+$white: #fefefe;
+
+/*********************
+*
+* z-index
+*
+* z-index: index($elements, labbookHeader)
+*
+***********************/
+$elements: basic, psuedoCard, card, fixedDate, date, button, labbookHeader,
+  sideBar, headerStrip, veil, popup, head, modalCoverNested, loader, modalCover,
+  modal, footer, helper, login, prompt;
+
+$footerElements: basic, progressBar, status, section, message, button;
+
+/*********************
+*
+* font sizes
+*
+***********************/
+$h1-fontsize: 3.052em;
+$h2-fontsize: 2.441em;
+$h3-fontsize: 1.953em;
+$h4-fontsize: 1.563em;
+$h5-fontsize: 1.25em;
+$h6-fontsize: 1em;
+$body-fontsize: 15px !default;
+$tooltip: 0.8em;
+$annotation: 0.64em;
+$superscript: 0.512em;
+
+/*****************************
+*
+* width
+*
+********************************/
+
+$sideBarWidth: 140px;

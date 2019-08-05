@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="36px" height="36px" viewBox="0 0 36 36" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 48.2 (47327) - http://www.bohemiancoding.com/sketch -->
+    <title>icon/activity/object-data-output</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="icon/activity/object-data-output" stroke="#9b9c9e" stroke-width="2">
+            <path d="M33.4545455,35 L2.54545455,35 C1.69545455,35 1,34.3045455 1,33.4545455 L1,2.54545455 C1,1.69545455 1.69545455,1 2.54545455,1 L33.4545455,1 C34.3045455,1 35,1.69545455 35,2.54545455 L35,33.4545455 C35,34.3045455 34.3045455,35 33.4545455,35 Z" id="Shape"></path>
+            <path d="M18,16 L18,7" id="Shape-Copy-2" stroke-linecap="round" stroke-linejoin="round"></path>
+            <polyline id="Shape-Copy" stroke-linecap="round" stroke-linejoin="round" points="14 10 18 6 22 10"></polyline>
+            <g id="image-video_files" transform="translate(6.000000, 11.000000)" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4.00869136,0.995654214 C3.14082316,1.4295883 2.12013444,1.93993265 0.94662522,2.52668724 C0.06216684,2.9689167 0.06216684,4.2310833 0.94662522,4.67331276 L10.9266869,9.66334422 C11.602353,10.0011772 12.3976464,10.0011772 13.0733125,9.66334422 L23.0533742,4.67331276 C23.9378331,4.2310833 23.9378331,2.9689167 23.0533742,2.52668724 C21.8685513,1.93427579 20.8408966,1.42044843 19.9704101,0.985205161" id="Shape"></path>
+                <path d="M0,8.4 L10.9266872,13.8633442 C11.6023533,14.2011772 12.3976467,14.2011772 13.0733128,13.8633442 L24,8.4" id="Shape"></path>
+                <path d="M0,12.6 L10.9266872,18.063343 C11.6023533,18.4011772 12.3976467,18.4011772 13.0733128,18.063343 L24,12.6" id="Shape"></path>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32px" height="32px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 49.3 (51167) - http://www.bohemiancoding.com/sketch -->
+    <title>icon/general/plus-big</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <circle id="path-1" cx="14" cy="14" r="14"></circle>
+    </defs>
+    <g id="icon/general/plus-big" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="icon/add-note-copy" transform="translate(1.798990, 1.798990)">
+            <g id="Group-3">
+                <g id="Button/Add-activity">
+                    <g id="Oval-2">
+                        <use fill="#007EA8" fill-rule="evenodd" xlink:href="#path-1"></use>
+                        <circle stroke="#E3E4E5" stroke-width="2" cx="14" cy="14" r="13"></circle>
+                    </g>
+                    <path d="M21,14 L7,14" id="Line" stroke="#FFFFFF" stroke-linecap="round"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

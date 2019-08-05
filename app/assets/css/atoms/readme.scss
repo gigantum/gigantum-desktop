@@ -1,0 +1,22 @@
+.Readme {
+  ul,
+  ol {
+    /* box size */
+    margin: 0 0 0 1rem;
+    li {
+      /* display */
+      display: list-item;
+
+      /* other */
+      list-style: disc;
+    }
+  }
+
+  blockquote {
+    /* box size */
+    padding-left: 5px;
+
+    /* font */
+    font-style: italic;
+  }
+}

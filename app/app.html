@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html class="arrow-box">
+  <head>
+    <meta charset="utf-8">
+    <title>Gigantum Desktop</title>
+    <script>
+      (function() {
+        if (!process.env.HOT) {
+          const link = document.createElement('link');
+          link.rel = 'stylesheet';
+          link.href = './dist/style.css';
+          // HACK: Writing the script path should be done with webpack
+          document.getElementsByTagName('head')[0].appendChild(link);
+        }
+      }());
+    </script>
+
+    <style>
+      .arrow-box {
+        position: relative;
+        background: #88b7d5;
+        border: 30px solid #c2e1f5;
+      }
+      .arrow-box:after, .arrow-box:before {
+          bottom: 100%;
+          left: 50%;
+          border: solid transparent;
+          content: " ";
+          height: 0;
+          width: 0;
+          position: absolute;
+          pointer-events: none;
+      }
+      .arrow-box:after {
+          border-color: rgba(136, 183, 213, 0);
+          border-bottom-color: #88b7d5;
+          border-width: 30px;
+          margin-left: -30px;
+      }
+      .arrow-box:before {
+          border-color: rgba(194, 225, 245, 0);
+          border-bottom-color: #c2e1f5;
+          border-width: 36px;
+          margin-left: -36px;
+      }
+      </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script>
+      {
+        const scripts = [];
+
+        // Dynamically insert the DLL script in development env in the
+        // renderer process
+        if (process.env.NODE_ENV === 'development') {
+          scripts.push('../dll/renderer.dev.dll.js');
+        }
+
+        // Dynamically insert the bundled app script in the renderer process
+        const port = process.env.PORT || 1212;
+        scripts.push(
+          (process.env.HOT)
+            ? 'http://localhost:' + port + '/dist/renderer.dev.js'
+            : './dist/renderer.prod.js'
+        );
+
+        document.write(
+          scripts
+            .map(script => `<script defer src="${script}"><\/script>`)
+            .join('')
+        );
+      }
+    </script>
+  </body>
+</html>

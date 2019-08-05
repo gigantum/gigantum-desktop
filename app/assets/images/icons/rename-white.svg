@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="20px" height="12px" viewBox="0 0 20 12" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.1 (67048) - http://www.bohemiancoding.com/sketch -->
+    <title>icon/branch/rename</title>
+    <desc>Created with Sketch.</desc>
+    <g id="icon/branch/rename" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round">
+        <g id="Design_type" transform="translate(8.000000, 1.000000)" stroke="#FFFFFF">
+            <path d="M0,0 C1.1045704,0 2,0.8954296 2,2" id="Shape"></path>
+            <path d="M4,0 C2.8954296,0 2,0.8954296 2,2" id="Shape"></path>
+            <path d="M4,10 C2.8954296,10 2,9.10457103 2,8" id="Shape"></path>
+            <path d="M0,10 C1.1045704,10 2,9.10457103 2,8" id="Shape"></path>
+            <path d="M2,2 L2,8" id="Shape"></path>
+            <path d="M0,5 L4,5" id="Shape"></path>
+        </g>
+    </g>
+</svg>

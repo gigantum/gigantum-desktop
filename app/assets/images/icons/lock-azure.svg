@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="9px" height="13px" viewBox="0 0 9 13" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->
+    <title>icon/general/lock</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="icon/general/lock" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Group-2" stroke="#007ea8">
+            <path d="M7.31481481,12.7777778 L1.68518519,12.7777778 C0.907894904,12.7777778 0.277777778,12.0688945 0.277777778,11.1944444 L0.277777778,6.44444444 L8.72222222,6.44444444 L8.72222222,11.1944444 C8.72222222,12.0688945 8.09210376,12.7777778 7.31481481,12.7777778 Z" id="Shape" fill="#007ea8" stroke-linecap="round" stroke-linejoin="round"></path>
+            <rect id="Rectangle-2" stroke-width="2" transform="translate(4.500000, 5.520833) rotate(-90.000000) translate(-4.500000, -5.520833) " x="0.75" y="2.95833333" width="7.5" height="5.125" rx="2.5625"></rect>
+        </g>
+    </g>
+</svg>
