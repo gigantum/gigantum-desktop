@@ -7,6 +7,8 @@ export const STOPPED = 'STOPPED';
 export const LOADING = 'LOADING';
 export const STARTING = 'STARTING';
 export const STOPPING = 'STOPPING';
+export const TRY_AGAIN_STOPPED = 'TRY_AGAIN_STOPPED';
+export const TRY_AGAIN_RUNNING = 'TRY_AGAIN_RUNNING';
 
 const stateMachine = Machine({
   initial: LOADING,
@@ -50,6 +52,16 @@ const stateMachine = Machine({
       on: {
         ERROR,
         SUCCESS: STOPPED
+      }
+    },
+    [ERROR]: {
+      meta: {
+        message: 'Could not create instance see error below',
+        additionalInfo: ''
+      },
+      on: {
+        TRY_AGAIN_STOPPED: STARTING,
+        TRY_AGAIN_RUNNING: STOPPING
       }
     }
   }
