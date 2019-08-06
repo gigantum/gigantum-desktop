@@ -17,7 +17,11 @@ import Transition from './states/Transition';
 // assets
 import './Status.scss';
 
-type Props = {};
+type Props = {
+  machine: {
+    value: string
+  }
+};
 
 export default class Home extends Component<Props> {
   props: Props;
@@ -59,9 +63,7 @@ export default class Home extends Component<Props> {
     const { props, state } = this;
 
     const renderMap = {
-      [STARTING]: (
-        <Transition {...props} {...state} transition={this.transition} />
-      ),
+      [STARTING]: <div>Gigantum is starting</div>,
       [RUNNING]: <Running {...props} {...state} transition={this.transition} />,
       [STOPPED]: <Stopped {...props} {...state} transition={this.transition} />,
       [STOPPING]: <Error {...props} {...state} transition={this.transition} />,
@@ -70,8 +72,8 @@ export default class Home extends Component<Props> {
         <Transition {...props} {...state} transition={this.transition} />
       )
     };
-    if (state && state.machine) {
-      return renderMap[state.machine.value];
+    if (props && props.machine) {
+      return renderMap[props.machine.value];
     }
     return null;
   }
