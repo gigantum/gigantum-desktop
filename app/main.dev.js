@@ -10,20 +10,13 @@
  *
  * @flow
  */
-import { app, BrowserWindow, Tray, nativeImage } from 'electron';
+import { app, BrowserWindow, Tray, nativeImage, ipcMain } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
-import Storage from './storage/Storage';
+// import Storage from './storage/Storage';
 
 const TRAY_ARROW_HEIGHT = -5;
-
-// systemPreferences.subscribeNotification(
-//   'AppleInterfaceThemeChangedNotification',
-//   function theThemeHasChanged () {
-//     updateMyAppTheme(systemPreferences.isDarkMode())
-//   }
-// )
 
 export default class AppUpdater {
   constructor() {
@@ -32,8 +25,6 @@ export default class AppUpdater {
     autoUpdater.checkForUpdatesAndNotify();
   }
 }
-
-let mainWindow = null;
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');
@@ -90,21 +81,23 @@ const toolbarLaunch = (toolbarWindow, tray) => {
     }
   });
 
-  toolbarWindow.on('blur', () => {
-    if (!toolbarWindow.webContents.isDevToolsOpened()) {
-      toolbarWindow.hide();
-    }
-    toolbarWindow.hide();
-  });
+  // toolbarWindow.on('blur', () => {
+  //   if (!toolbarWindow.webContents.isDevToolsOpened()) {
+  //     toolbarWindow.hide();
+  //   }
+  //   console.log('hiding')
+  //   toolbarWindow.hide();
+  // });
 };
 
 const showWindow = (toolbarWindow, tray) => {
   const trayPos = tray.getBounds();
   const windowPos = toolbarWindow.getBounds();
   let x = 0;
-
+  console.log('this ran');
   if (process.platform === 'darwin') {
     x = Math.round(trayPos.x + trayPos.width / 2 - windowPos.width / 2);
+    console.log(x);
   } else {
     x = Math.round(trayPos.x + trayPos.width / 2 - windowPos.width / 2);
   }
@@ -117,6 +110,14 @@ const showWindow = (toolbarWindow, tray) => {
   toolbarWindow.focus();
 };
 
+const showInstaller = toolbarWindow => {
+  // const currentDisplay = screen.getDisplayNearestPoint({ x, y });
+  // win.setPosition(currentDisplay.workArea.x, currentDisplay.workArea.y, false);
+  toolbarWindow.setVisibleOnAllWorkspaces(true);
+  toolbarWindow.show();
+  toolbarWindow.focus();
+};
+
 app.on('ready', async () => {
   if (
     process.env.NODE_ENV === 'development' ||
@@ -125,7 +126,15 @@ app.on('ready', async () => {
     await installExtensions();
   }
 
-  mainWindow = new BrowserWindow({
+  // const storage = new Storage();
+
+  const appPath = 'app.html';
+
+  const icon = nativeImage.createFromDataURL(gigantumBase64);
+  const tray = new Tray(icon);
+
+  const toolbarWindow = new BrowserWindow({
+    name: 'toolbar',
     width: 300,
     height: 500,
     transparent: true,
@@ -140,45 +149,76 @@ app.on('ready', async () => {
       backgroundThrottling: false
     }
   });
-  const storage = new Storage();
-  const install = storage.get('install');
-  const appPath = install.complete
-    ? 'toolbar/toolbar.html'
-    : 'installer/installer.html';
 
-  const icon = nativeImage.createFromDataURL(gigantumBase64);
-  const tray = new Tray(icon);
+  // if (install.complete) {
+  toolbarLaunch(toolbarWindow, tray);
+  // }
 
-  if (install.complete) {
-    toolbarLaunch(mainWindow, tray);
-  }
-  mainWindow.loadURL(`file://${__dirname}/${appPath}`);
+  toolbarWindow.loadURL(`file://${__dirname}/${appPath}?toolbar`);
+
+  const installerWindow = new BrowserWindow({
+    name: 'installer',
+    width: 800,
+    height: 500,
+    transparent: true,
+    resizable: false,
+    frame: false,
+    show: false,
+    alwaysOnTop: false,
+    fullscreenable: false,
+    webPreferences: {
+      // Prevents renderer process code from not running when window is
+      // hidden
+      backgroundThrottling: false
+    }
+  });
+
+  installerWindow.loadURL(`file://${__dirname}/${appPath}?installer`);
 
   // @TODO: Use 'ready-to-show' event
   //        https://github.com/electron/electron/blob/master/docs/api/browser-window.md#using-ready-to-show-event
   //
   //
 
-  mainWindow.webContents.on('did-finish-load', () => {
-    if (!mainWindow) {
-      throw new Error('"mainWindow" is not defined');
+  toolbarWindow.webContents.on('did-finish-load', () => {
+    if (!toolbarWindow) {
+      throw new Error('"toolbarWindow" is not defined');
     }
     if (process.env.START_MINIMIZED) {
-      mainWindow.minimize();
+      toolbarWindow.minimize();
     } else {
-      if (install.complete) {
-        showWindow(mainWindow, tray);
-      }
-      mainWindow.show();
-      mainWindow.focus();
+      // if (install.complete) {
+      showWindow(toolbarWindow, tray);
+      // }
+      toolbarWindow.show();
+      toolbarWindow.focus();
     }
   });
 
-  mainWindow.on('closed', () => {
-    mainWindow = null;
+  installerWindow.webContents.on('did-finish-load', () => {
+    if (!installerWindow) {
+      throw new Error('"installerWindow" is not defined');
+    }
+    if (process.env.START_MINIMIZED) {
+      installerWindow.minimize();
+    } else {
+      // if (install.complete) {
+      //   // showInstaller(installerWindow);
+      // }
+      // installerWindow.show();
+      // installerWindow.focus();
+    }
   });
 
-  const menuBuilder = new MenuBuilder(mainWindow);
+  ipcMain.on('asynchronous-message', (evt, message) => {
+    console.log(message);
+
+    showInstaller(installerWindow);
+  });
+
+  toolbarWindow.on('closed', () => {});
+
+  const menuBuilder = new MenuBuilder(toolbarWindow);
   menuBuilder.buildMenu();
 
   // Remove this if your app does not use auto updates

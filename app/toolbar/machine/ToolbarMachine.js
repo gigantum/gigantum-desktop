@@ -1,20 +1,21 @@
 // @flow
 import { Machine } from 'xstate';
 // container states
-export const RUNNING = 'RUNNING';
-export const ERROR = 'ERROR';
-export const STOPPED = 'STOPPED';
-export const LOADING = 'LOADING';
-export const STARTING = 'STARTING';
-export const STOPPING = 'STOPPING';
-export const TRY_AGAIN_STOPPED = 'TRY_AGAIN_STOPPED';
-export const TRY_AGAIN_RUNNING = 'TRY_AGAIN_RUNNING';
+import {
+  RUNNING,
+  ERROR,
+  STOPPED,
+  LOADING,
+  STARTING,
+  STOPPING,
+  CONFIRM_ACTION
+} from './ToolbarConstants';
 
 const stateMachine = Machine({
   initial: LOADING,
   states: {
     [LOADING]: {
-      meta: { message: 'Checking state of gigantum...' },
+      meta: { message: 'Checking for Docker' },
       on: {
         RUNNING,
         ERROR,
@@ -22,13 +23,13 @@ const stateMachine = Machine({
       }
     },
     [STOPPED]: {
-      meta: { message: 'Starting Gigantum', additionalInfo: '' },
+      meta: { message: 'Click to Start', additionalInfo: '' },
       on: {
         START: STARTING
       }
     },
     [STARTING]: {
-      meta: { message: 'Error Adding Credentials', additionalInfo: '' },
+      meta: { message: 'Starting Gigantum', additionalInfo: '' },
       on: {
         SUCCESS: RUNNING,
         ERROR
@@ -36,22 +37,34 @@ const stateMachine = Machine({
     },
     [RUNNING]: {
       meta: {
-        message: 'Could not create instance see error below',
+        message: 'Click to Quit',
         additionalInfo: ''
       },
       on: {
         ERROR,
-        STOP: STOPPING
+        STOP: CONFIRM_ACTION,
+        FORCE_STOP: STOPPING
       }
     },
     [STOPPING]: {
       meta: {
-        message: 'Could not create instance see error below',
+        message: 'Stopping Gigantum',
         additionalInfo: ''
       },
       on: {
         ERROR,
         SUCCESS: STOPPED
+      }
+    },
+    [CONFIRM_ACTION]: {
+      meta: {
+        message: 'Are you sure?',
+        additionalInfo: ''
+      },
+      on: {
+        ERROR,
+        CONFIRM: STOPPING,
+        CANCEL: RUNNING
       }
     },
     [ERROR]: {

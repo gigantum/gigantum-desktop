@@ -3,13 +3,20 @@ import * as React from 'react';
 // assets
 import './Transition.scss';
 
-type Props = {};
+type Props = {
+  message: string
+};
 
 class Transition extends React.Component<Props> {
   props: Props;
 
   render() {
-    return <div>Transition</div>;
+    const { props } = this;
+    return (
+      <div className="Transition">
+        <div className="Transition__message">{props.message}</div>
+      </div>
+    );
   }
 }
 
