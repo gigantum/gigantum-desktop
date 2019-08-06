@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="48px" height="48px" viewBox="0 0 48 48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 53.2 (72643) - https://sketchapp.com -->
+    <title>icon/branch/delete48-thick</title>
+    <desc>Created with Sketch.</desc>
+    <g id="icon/branch/delete48-thick" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M19,20 C19,18.8954305 19.8954305,18 21,18 C22.1045695,18 23,18.8954305 23,20 L23,32 C23,33.1045695 22.1045695,34 21,34 C19.8954305,34 19,33.1045695 19,32 L19,20 Z" id="Line-2-Copy-2" fill="#9b9c9e" fill-rule="nonzero"></path>
+        <path d="M25,20 C25,18.8954305 25.8954305,18 27,18 C28.1045695,18 29,18.8954305 29,20 L29,32 C29,33.1045695 28.1045695,34 27,34 C25.8954305,34 25,33.1045695 25,32 L25,20 Z" id="Line-2-Copy" fill="#9b9c9e" fill-rule="nonzero"></path>
+        <path d="M10,16 C8.8954305,16 8,15.1045695 8,14 C8,12.8954305 8.8954305,12 10,12 L38,12 C39.1045695,12 40,12.8954305 40,14 C40,15.1045695 39.1045695,16 38,16 L10,16 Z" id="Shape" fill="#9b9c9e" fill-rule="nonzero"></path>
+        <path d="M32,36 L32,14 C32,12.8954305 32.8954305,12 34,12 C35.1045695,12 36,12.8954305 36,14 L36,38 C36,39.1045695 35.1045695,40 34,40 L14,40 C12.8954305,40 12,39.1045695 12,38 L12,14 C12,12.8954305 12.8954305,12 14,12 C15.1045695,12 16,12.8954305 16,14 L16,36 L32,36 Z" id="Path" fill="#9b9c9e" fill-rule="nonzero"></path>
+        <path d="M28,12 L28,8 C28,6.8954305 28.8954305,6 30,6 C31.1045695,6 32,6.8954305 32,8 L32,14 C32,15.1045695 31.1045695,16 30,16 L18,16 C16.8954305,16 16,15.1045695 16,14 L16,8 C16,6.8954305 16.8954305,6 18,6 C19.1045695,6 20,6.8954305 20,8 L20,12 L28,12 Z" id="Path" fill="#9b9c9e" fill-rule="nonzero" transform="translate(24.000000, 11.000000) rotate(-180.000000) translate(-24.000000, -11.000000) "></path>
+    </g>
+</svg>

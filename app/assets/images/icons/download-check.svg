@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="21px" height="22px" viewBox="0 0 21 22" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 50 (54983) - http://www.bohemiancoding.com/sketch -->
+    <title>icon/cloud/download-check</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="icon/cloud/download-check" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round">
+        <g id="Weather_cloud-thunder" transform="translate(2.000000, 3.000000)" stroke="#9B9C9E" stroke-width="2">
+            <path d="M15.7524813,11.1191995 C16.5171244,10.4138117 17,9.40624885 17,8.29761905 C17,7.00238095 16.352381,5.86904762 15.3809524,5.14047619 C15.3809524,5.05952381 15.3809524,4.93809524 15.3809524,4.85714286 C15.3809524,2.18571429 13.1952381,0 10.5238095,0 C7.85238095,0 5.66666667,2.18571429 5.66666667,4.85714286 C5.66666667,5.34285714 5.74761905,5.82857143 5.86904762,6.27380952 C5.26190476,5.66666667 4.41190476,5.26190476 3.44047619,5.26190476 C1.53809524,5.26190476 0,6.8 0,8.70238095 C0,10.1502009 0.890876205,11.3870238 2.15520192,11.8954231" id="Shape"></path>
+            <polyline id="Shape" points="12.7211914 9.74511719 8.5 15 5.66666667 12.5714286"></polyline>
+        </g>
+    </g>
+</svg>

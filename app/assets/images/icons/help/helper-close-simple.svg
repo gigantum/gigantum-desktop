@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="23px" height="22px" viewBox="0 0 23 22" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->
+    <title>icon/help/main-close-simple</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="icon/help/main-close-simple" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Group-4" fill="#FFFFFF">
+            <path d="M0.633333333,20.9322073 C0.633333333,20.9322073 5.75166667,22.010053 7.60166667,20.2981803 C8.95833333,20.99561 10.4383333,21.3760261 12.1033333,21.3760261 C17.6533333,21.3760261 22.2166667,16.6842268 22.2166667,10.9779845 C22.2166667,5.20833945 17.715,0.57994288 12.1033333,0.57994288 C6.55333333,0.57994288 1.99,5.27174215 1.99,10.9779845 C1.99,12.4996491 2.29833333,14.0213137 2.915,15.2893676 C2.915,15.2893676 3.47,18.0790861 0.633333333,20.9322073 Z" id="Shape" transform="translate(11.425000, 10.977984) scale(-1, 1) translate(-11.425000, -10.977984) "></path>
+        </g>
+        <g id="icon/add-note-copy" transform="translate(6.349242, 6.349242)" stroke="#007EA8" stroke-linecap="round">
+            <path d="M9.75,4.5 L-0.75,4.5" id="Line" transform="translate(4.500000, 4.500000) rotate(-315.000000) translate(-4.500000, -4.500000) "></path>
+            <path d="M4.5,-0.75 L4.5,9.75" id="Line" transform="translate(4.500000, 4.500000) rotate(-315.000000) translate(-4.500000, -4.500000) "></path>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="20px" height="12px" viewBox="0 0 20 12" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 49.3 (51167) - http://www.bohemiancoding.com/sketch -->
+    <title>icon/branch/export</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="icon/branch/export" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="round">
+        <path d="M6.44855938,4.03369141 L13.5,4.03369141" id="Line" stroke="#9B9C9E" transform="translate(9.500000, 4.533691) rotate(-270.000000) translate(-9.500000, -4.533691) "></path>
+        <polyline id="Shape" stroke="#9B9C9E" stroke-linejoin="round" transform="translate(10.000000, 8.457604) rotate(-270.000000) translate(-10.000000, -8.457604) " points="9.07608696 6.45760445 10.923913 8.45760445 9.07608696 10.4576044"></polyline>
+        <path d="M10,6.03369141 L10,15.0336914" id="Line" stroke="#9B9C9E" transform="translate(10.000000, 10.533691) rotate(-270.000000) translate(-10.000000, -10.533691) "></path>
+    </g>
+</svg>

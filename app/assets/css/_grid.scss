@@ -1,0 +1,193 @@
+.grid {
+  @include grid();
+
+  /* box size */
+  margin: 0 -12.5px;
+  width: auto;
+}
+
+.column-1-span-1 {
+  @include spanColumns(1, 1);
+}
+
+.column-1-span-2 {
+  @include spanColumns(2, 1);
+}
+
+.column-1-span-3 {
+  @include spanColumns(3, 1);
+}
+
+.column-1-span-4 {
+  @include spanColumns(4, 1);
+}
+
+.column-1-span-5 {
+  @include spanColumns(5, 1);
+}
+
+.column-1-span-6 {
+  @include spanColumns(6, 1);
+}
+
+.column-1-span-7 {
+  @include spanColumns(7, 1);
+}
+
+.column-1-span-8 {
+  @include spanColumns(8, 1);
+}
+
+.column-1-span-9 {
+  @include spanColumns(9, 1);
+}
+
+.column-1-span-10 {
+  @include spanColumns(10, 1);
+}
+
+.column-1-span-11 {
+  @include spanColumns(11, 1);
+}
+
+.column-1-span-12 {
+  @include spanColumns(12, 1);
+}
+
+.Labbook--sidePanelVisible {
+  .column-1-span-1 {
+    @include spanColumns(1, 4);
+  }
+
+  .column-1-span-2 {
+    @include spanColumns(2, 4);
+  }
+
+  .column-1-span-3 {
+    @include spanColumns(3, 4);
+  }
+
+  .column-1-span-4 {
+    @include spanColumns(4, 4);
+  }
+
+  .column-1-span-5 {
+    @include spanColumns(5, 4);
+  }
+
+  .column-1-span-6 {
+    @include spanColumns(6, 4);
+  }
+
+  .column-1-span-7 {
+    @include spanColumns(7, 4);
+  }
+
+  .column-1-span-8 {
+    @include spanColumns(8, 4);
+  }
+
+  .column-1-span-9 {
+    @include spanColumns(9, 4);
+  }
+
+  .column-1-span-10 {
+    @include spanColumns(10, 4);
+  }
+
+  .column-1-span-11 {
+    @include spanColumns(11, 4);
+  }
+
+  .column-1-span-12 {
+    @include spanColumns(12, 4);
+  }
+}
+
+.column-2-span-6 {
+  @include column(2);
+  &--shrink {
+    @include columnShrink(2, 2);
+  }
+}
+
+.column-3-span-4 {
+  @include column(3);
+  &--shrink {
+    @include columnShrink(3, 2);
+  }
+}
+
+.column-4-span-3 {
+  @include column(4);
+  &--shrink {
+    @include columnShrink(4, 2);
+  }
+}
+
+.column-6-span-2 {
+  @include column(6);
+  &--shrink {
+    @include columnShrink(6, 2);
+  }
+}
+
+.column-12-span-1 {
+  @include column(12);
+  &--shrink {
+    @include columnShrink(12, 2);
+  }
+}
+
+@media screen and (max-width: 1440px) and (min-width: 0) {
+  .Labbook--sidePanelVisible {
+    .column-3-span-4--shrink:nth-child(2) {
+      margin: 12.5px 2px !important;
+    }
+  }
+}
+
+@media screen and (max-width: 1124px) and (min-width: 0) {
+  .column-3-span-4--shrink:nth-child(2) {
+    margin: 12.5px 2px !important;
+  }
+}
+
+@media screen and (max-width: 1755px) and (min-width: 0) {
+  .Labbook--sidePanelVisible {
+    .column-2-span-6 {
+      @include column(3);
+      &--shrink {
+        @include columnShrink(3, 1);
+      }
+    }
+
+    .column-3-span-4 {
+      @include column(4);
+      &--shrink {
+        @include columnShrink(4, 1);
+      }
+    }
+
+    .column-4-span-3 {
+      @include column(5);
+      &--shrink {
+        @include columnShrink(5, 1);
+      }
+    }
+
+    .column-6-span-2 {
+      @include column(7);
+      &--shrink {
+        @include columnShrink(7, 1);
+      }
+    }
+
+    .column-12-span-1 {
+      @include column(12);
+      &--shrink {
+        @include columnShrink(12, 1);
+      }
+    }
+  }
+}
