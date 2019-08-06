@@ -1,6 +1,5 @@
 // @flow
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 // States
 import {
   RUNNING,
@@ -21,7 +20,6 @@ import Confirm from './states/Confirm';
 import './Status.scss';
 
 type Props = {
-  transition: PropTypes.Func,
   machine: {
     value: ''
   }
