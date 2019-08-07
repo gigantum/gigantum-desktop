@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1440px" height="50px" viewBox="0 0 1440 50" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 50 (54983) - http://www.bohemiancoding.com/sketch -->
+    <title>divider-line</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="-0.173872591%" y1="101.788839%" x2="101.124117%" y2="17.1404672%" id="linearGradient-1">
+            <stop stop-color="#2E475E" offset="0%"></stop>
+            <stop stop-color="#13B2BA" offset="22.56819%"></stop>
+            <stop stop-color="#24738A" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="divider-line" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <rect id="gradient-rule" fill="url(#linearGradient-1)" fill-rule="nonzero" transform="translate(720.000000, 5.000000) scale(1, -1) rotate(180.000000) translate(-720.000000, -5.000000) " x="0" y="1.13686838e-13" width="1440" height="50"></rect>
+    </g>
+</svg>

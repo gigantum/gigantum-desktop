@@ -1,0 +1,247 @@
+.Download {
+  /* position */
+  position: relative;
+
+  /* box size */
+  width: 20px;
+  height: 20px;
+}
+
+.Download__content {
+  /* position */
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+
+  /* box size */
+  width: 40px;
+  height: 40px;
+  margin: auto;
+
+  /* border */
+  border: 3px solid $azure;
+  border-radius: 100%;
+}
+
+.Download__content-inside {
+  /* position */
+  position: relative;
+
+  /* box-size */
+  width: 100%;
+  height: 100%;
+}
+
+.Download__line-down-container {
+  /* position */
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+
+  /* effects */
+  transition: transform 0s ease;
+  transform: rotate(0deg);
+}
+
+.Download__input {
+  /* display */
+  display: none;
+}
+.Download__input:checked ~ .Download__line-down-container {
+  /* effects */
+  transform: rotate(-360deg);
+  transition: transform 1.5s ease 1.25s;
+}
+
+.Download__line-down {
+  /* position */
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+
+  /* box size */
+  width: 3px;
+  height: 25px;
+  margin: auto;
+
+  /* effects */
+  transition: height 0.5s ease;
+
+  /* border */
+  border-radius: 1.5px;
+
+  /* background */
+  background: #fff;
+}
+
+.Download__input:checked ~ .Download__line-down-container .Download__line-down {
+  /* position */
+  top: -4px;
+
+  /* box size */
+  height: 2px;
+
+  /* effects */
+  animation: Download__bounce 0.5s forwards 0.55s;
+}
+
+.Download__input:checked
+  ~ .Download__line-down-container
+  .Download__line-down::before {
+  /* position */
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: -18.8px;
+
+  /* box size */
+  width: 40px;
+  height: 40px;
+
+  /* other */
+  content: '';
+
+  /* effects */
+  animation: Download__border-fill 0.5s forwards 3s;
+
+  /* border */
+  border: 4px solid transparent;
+  border-radius: 100%;
+}
+
+.Download__line-point {
+  /* position */
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+
+  /* box size */
+  width: 11.6px;
+  height: 26px;
+  margin: auto;
+
+  /* effects */
+  transition: height 0.15s ease 0.45s;
+}
+
+.Download__line-point::before,
+.Download__line-point::after {
+  /* position */
+  position: absolute;
+  bottom: -2px;
+
+  /* box size */
+  width: 2px;
+  height: 15px;
+
+  /* effects */
+  content: '';
+  transition: transform 0.15s ease 0.47s, left 0.15s ease 0.47s,
+    right 0.15s ease 0.47s;
+
+  /* border */
+  border-radius: 10px;
+
+  /* background */
+  background: $azure;
+}
+
+.Download__line-point::before {
+  /* position */
+  right: 0;
+
+  /* effects */
+  transform: rotate(45deg);
+}
+
+.Download__line-point::after {
+  /* position */
+  left: 0;
+
+  /* effects */
+  transform: rotate(-45deg);
+}
+
+.Download__input:checked ~ .Download__line-point {
+  /* box size */
+  height: 12px;
+}
+
+.Download__input:checked ~ .Download__line-point::before {
+  /* position */
+  right: -2px;
+
+  /* effects */
+  transform: rotate(90deg);
+  animation: Download__check-right 0.25s forwards 3s;
+}
+
+.Download__input:checked ~ .Download__line-point::after {
+  /* position */
+  left: -2px;
+
+  /* effects */
+  transform: rotate(-90deg);
+  animation: Download__check-left 0.25s forwards 3s;
+}
+
+@keyframes Download__bounce {
+  0% {
+    top: -4px;
+  }
+  25% {
+    top: -50px;
+  }
+  50% {
+    top: -55px;
+  }
+  100% {
+    top: -38px;
+  }
+}
+
+@keyframes Download__check-left {
+  0% {
+    transform: rotate(-90deg);
+    left: -2px;
+    height: 15px;
+  }
+  100% {
+    transform: rotate(-45deg);
+    left: 0;
+    height: 9px;
+  }
+}
+
+@keyframes Download__check-right {
+  0% {
+    transform: rotate(90deg);
+    right: -2px;
+    height: 15px;
+    bottom: -2px;
+  }
+  100% {
+    transform: rotate(45deg);
+    right: 2px;
+    height: 16px;
+    bottom: -3px;
+  }
+}
+
+@keyframes Download__border-fill {
+  0% {
+    border: 4px solid transparent;
+  }
+  100% {
+    border: 4px solid $azure;
+  }
+}

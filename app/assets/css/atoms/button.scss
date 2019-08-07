@@ -1,0 +1,789 @@
+button {
+  /* BOX SIZE */
+  width: 162px;
+  margin: 0 12.5px;
+  padding-top: 7px;
+  padding-bottom: 7px;
+
+  /* EFFECTS */
+  cursor: pointer;
+
+  /* text */
+  color: $white;
+  line-height: 1rem;
+
+  /* BORDER */
+  border: 0;
+  border-radius: 4px;
+
+  /* BACKGROUND */
+  background: $azure;
+
+  /* font */
+  font-weight: 400;
+
+  &:hover {
+    @include boxShadowDark();
+  }
+
+  &:disabled,
+  &:hover:disabled {
+    /* EFFECTS */
+    overflow: hidden;
+
+    /* BORDER */
+    border: 0;
+    box-shadow: none !important;
+
+    /* BACKGROUND */
+    background-color: $romanSilver;
+  }
+}
+
+.Btn {
+  /* BOX SIZE */
+  margin: 0 12.5px;
+
+  /* EFFECTS */
+  cursor: pointer;
+  text-align: center;
+
+  /* BORDER */
+  border: 0;
+  border-radius: 4px;
+
+  /* BACKGROUND */
+  background-color: $azure;
+
+  &:hover {
+    @include boxShadowDark();
+  }
+
+  &--noStyle {
+    /* BOX SIZE */
+    width: auto;
+
+    /* BOX SIZE */
+    color: $jet;
+
+    /* BACKGROUND */
+    background: transparent;
+
+    /* BORDER */
+    box-shadow: none !important;
+  }
+  // flat button
+  &--flat {
+    /* BOX SIZE */
+    width: auto;
+    padding: 7px 20px;
+
+    /* EFFECTS */
+    cursor: pointer;
+    text-decoration: underline;
+
+    /* text */
+    color: $azure;
+
+    /* BORDER */
+    border: 0;
+    border-radius: 0;
+    box-shadow: none !important;
+
+    /* BACKGROUND */
+    background: none;
+
+    &:hover {
+      /* BOX SIZE */
+      padding: 7px 18px 7px 20px;
+
+      /* text */
+      font-size: 17px;
+    }
+
+    &:disabled {
+      /* text */
+      text-decoration: none;
+      color: $romanSilver;
+      text-shadow: none;
+
+      /* border  */
+      border: 0 solid $grey;
+
+      /* BACKGROUND */
+      background: transparent !important;
+    }
+  }
+
+  // feature or actions buttons
+  &--feature {
+    /* position */
+    position: absolute;
+    z-index: 1;
+
+    /* BOX SIZE */
+    width: 30px;
+    height: 30px;
+    padding: 0;
+
+    /* EFFECTS */
+    transition: all 0.25s ease, background-position 0ms, font-size 0ms;
+
+    /* BORDER */
+    border: 2px solid $white;
+    border-radius: 30px;
+
+    /* font */
+    font-size: 0;
+
+    &:hover,
+    &:focus,
+    &--expanded {
+      /* BOX SIZE */
+      width: auto;
+      padding: 0 40px 0 15px;
+
+      /* font */
+      font-size: 14px;
+    }
+    &--expanded--paddingLeft,
+    &--expanded--paddingLeft:hover,
+    &--expanded--paddingLeft:focus {
+      /* BOX SIZE */
+      width: auto;
+      padding: 0 15px 0 40px;
+
+      /* font */
+      font-size: 14px;
+    }
+    &:disabled,
+    &:disabled:hover,
+    &:disabled:focus {
+      /* BOX SIZE */
+      width: 30px;
+      padding: 0;
+
+      /* BACKGROUND */
+      background-size: 30px;
+
+      /* font */
+      font-size: 0;
+    }
+    &--noPadding {
+      /* BOX SIZE */
+      padding: 0 15px !important;
+    }
+  }
+
+  &--noShadow {
+    /* EFFECTS */
+    box-shadow: none !important;
+  }
+
+  &--action {
+    /* BOX SIZE */
+    width: auto;
+  }
+
+  &--round {
+    /* BORDER */
+    border-radius: 15px;
+  }
+
+  &--bordered {
+    /* BORDER */
+    border: 1px solid $azure;
+
+    &:disabled {
+      /* BORDER */
+      border: 1px solid $romanSilver;
+    }
+  }
+
+  &--wide {
+    /* BOX SIZE */
+    width: 210px;
+  }
+
+  &--small {
+    /* BOX SIZE */
+    width: 20px;
+    height: 20px;
+
+    /* BACKGROUND */
+    background-size: 10px !important;
+  }
+
+  &--medium {
+    /* BOX SIZE */
+    width: 30px;
+    height: 30px;
+  }
+
+  &--large {
+    /* BOX SIZE */
+    padding: 1em;
+  }
+
+  &--fileBrowser {
+    /* BOX SIZE */
+    width: 25px;
+    height: 25px;
+
+    /* BACKGROUND */
+    background-size: 18px !important;
+  }
+
+  &--no-underline {
+    /* TEXT */
+    text-decoration: none;
+  }
+
+  &--columns {
+    /* display */
+    align-items: flex-start;
+
+    /* BOX SIZE */
+    padding: 6px 40px 6px 20px;
+
+    /* TEXT */
+    line-height: 14px;
+
+    /* INCLUDES */
+    @include flex(space-around, column);
+  }
+
+  &--label {
+    /* FONT */
+    font-size: 12px;
+  }
+
+  &--text {
+    /* FONT */
+    font-size: 16px;
+  }
+
+  &--last {
+    /* BOX SIZE */
+    margin-right: 0;
+  }
+
+  &--first {
+    /* BOX SIZE */
+    margin-left: 0;
+  }
+
+  &--noPadding {
+    /* BOX SIZE */
+    padding: 0;
+
+    &:hover,
+    &:focus,
+    &:disabled {
+      /* BOX SIZE */
+      padding: 0;
+    }
+  }
+
+  &--noMargin {
+    /* BOX SIZE */
+    margin: 0;
+
+    &:hover,
+    &:focus,
+    &:disabled {
+      /* BOX SIZE */
+      margin: 0;
+    }
+  }
+
+  /**********************************
+   * feature buttons
+   *
+   *
+   *********************************/
+  &__loadMore {
+    /* BOX SIZE */
+    width: 315px;
+    height: 25px;
+    margin: 0;
+
+    /* BORDER */
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+
+    &:hover {
+      /* BORDER */
+      box-shadow: none;
+      &::before {
+        /* TEXT */
+        text-decoration: underline;
+      }
+    }
+    &--up {
+      /* BACKGROUND */
+      background: url('~Images/icons/up-arrow-azure.svg') no-repeat
+        calc(50% + 50px) 5px;
+      background-size: 20px;
+
+      &::before {
+        content: 'Collapse';
+
+        /* TEXT */
+        color: $azure;
+        line-height: 16px;
+      }
+    }
+    &--down {
+      /* BACKGROUND */
+      background: url('~Images/icons/down-arrow-azure.svg') no-repeat
+        calc(50% + 50px) 5px;
+      background-size: 20px;
+
+      &::before {
+        content: 'Expand';
+
+        /* TEXT */
+        color: $azure;
+        line-height: 16px;
+      }
+    }
+  }
+
+  &__delete {
+    /* BACKGROUND */
+    background: url(~Images/icons/trash-azure.svg) no-repeat center center;
+    background-size: 18px;
+
+    &:focus {
+      /* BACKGROUND */
+      background: $azure url(~Images/icons/trash-white.svg) no-repeat center
+        center;
+      background-size: 18px;
+    }
+
+    &:hover {
+      /* BACKGROUND */
+      background: $azure url(~Images/icons/trash-white.svg) no-repeat center
+        center;
+      background-size: 18px;
+    }
+
+    &:disabled {
+      /* BACKGROUND */
+      background: transparent url(~Images/icons/trash.svg) no-repeat center
+        center !important;
+      background-size: 18px;
+    }
+  }
+
+  &__rename {
+    /* BACKGROUND */
+    background: url(~Images/icons/rename-azure.svg) no-repeat center center;
+    background-size: 21px !important;
+
+    &:focus {
+      /* BACKGROUND */
+      background: $azure url(~Images/icons/rename-white.svg) no-repeat center
+        center;
+      background-size: 21px !important;
+    }
+
+    &:hover {
+      /* BACKGROUND */
+      background: $azure url(~Images/icons/rename-white.svg) no-repeat center
+        center;
+      background-size: 21px !important;
+    }
+
+    &:disabled {
+      /* BACKGROUND */
+      background: transparent url(~Images/icons/rename.svg) no-repeat center
+        center !important;
+      background-size: 21px !important;
+    }
+  }
+
+  &__addFolder {
+    /* BACKGROUND */
+    background: url(~Images/icons/folder-add-new-azure.svg) no-repeat left 4px
+      top 2px;
+    background-size: 18px;
+
+    &:focus {
+      /* BACKGROUND */
+      background: $azure url(~Images/icons/folder-add-new-hover.svg) no-repeat
+        left 4px top 2px;
+      background-size: 18px;
+    }
+
+    &:hover {
+      /* BACKGROUND */
+      background: $azure url(~Images/icons/folder-add-new-hover.svg) no-repeat
+        left 4px top 2px;
+      background-size: 18px;
+    }
+
+    &:disabled {
+      /* BACKGROUND */
+      background: transparent url(~Images/icons/folder-add-new.svg) no-repeat
+        left 4px top 2px !important;
+      background-size: 18px;
+    }
+  }
+
+  &__check {
+    /* BACKGROUND */
+    background: url(~Images/icons/check-selected.svg) no-repeat center center;
+    background-size: 30px;
+
+    /* BORDER */
+    box-shadow: none !important;
+
+    &:focus {
+      /* BACKGROUND */
+      background: url(~Images/icons/check-selected.svg) no-repeat center center;
+      background-size: 30px;
+
+      /* BORDER */
+      border: 0;
+    }
+
+    &:hover {
+      /* BACKGROUND */
+      background: url(~Images/icons/check-selected.svg) no-repeat center center;
+      background-size: 34px;
+
+      /* BORDER */
+      border: 0;
+    }
+  }
+
+  &__addDataset {
+    /* BACKGROUND */
+    background: url(~Images/icons/database-add-azure.svg) no-repeat center
+      center;
+    background-size: 18px;
+
+    &:focus {
+      /* BACKGROUND */
+      background: $azure url(~Images/icons/database-add-hover.svg) no-repeat
+        center center;
+      background-size: 18px;
+    }
+
+    &:hover {
+      /* BACKGROUND */
+      background: $azure url(~Images/icons/database-add-hover.svg) no-repeat
+        center center;
+      background-size: 18px;
+    }
+
+    &:disabled {
+      /* BACKGROUND */
+      background: transparent url(~Images/icons/database-add.svg) no-repeat
+        center center !important;
+      background-size: 18px;
+    }
+  }
+
+  &__upArrow {
+    /* BACKGROUND */
+    background: url(~Images/icons/update-azure.svg) no-repeat center center;
+    background-size: 18px;
+
+    &:focus {
+      /* BACKGROUND */
+      background: $azure url(~Images/icons/update-white.svg) no-repeat center
+        center;
+      background-size: 18px;
+    }
+
+    &:hover {
+      /* BACKGROUND */
+      background: $azure url(~Images/icons/update-white.svg) no-repeat center
+        center;
+      background-size: 18px;
+    }
+
+    &:disabled {
+      /* BACKGROUND */
+      background: transparent url(~Images/icons/update-version.svg) no-repeat
+        center center !important;
+      background-size: 18px;
+    }
+  }
+
+  &__Favorite-off {
+    /* BACKGROUND */
+    background: url(~Images/icons/star__off-azure.svg) no-repeat center top 2px;
+    background-size: 18px;
+
+    &:focus {
+      /* BACKGROUND */
+      background: $azure url(~Images/icons/star__off-white.svg) no-repeat center
+        top 2px;
+      background-size: 18px;
+    }
+
+    &:hover {
+      /* BACKGROUND */
+      background: $azure url(~Images/icons/star__off-white.svg) no-repeat center
+        top 2px;
+      background-size: 18px;
+    }
+
+    &:disabled {
+      /* BACKGROUND */
+      background: url(~Images/icons/star__off.svg) no-repeat center top 2px;
+      background-size: 18px;
+    }
+  }
+
+  &__Favorite-on {
+    /* BACKGROUND */
+    background: url(~Images/icons/star__on.svg) no-repeat center top 2px;
+    background-size: 18px;
+
+    &:focus {
+      /* BACKGROUND */
+      background: $azure url(~Images/icons/star__on.svg) no-repeat center top
+        2px;
+      background-size: 18px;
+    }
+
+    &:hover {
+      /* BACKGROUND */
+      background: $azure url(~Images/icons/star__on.svg) no-repeat center top
+        2px;
+      background-size: 18px;
+    }
+
+    &:disabled {
+      /* BACKGROUND */
+      background: url(~Images/icons/star__on.svg) no-repeat center top 2px;
+      background-size: 18px;
+    }
+  }
+
+  &__download {
+    /* POSITION */
+    margin-right: 5px;
+
+    /* BACKGROUND */
+    background: url('~Images/icons/database-download-azure.svg') no-repeat 50%
+      50%;
+    background-size: 20px;
+
+    &:hover {
+      /* BACKGROUND */
+      background: url('~Images/icons/database-download-azure.svg') no-repeat 50%
+        50%;
+      background-size: 22px;
+    }
+  }
+
+  &__downloaded {
+    /* POSITION */
+    margin-right: 5px;
+
+    /* EFFECTS */
+    cursor: auto !important;
+
+    /* BACKGROUND */
+    background: url('~Images/icons/database-grey-local.svg') no-repeat 50% 50%;
+    background-size: 20px;
+
+    /* BORDER */
+    box-shadow: none !important;
+  }
+
+  &__redirect {
+    /* BACKGROUND */
+    background: $azure url('~Images/icons/continue-arrow.svg') no-repeat -1px center;
+    background-size: 30px;
+    &:hover,
+    &:focus {
+      /* BACKGROUND */
+      background-position: right 1px center;
+      background-size: 30px;
+    }
+    &--featurePosition {
+      /* POSITION */
+      top: -20px;
+      right: 15px;
+    }
+  }
+
+  &__edit {
+    /* BACKGROUND */
+    background: $azure url('~Images/icons/edit.svg') no-repeat center center;
+    background-size: 18px;
+
+    &:hover,
+    &:focus {
+      /* BACKGROUND */
+      background: $azure url('~Images/icons/edit.svg') no-repeat right 7px
+        center;
+      background-size: 18px;
+    }
+    &--featurePosition {
+      /* POSITION */
+      top: -20px;
+      right: 15px;
+    }
+    &--DescriptionPosition {
+      /* POSITION */
+      top: 0;
+      right: 0;
+    }
+  }
+
+  &__toggle {
+    /* DISPLAY */
+    flex: 0 1 30px;
+
+    /* POSITION */
+    width: 24px;
+    height: 24px;
+
+    /* EFFECTS */
+    cursor: pointer;
+
+    /* BACKGROUND */
+    background: url('~Images/icons/down-arrow-white.svg') no-repeat center
+      center;
+    background-size: 18px;
+
+    &:hover {
+      /* BORDER */
+      box-shadow: none;
+    }
+
+    &--open {
+      /* BACKGROUND */
+      background: url('~Images/icons/up-arrow-white.svg') no-repeat center
+        center;
+      background-size: 18px;
+    }
+  }
+
+  &__close {
+    /* BACKGROUND */
+    background: url(~Images/icons/close.svg) no-repeat center center;
+    background-size: 30px;
+
+    /* BORDER */
+    border: 0;
+    box-shadow: none !important;
+
+    &:focus {
+      /* BACKGROUND */
+      background: url(~Images/icons/close.svg) no-repeat center center;
+      background-size: 30px;
+
+      /* BORDER */
+      border: 0;
+    }
+
+    &:hover {
+      /* BACKGROUND */
+      background: url(~Images/icons/close.svg) no-repeat center center;
+      background-size: 34px;
+
+      /* BORDER */
+      border: 0;
+    }
+  }
+
+  &__remove {
+    /* BACKGROUND */
+    background: $azure url('~Images/icons/close-white.svg') no-repeat center
+      center;
+    background-size: 20px;
+
+    &:disabled {
+      /* BACKGROUND */
+      background-image: url('~Images/icons/close-white.svg');
+      background-repeat: no-repeat;
+      background-position: center center;
+      background-size: 20px;
+    }
+  }
+
+  &__expandable-close {
+    /* POSITION */
+    position: absolute;
+    z-index: 1;
+    top: -20px;
+    right: 15px;
+
+    /* BOX SIZE */
+    width: 30px;
+    height: 30px;
+    padding: 0;
+
+    /* EFFECTS */
+    transition: all 0.25s ease, background-position 1ms;
+
+    /* BORDER */
+    border: none;
+    border-radius: 30px;
+
+    /* BACKGROUND */
+    background: $azure url('~Images/icons/close-white.svg') no-repeat center
+      center;
+    background-size: 15px;
+
+    span {
+      /* DISPLAY */
+      display: none;
+    }
+
+    &:hover,
+    &:focus {
+      /* BOX SIZE */
+      width: auto;
+      padding: 0 40px 0 15px;
+
+      /* BORDER */
+      border: none;
+
+      /* BACKGROUND */
+      background: $azure url('~Images/icons/close-white.svg') no-repeat right
+        10px center;
+      background-size: 15px;
+
+      span {
+        display: block;
+      }
+    }
+  }
+
+  &__overview {
+    /* POSITION */
+    top: -7px;
+  }
+
+  &__plus {
+    /* BACKGROUND */
+    background: $azure url('~Images/icons/add-white.svg') no-repeat center
+      center;
+    background-size: 20px !important;
+
+    &:disabled {
+      /* BACKGROUND */
+      background-image: url('~Images/icons/add-white.svg');
+      background-repeat: no-repeat;
+      background-position: center center;
+      background-size: 20px !important;
+    }
+  }
+
+  &__dropdown {
+    /* POSITION */
+    width: 20px;
+    height: 20px;
+  }
+}

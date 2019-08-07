@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="20px" height="12px" viewBox="0 0 20 12" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 49.3 (51167) - http://www.bohemiancoding.com/sketch -->
+    <title>icon/branch/switch</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="icon/branch/switch" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="round">
+        <g id="Control-&amp;-Navigation_2-1-arrow" transform="translate(15.000000, 1.000000)" stroke="#9B9C9E" stroke-linejoin="round">
+            <polyline id="Shape" points="0 0 1.84782609 2 0 4"></polyline>
+            <polyline id="Shape" points="0 6 1.84782609 8 0 10"></polyline>
+        </g>
+        <path d="M16.0291748,3 C14.5585857,3 13.2155274,3 12,3 C10.0088704,3 9.00887044,4 9,6 C9.00366211,8 8.00366211,9 6,9 C4.79012438,9 3.46004626,9 2.00976563,9" id="Path-3" stroke="#9B9C9E"></path>
+        <path d="M16.0157471,3 C14.5504092,3 13.2118268,3 12,3 C11.1708439,3 10.5135593,3.17340978 10.0281463,3.52022934 M8.012117,8.45715851 C7.52302114,8.81905284 6.85231548,9 6,9 C4.78795222,9 3.45526992,9 2.00195312,9" id="Path-3-Copy" stroke="#9B9C9E" transform="translate(9.008850, 6.000000) scale(1, -1) translate(-9.008850, -6.000000) "></path>
+    </g>
+</svg>

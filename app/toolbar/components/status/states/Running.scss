@@ -1,0 +1,28 @@
+@import '~Styles/_imports.scss';
+
+.Running {
+  @include flex(flex-start, column);
+  height: 100%;
+  align-items: center;
+}
+
+.Running__message {
+  font-size: 19px;
+  color: $warning;
+  text-align: center;
+  padding-top: 20px;
+}
+
+.Btn__Stop {
+  background: #e3e4e5;
+  border: none;
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  cursor: pointer;
+  outline: none;
+  margin-top: 20px;
+  &:hover {
+    @include boxShadowDark();
+  }
+}

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="40px" height="40px" viewBox="0 0 40 40" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->
+    <title>button/check-unselected</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="button/check-unselected" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="button/file-listing-x-inactive-copy-4" fill="#F3F5F7" stroke="#9B9C9E" stroke-width="2">
+            <g id="icon/add-note" transform="translate(19.798990, 19.798990) rotate(-315.000000) translate(-19.798990, -19.798990) translate(5.798990, 5.798990)">
+                <g id="Group-3">
+                    <g id="Button/Add-activity">
+                        <circle id="Oval-2" cx="14" cy="14" r="13"></circle>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
