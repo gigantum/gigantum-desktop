@@ -76,7 +76,7 @@ export default class GigDockerClient {
     });
   }
 
-  setupDocker() {
+  setupDocker(callback) {
     const self = this;
 
     const statusList = [
@@ -107,6 +107,9 @@ export default class GigDockerClient {
 
       cb();
     };
+
+    var promises = []
+
 
     this.dockerode.getEvents({}).then(
       (response) => {
@@ -153,6 +156,7 @@ export default class GigDockerClient {
       },
     );
   }
+
   internetAvailable() {
     return Promise.race([
       fetch('https://www.google.com/', {
@@ -163,6 +167,7 @@ export default class GigDockerClient {
       )
     ]);
   }
+  
   dockerConnectionTest() {
     return this.dockerode.ping().then(() => true, () => false);
   }

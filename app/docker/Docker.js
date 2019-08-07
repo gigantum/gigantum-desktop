@@ -117,7 +117,10 @@ class Docker {
     @param {} -
     stops the docker application
   */
-  setupDocker = () => {
+  checkDockerState = () => {
+    // setupDocker
+
+    // TODO create promises for the 2 dockerode calls
     const self = this;
 
     const statusList = ['stop', 'kill', 'unmount', 'disconnect', 'die'];
