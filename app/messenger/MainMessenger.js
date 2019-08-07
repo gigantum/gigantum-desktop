@@ -33,6 +33,8 @@ const toolbarLaunch = (toolbarWindow, tray) => {
     }
   });
 
+  // Commented out for development purposes
+
   // toolbarWindow.on('blur', () => {
   //   if (!toolbarWindow.webContents.isDevToolsOpened()) {
   //     toolbarWindow.hide();
