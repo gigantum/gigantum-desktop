@@ -6,7 +6,7 @@ class ToolbarMesseneger {
     sends open.installer to ipcRenderer
     MainMessenger recieves message and opens installer window
   */
-  openInstaller = () => {
+  showInstaller = () => {
     ipcRenderer.send('asynchronous-message', 'open.installer');
   };
 

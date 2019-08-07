@@ -2,8 +2,11 @@
 import React, { Component } from 'react';
 // import ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+
 // messenger
 import ToolbarMessenger from './messenger/ToolbarMessenger';
+// docker
+import Docker from '../docker/Docker';
 // components
 import routes from '../redux/constants/routes';
 import Info from './containers/Info';
@@ -14,30 +17,40 @@ type Props = {
 };
 
 export default class Routes extends Component<Props> {
-  // TODO: remove here for proof of concept
-  showInstaller = () => {
-    const toolbarMessenger = new ToolbarMessenger();
+  toolbarMessenger = new ToolbarMessenger();
 
-    toolbarMessenger.openInstaller();
-  };
-
-  // TODO: remove here for proof of concept
-  hideInstaller = () => {
-    const toolbarMessenger = new ToolbarMessenger();
-
-    toolbarMessenger.hideInstaller();
-  };
+  docker = new Docker();
 
   render() {
     const { storage } = this.props;
-
+    console.log(this);
     return (
       <div className="Routes">
-        <button type="button" onClick={() => this.showInstaller()}>
+        <button
+          type="button"
+          onClick={() => this.toolbarMessenger.showInstaller()}
+        >
           Show
         </button>
-        <button type="button" onClick={() => this.hideInstaller()}>
+        <button
+          type="button"
+          onClick={() => this.toolbarMessenger.hideInstaller()}
+        >
           hide
+        </button>
+
+        <button
+          type="button"
+          onClick={() => this.docker.startDockerApplication()}
+        >
+          start docker
+        </button>
+
+        <button
+          type="button"
+          onClick={() => this.docker.stopDockerApplication()}
+        >
+          stop docker
         </button>
 
         <Router>

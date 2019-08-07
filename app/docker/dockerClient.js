@@ -59,6 +59,9 @@ export default class GigDockerClient {
     this.updatedImageDownloaded = false;
     this.electronAppDownloaded = false;
     this.dockerRequest = new DockerApi(this.dockerOptions);
+
+
+    // move this to messeneger
     autoUpdater.on('update-downloaded', (info) => {
       this.uiManager.updateInstallImageWindow({ isDownloaded: true }, 'update');
       if (this.updatedImageDownloaded) {
