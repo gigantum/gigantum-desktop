@@ -21,10 +21,9 @@ export default class Main extends Component<Props> {
   };
 
   componentDidMount() {
-    console.log(this.props);
-    // setTimeout(() => {
-    //   this.transition('STOPPED', { message: 'Click to Start' });
-    // }, 5000);
+    setTimeout(() => {
+      this.transition('STOPPED', { message: 'Click to Start' });
+    }, 5000);
   }
 
   /**
