@@ -33,12 +33,14 @@ const toolbarLaunch = (toolbarWindow, tray) => {
     }
   });
 
-  toolbarWindow.on('blur', () => {
-    if (!toolbarWindow.webContents.isDevToolsOpened()) {
-      toolbarWindow.hide();
-    }
-    toolbarWindow.hide();
-  });
+  // Commented out for development purposes
+
+  // toolbarWindow.on('blur', () => {
+  //   if (!toolbarWindow.webContents.isDevToolsOpened()) {
+  //     toolbarWindow.hide();
+  //   }
+  //   toolbarWindow.hide();
+  // });
 };
 
 /**
