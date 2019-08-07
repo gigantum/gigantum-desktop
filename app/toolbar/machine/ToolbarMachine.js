@@ -64,7 +64,8 @@ const stateMachine = Machine({
       on: {
         ERROR,
         CONFIRM: STOPPING,
-        CANCEL: RUNNING
+        CANCEL: RUNNING,
+        REPROMPT: CONFIRM_ACTION
       }
     },
     [ERROR]: {

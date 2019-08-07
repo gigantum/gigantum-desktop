@@ -43,6 +43,9 @@ export default class Main extends Component<Props> {
   */
   transition = (eventType, nextState) => {
     const { state } = this;
+    console.log(state.machine.value, eventType, {
+      state
+    });
 
     const newState = stateMachine.transition(state.machine.value, eventType, {
       state
@@ -50,10 +53,11 @@ export default class Main extends Component<Props> {
 
     this.runActions(newState);
     // TODO use category / installNeeded
+    console.log(newState);
     this.setState({
       machine: newState,
-      message: nextState && nextState.message ? nextState.message : ''
-      // category: nextState && nextState.category ? nextState.category : '',
+      message: nextState && nextState.message ? nextState.message : '',
+      category: nextState && nextState.category ? nextState.category : ''
       // installNeeded:
       //   nextState && nextState.installNeeded ? nextState.installNeeded : false
     });
@@ -69,6 +73,7 @@ export default class Main extends Component<Props> {
           machine={state.machine}
           message={state.message}
           transition={this.transition}
+          category={state.category}
         />
         <Buttons machine={state.machine} />
       </div>

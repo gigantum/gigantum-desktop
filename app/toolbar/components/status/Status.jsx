@@ -35,7 +35,7 @@ export default class Home extends Component<Props> {
       [STARTING]: <Transition {...props} {...state} />,
       [RUNNING]: <Running {...props} {...state} />,
       [STOPPED]: <Stopped {...props} {...state} />,
-      [STOPPING]: <Error {...props} {...state} />,
+      [STOPPING]: <Transition {...props} {...state} />,
       [ERROR]: <Error {...props} {...state} />,
       [LOADING]: <Transition {...props} {...state} />,
       [CONFIRM_ACTION]: <Confirm {...props} {...state} />

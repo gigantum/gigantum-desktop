@@ -27,7 +27,7 @@ class Running extends React.Component<Props> {
       });
     } else if (validateDockerClose) {
       props.transition(STOP, {
-        message: 'Are you sure?',
+        message: 'Would you like to close Docker?',
         category: 'closeDocker'
       });
     } else {

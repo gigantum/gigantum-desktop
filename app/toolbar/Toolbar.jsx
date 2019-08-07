@@ -33,12 +33,12 @@ export default class Routes extends Component<Props> {
 
     return (
       <div className="Routes">
-        <button type="button" onClick={() => this.showInstaller()}>
+        {/* <button type="button" onClick={() => this.showInstaller()}>
           Show
         </button>
         <button type="button" onClick={() => this.hideInstaller()}>
           hide
-        </button>
+        </button> */}
 
         <Router>
           <Switch>

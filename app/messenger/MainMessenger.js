@@ -33,12 +33,12 @@ const toolbarLaunch = (toolbarWindow, tray) => {
     }
   });
 
-  toolbarWindow.on('blur', () => {
-    if (!toolbarWindow.webContents.isDevToolsOpened()) {
-      toolbarWindow.hide();
-    }
-    toolbarWindow.hide();
-  });
+  // toolbarWindow.on('blur', () => {
+  //   if (!toolbarWindow.webContents.isDevToolsOpened()) {
+  //     toolbarWindow.hide();
+  //   }
+  //   toolbarWindow.hide();
+  // });
 };
 
 /**
