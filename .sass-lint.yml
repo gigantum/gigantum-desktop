@@ -1,4 +1,0 @@
-files:
-  include: 'app/assets/css/*.s+(a|c)ss'
-  ignore:
-    - 'app/assets/css/vendor/**/*.scss'
