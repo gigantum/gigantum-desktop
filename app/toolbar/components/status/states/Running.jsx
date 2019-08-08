@@ -44,20 +44,20 @@ class Running extends React.Component<Props> {
     const { props } = this;
     const { storage } = props;
     // TODO check to see if any project containers are running, true if there are, false otherwise. False if setting is remembered
-    const validateGigantumClose = !storage.get('closeGigantumConfirm');
+    const validateGigantumClose = !storage.get('close.gigantumConfirm');
     // TODO check config to see if setting is remembered
-    const shouldCloseDockerConfig = storage.get('closeDockerConfirm');
+    const shouldCloseDockerConfig = storage.get('close.dockerConfirm');
     const validateDockerClose = shouldCloseDockerConfig === undefined;
 
     if (validateGigantumClose) {
       props.transition(STOP, {
         message: 'Are you sure?',
-        category: 'closeGigantum'
+        category: 'close.gigantum'
       });
     } else if (validateDockerClose) {
       props.transition(STOP, {
         message: 'Would you like to close Docker?',
-        category: 'closeDocker'
+        category: 'close.docker'
       });
     } else {
       props.transition(FORCE_STOP, {

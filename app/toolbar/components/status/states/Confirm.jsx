@@ -33,7 +33,7 @@ class Confirm extends React.Component<Props> {
   handleCheckbox = isChecked => {
     const { props } = this;
     const { category, storage } = props;
-    if (category !== 'closeDocker') {
+    if (category !== 'close.docker') {
       storage.set(`${category}Confirm`, isChecked);
     }
     this.setState({ isChecked });
@@ -103,16 +103,16 @@ class Confirm extends React.Component<Props> {
     const { props, state } = this;
     const { category, storage } = props;
     // TODO check config to see if setting is remembered
-    const shouldCloseDockerConfig = storage.get('closeDockerConfirm');
+    const shouldCloseDockerConfig = storage.get('close.dockerConfirm');
     const validateDockerClose = shouldCloseDockerConfig === undefined;
 
-    if (category === 'closeDocker') {
+    if (category === 'close.docker') {
       this.stopGigantumState();
       this.handleGigantumClose(confirm);
       if (state.isChecked) {
         storage.set(`${category}Confirm`, confirm);
       }
-    } else if (category === 'closeGigantum') {
+    } else if (category === 'close.gigantum') {
       if (!confirm) {
         props.transition(CANCEL, {
           message: 'Click to Quit'
@@ -127,7 +127,7 @@ class Confirm extends React.Component<Props> {
             console.log(this.state);
             props.transition(REPROMPT, {
               message: 'Would you like to close Docker?',
-              category: 'closeDocker'
+              category: 'close.docker'
             });
           }
         );
@@ -135,7 +135,7 @@ class Confirm extends React.Component<Props> {
         this.stopGigantumState();
         this.handleGigantumClose(shouldCloseDockerConfig);
       }
-    } else if (category === 'restartGigantum') {
+    } else if (category === 'restart.gigantum') {
       if (!confirm) {
         props.transition(CANCEL, {
           message: 'Click to Quit'
@@ -148,10 +148,9 @@ class Confirm extends React.Component<Props> {
 
   render() {
     const { props, state } = this;
-    console.log(state.isChecked);
     const { category } = props;
     const checkboxText =
-      category === 'closeDocker'
+      category === 'close.docker'
         ? 'Remember my selection next time'
         : "Don't ask me this again";
     return (

@@ -34,12 +34,12 @@ export default class Buttons extends PureComponent<Props> {
   handleGigantumRestart = () => {
     const { props } = this;
     const { storage } = props;
-    const validateRestart = !storage.get('restartGigantumConfirm');
+    const validateRestart = !storage.get('restart.gigantumConfirm');
 
     if (validateRestart) {
       props.transition(RESTART, {
         message: 'Are you sure?',
-        category: 'restartGigantum'
+        category: 'restart.gigantum'
       });
     } else {
       props.transition(FORCE_RESTART, {

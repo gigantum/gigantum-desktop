@@ -30,7 +30,7 @@ class ViewManager extends Component<Props> {
   render() {
     const { props } = this;
     const { storage } = props;
-    console.log(storage);
+
     return (
       <Router>
         <div>
