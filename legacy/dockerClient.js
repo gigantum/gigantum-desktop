@@ -167,7 +167,7 @@ export default class GigDockerClient {
       )
     ]);
   }
-  
+
   dockerConnectionTest() {
     return this.dockerode.ping().then(() => true, () => false);
   }
@@ -405,9 +405,11 @@ export default class GigDockerClient {
           window: 'update',
         });
       }
+
       const dataObj = {};
       const extractObj = {};
       let extractInARow = 0;
+
       const handlePull = (data, enc, cb) => {
         if (data.error) return cb(new Error(data.error.trim()));
         if (!data.id || !data.progressDetail || !data.progressDetail.current) {

@@ -2,11 +2,10 @@
 import React, { Component } from 'react';
 // import ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-
 // messenger
 import ToolbarMessenger from './messenger/ToolbarMessenger';
 // docker
-import Docker from '../docker/Docker';
+import ToolbarInterface from '../libs/ToolbarInterface';
 // components
 import routes from '../redux/constants/routes';
 import Info from './containers/Info';
@@ -19,11 +18,10 @@ type Props = {
 export default class Routes extends Component<Props> {
   toolbarMessenger = new ToolbarMessenger();
 
-  docker = new Docker();
+  toolbarInterface = new ToolbarInterface();
 
   render() {
     const { storage } = this.props;
-    console.log(this);
     return (
       <div className="Routes">
         <button
@@ -41,14 +39,14 @@ export default class Routes extends Component<Props> {
 
         <button
           type="button"
-          onClick={() => this.docker.startDockerApplication()}
+          onClick={() => this.toolbarInterface.startDockerApplication()}
         >
           start docker
         </button>
 
         <button
           type="button"
-          onClick={() => this.docker.stopDockerApplication()}
+          onClick={() => this.toolbarInterface.stopDockerApplication()}
         >
           stop docker
         </button>

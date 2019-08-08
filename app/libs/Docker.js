@@ -1,3 +1,4 @@
+// @flow
 // vendor
 import childProcess from 'child_process';
 import DockerApi from 'docker-remote-api';
@@ -11,7 +12,20 @@ import through from 'through2';
 // config
 import config from './config';
 // import storage from '../storage/Storage';
+
+// const internetAvailable = () => {
+//   return Promise.race([
+//     fetch('https://www.google.com/', {
+//       'method': 'GET'
+//     }),
+//     new Promise((resolve, reject) => {
+//         setTimeout(() => reject(new Error('timeout')), 5000)
 //
+//         return null;
+//       }
+//     )
+//   ]);
+// }
 
 /**
   @param {} -
@@ -58,19 +72,41 @@ class Docker {
 
   dockerode = new Dockerode(dockerodeOptions);
 
-  hostWorkingDir = null;
+  hostWorkingDir = path.join(os.homedir(), 'gigantum');
 
   trackedContainer = null;
 
   /* defaults END */
+
+  dockerConnectionTest() {
+    return this.dockerode.ping().then(() => true, () => false);
+  }
+
+  dockerReconnect(reconnectCount = 0) {
+    const nextInterval = reconnectCount + 1;
+    const self = this;
+    return this.dockerode.ping().then(
+      () => {
+        console.log('asdasd');
+        // self.uiManager.setupApp();
+        return null;
+      },
+      () => {
+        setTimeout(
+          () => {
+            self.dockerReconnect(nextInterval);
+          },
+          reconnectCount > 180 ? 15 * 1000 : 6 * 1000
+        );
+      }
+    );
+  }
 
   /**
     @param {} -
     stops the docker application
   */
   ensureLocalContainer = () => {
-    this.hostWorkingDir = path.join(os.homedir(), 'gigantum');
-
     try {
       fs.mkdirSync(this.hostWorkingDir);
     } catch (err) {
