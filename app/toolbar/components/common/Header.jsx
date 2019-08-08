@@ -34,8 +34,7 @@ export default class Header extends PureComponent<Props> {
 
     return (
       <div data-tid="container" className="Header">
-        gigantum
-        <span>client</span>
+        <div className="Header__Logo" />
         {renderMap[props.machine.value]}
       </div>
     );

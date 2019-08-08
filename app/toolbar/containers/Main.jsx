@@ -10,7 +10,9 @@ import Buttons from '../components/common/Buttons';
 // assets
 import './Main.scss';
 
-type Props = {};
+type Props = {
+  storage: object
+};
 
 export default class Main extends Component<Props> {
   props: Props;
@@ -61,7 +63,7 @@ export default class Main extends Component<Props> {
   };
 
   render() {
-    const { state } = this;
+    const { state, props } = this;
 
     return (
       <div data-tid="container">
@@ -71,8 +73,13 @@ export default class Main extends Component<Props> {
           message={state.message}
           transition={this.transition}
           category={state.category}
+          storage={props.storage}
         />
-        <Buttons machine={state.machine} transition={this.transition} />
+        <Buttons
+          machine={state.machine}
+          transition={this.transition}
+          storage={props.storage}
+        />
       </div>
     );
   }

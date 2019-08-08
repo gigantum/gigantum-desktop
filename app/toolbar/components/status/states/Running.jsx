@@ -12,7 +12,8 @@ import './Running.scss';
 
 type Props = {
   transition: () => void,
-  message: string
+  message: string,
+  storage: object
 };
 
 class Running extends React.Component<Props> {
@@ -41,10 +42,12 @@ class Running extends React.Component<Props> {
 
   confirmClose = () => {
     const { props } = this;
+    const { storage } = props;
     // TODO check to see if any project containers are running, true if there are, false otherwise. False if setting is remembered
-    const validateGigantumClose = true;
+    const validateGigantumClose = !storage.get('closeGigantumConfirm');
     // TODO check config to see if setting is remembered
-    const validateDockerClose = true;
+    const shouldCloseDockerConfig = storage.get('closeDockerConfirm');
+    const validateDockerClose = shouldCloseDockerConfig === undefined;
 
     if (validateGigantumClose) {
       props.transition(STOP, {
@@ -57,7 +60,6 @@ class Running extends React.Component<Props> {
         category: 'closeDocker'
       });
     } else {
-      const shouldCloseDockerConfig = true;
       props.transition(FORCE_STOP, {
         message: 'Closing Gigantum'
       });

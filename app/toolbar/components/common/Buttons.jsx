@@ -1,5 +1,6 @@
 // @flow
 import React, { PureComponent } from 'react';
+import { shell } from 'electron';
 // States
 import {
   STOPPED,
@@ -7,7 +8,8 @@ import {
   STARTING,
   STOPPING,
   CONFIRM_ACTION,
-  CONFIRM_RESTART,
+  RESTART,
+  FORCE_RESTART,
   ERROR,
   SUCCESS
 } from '../../machine/ToolbarConstants';
@@ -18,7 +20,8 @@ type Props = {
   machine: {
     value: ''
   },
-  transition: () => void
+  transition: () => void,
+  storage: object
 };
 
 export default class Buttons extends PureComponent<Props> {
@@ -30,15 +33,16 @@ export default class Buttons extends PureComponent<Props> {
   */
   handleGigantumRestart = () => {
     const { props } = this;
-    const validateRestart = true;
+    const { storage } = props;
+    const validateRestart = !storage.get('restartGigantumConfirm');
 
     if (validateRestart) {
-      props.transition(CONFIRM_ACTION, {
+      props.transition(RESTART, {
         message: 'Are you sure?',
         category: 'restartGigantum'
       });
     } else {
-      props.transition(CONFIRM_RESTART, {
+      props.transition(FORCE_RESTART, {
         message: 'Restarting Gigantum'
       });
       // call restartGigantum
@@ -63,6 +67,8 @@ export default class Buttons extends PureComponent<Props> {
       [STOPPING, LOADING, STOPPED, STARTING, CONFIRM_ACTION].indexOf(
         props.machine.value
       ) > -1;
+    // TODO get this from a config
+    const defaultUrl = 'http://localhost:10000/';
 
     return (
       <div data-tid="container" className="Buttons">
@@ -70,6 +76,7 @@ export default class Buttons extends PureComponent<Props> {
           className="Btn__Toolbar"
           disabled={disableButtons}
           type="button"
+          onClick={() => shell.openExternal(defaultUrl)}
         >
           Open in Browser
         </button>

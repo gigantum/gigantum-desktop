@@ -30,7 +30,6 @@ export default class Routes extends Component<Props> {
 
   render() {
     const { storage } = this.props;
-
     return (
       <div className="Routes">
         {/* <button type="button" onClick={() => this.showInstaller()}>
@@ -48,7 +47,13 @@ export default class Routes extends Component<Props> {
               path={routes.Info}
               component={Info}
             />
-            <Route storage={storage} path={routes.Main} component={Main} />
+            <Route
+              storage={storage}
+              path={routes.Main}
+              component={renderProps => (
+                <Main storage={storage} {...renderProps} />
+              )}
+            />
           </Switch>
         </Router>
       </div>

@@ -5,29 +5,41 @@ import { BrowserRouter as Router, Route } from 'react-router-dom';
 import Toolbar from './toolbar/Toolbar';
 import Installer from './installer/Installer';
 
-class ViewManager extends Component {
-  static Views() {
+type Props = {
+  storage: object
+};
+
+class ViewManager extends Component<Props> {
+  static Views(props) {
     return {
-      toolbar: <Toolbar />,
-      installer: <Installer />
+      toolbar: <Toolbar {...props} />,
+      installer: <Installer {...props} />
     };
   }
 
   static View(props) {
     const name = props.location.search.substr(1);
-    const view = ViewManager.Views()[name];
+    const ViewComponent = ViewManager.Views(props)[name];
 
-    if (view == null) {
-      throw new Error(view);
+    if (ViewComponent == null) {
+      throw new Error(ViewComponent);
     }
-    return view;
+    return ViewComponent;
   }
 
   render() {
+    const { props } = this;
+    const { storage } = props;
+    console.log(storage);
     return (
       <Router>
         <div>
-          <Route path="/" component={ViewManager.View} />
+          <Route
+            path="/"
+            component={renderProps => (
+              <ViewManager.View storage={storage} {...renderProps} />
+            )}
+          />
         </div>
       </Router>
     );

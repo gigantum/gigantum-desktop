@@ -1,14 +1,15 @@
 .Header {
-  background: linear-gradient(to left, rgb(68, 144, 163), rgb(28, 33, 49));
+  background: linear-gradient(to left, #4d7c8d, #344e5e);
   height: 42px;
-  font-weight: 100;
   color: white;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 19px;
-  span {
-    font-weight: normal;
-    margin-right: 5px;
+  font-size: 18px;
+  &__Logo {
+    background: url('~Images/logos/gigantum-logo.svg') no-repeat center bottom
+      9px;
+    width: 162px;
+    height: 100%;
   }
 }
