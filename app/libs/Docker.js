@@ -3,7 +3,6 @@
 import childProcess from 'child_process';
 import DockerApi from 'docker-remote-api';
 import Dockerode from 'dockerode';
-import fs from 'fs';
 import os from 'os';
 import path from 'path';
 import pump from 'pump';
@@ -63,7 +62,7 @@ const dockerOptions = (() => {
 
   return dockerOptionsTemp;
 })();
-
+console.log(dockerodeOptions);
 class Docker {
   /* set defaults here A-Z */
   attemptingReconnect = false;
@@ -78,75 +77,54 @@ class Docker {
 
   /* defaults END */
 
-  dockerConnectionTest() {
-    return this.dockerode.ping().then(() => true, () => false);
-  }
-
-  dockerReconnect(reconnectCount = 0) {
-    const nextInterval = reconnectCount + 1;
-    const self = this;
-    return this.dockerode.ping().then(
-      () => {
-        console.log('asdasd');
-        // self.uiManager.setupApp();
-        return null;
-      },
-      () => {
-        setTimeout(
-          () => {
-            self.dockerReconnect(nextInterval);
-          },
-          reconnectCount > 180 ? 15 * 1000 : 6 * 1000
-        );
-      }
-    );
-  }
+  dockerConnectionTest = () => this.dockerode.ping();
 
   /**
-    @param {} -
-    stops the docker application
+    @param {Function} callback
+    @param {Number} reconnectCount
+    recursively checks docker state untill it is ready
   */
-  ensureLocalContainer = () => {
-    try {
-      fs.mkdirSync(this.hostWorkingDir);
-    } catch (err) {
-      console.log(err);
-    }
+  checkIsDockerReady = (callback, reconnectCount = 0) => {
+    const nextInterval = reconnectCount + 1;
+    const { dockerode } = this;
+    console.log(reconnectCount);
 
-    const container = this.dockerode.getContainer(config.containerName);
-    container
-      .inspect()
-      .then(resContainer => {
-        this.trackedContainer = container;
+    const checkAgain = () => {
+      setTimeout(() => {
+        this.checkIsDockerReady(callback, nextInterval);
+      }, 100);
+    };
 
-        if (
-          resContainer.Config.Image === config.imageName &&
-          resContainer.State.Running
-        ) {
-          this.testPing({
-            openPopup: true
-          });
-        } else {
-          this.stopGigantum()
-            .then(() => this.stopProjects())
-            .then(() =>
-              this.dockerRequest.delete(
-                `/containers/${config.containerName}`,
-                err => {
-                  if (err) {
-                    console.log(err);
-                  }
-                  this.runGigantum();
-                }
-              )
-            )
-            .catch(() => this.runGigantum());
+    if (reconnectCount < 101) {
+      console.log(reconnectCount);
+      dockerode.ping(
+        (error, response) => {
+          console.log(error, response);
+          // TODO test for errors coming from response
+          if (response === 'OK') {
+            callback({ success: true, data: response });
+          } else {
+            checkAgain();
+          }
+          return null;
+        },
+        () => {
+          console.log('asasdasd');
+          checkAgain();
         }
-        return null;
-      })
-      .catch(() => {
-        this.runGigantum();
+      );
+    } else {
+      console.log('20004');
+      callback({
+        success: false,
+        data: {
+          error: {
+            message:
+              'Docker is having trouble starting. Timed out after 10 minutes.'
+          }
+        }
       });
+    }
   };
 
   /**
@@ -229,9 +207,11 @@ class Docker {
     @param {} -
     starts the docker application
   */
-  startDockerApplication = () => {
+  startDockerApplication = callback => {
     const dockerSpawn = childProcess.spawn('open', ['-a', 'docker']);
     window.docker = dockerSpawn;
+    // TODO uninstall docker to get error state
+    callback({ success: true, data: dockerSpawn });
   };
 
   /**

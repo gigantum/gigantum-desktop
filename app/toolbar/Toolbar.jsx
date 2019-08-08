@@ -20,59 +20,10 @@ export default class Routes extends Component<Props> {
 
   toolbarInterface = new ToolbarInterface();
 
-  interfaceFunction = interfaceToCall => {
-    const callback = response => {
-      console.log(response);
-    };
-
-    interfaceToCall(callback, true);
-  };
-
   render() {
     const { storage } = this.props;
     return (
       <div className="Routes">
-        <button
-          type="button"
-          onClick={() => this.toolbarMessenger.showInstaller()}
-        >
-          Show
-        </button>
-        <button
-          type="button"
-          onClick={() => this.toolbarMessenger.hideInstaller()}
-        >
-          hide
-        </button>
-
-        <button
-          type="button"
-          onClick={() => this.interfaceFunction(this.toolbarInterface.start)}
-        >
-          start
-        </button>
-
-        <button
-          type="button"
-          onClick={() => this.interfaceFunction(this.toolbarInterface.stop)}
-        >
-          stop
-        </button>
-
-        <button
-          type="button"
-          onClick={() => this.interfaceFunction(this.toolbarInterface.restart)}
-        >
-          restart
-        </button>
-
-        <button
-          type="button"
-          onClick={() => this.interfaceFunction(this.toolbarInterface.check)}
-        >
-          check
-        </button>
-
         <Router>
           <Switch>
             <Route

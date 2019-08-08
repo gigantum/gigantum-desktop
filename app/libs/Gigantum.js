@@ -2,6 +2,7 @@
 // vendor
 import { app, dialog } from 'electron';
 import { autoUpdater } from 'electron-updater';
+import fs from 'fs';
 import open from 'open';
 import pump from 'pump';
 import throughJSON from 'through-json';
@@ -14,46 +15,168 @@ import config from './config';
 class Gigantum extends Docker {
   trackedContainer = null;
 
-  runGigantum() {
-    this.dockerRequest.get(`/images/${config.imageName}/json`, err => {
-      if (err) {
-        this.pullGigantum('install');
-      } else {
-        this.createGigantum();
-      }
-    });
+  constructor(props) {
+    super(props);
+    console.log(this);
+    this.init();
   }
 
-  start = () => {
-    this.trackedContainer
-      .start()
-      .then(() => {
-        this.testPing({
-          openPopup: true
-        });
-
-        return null;
-      })
-      .catch(err => {
-        if (
-          err.json.message.split(':')[
-            err.json.message.split(':').length - 1
-          ] === ' port is already allocated'
-        ) {
-          this.uiManager.handleAppEvent({
-            toolTip: 'ERROR: Port in use',
-            status: 'notRunning',
-            id: 'portInUse',
-            window: 'portInUse'
-          });
-        } else {
-          this.testPing({
-            openPopup: true
-          });
-        }
-      });
+  /**
+    @param {} -
+    init for docker
+  */
+  init = () => {
+    try {
+      fs.mkdirSync(this.hostWorkingDir);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
+  /**
+    @param {Function} callback
+    runs getContainer and checks if the container exists
+    @calls {this.getContainer}
+  */
+  runGigantum = callback => {
+    this.dockerRequest.get(`/images/${config.imageName}/json`, error => {
+      console.log(error);
+      if (error) {
+        callback({
+          success: false,
+          running: false,
+          error
+        });
+      } else {
+        this.createGigantum(callback);
+      }
+    });
+  };
+
+  /**
+    @param {Function} callback
+    creates container and passes container back to start callback
+    @calls {dockerode.createContainer}
+  */
+  createGigantum(callback) {
+    this.stopProjects();
+    this.dockerode
+      .createContainer(
+        Object.assign(config.containerConfig, { name: config.containerName })
+      )
+      .then(gigantumContainer => {
+        callback({ success: true, running: false, gigantumContainer });
+        return null;
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }
+
+  /**
+    @param {Function} callback
+    runs getContainer and checks if the container exists
+    @calls {dockerode.getContainer}
+  */
+  start = callback => {
+    console.log(callback);
+
+    const getContainerCallback = response => {
+      if (!response.running && response.success) {
+        response.gigantumContainer
+          .start()
+          .then(() => {
+            this.checkApi(callback, { openPopup: true });
+
+            callback({ success: true, data: {} });
+
+            return null;
+          })
+          .catch(error => {
+            console.log(error);
+            const errorMessage = error.json.message.split(':')[
+              error.json.message.split(':').length - 1
+            ];
+
+            if (errorMessage === ' port is already allocated') {
+              callback({ success: false, error: error.json });
+            } else {
+              this.checkApi(callback, { openPopup: true });
+            }
+          });
+      } else {
+        callback(response);
+      }
+    };
+
+    this.getContainer(getContainerCallback);
+  };
+
+  /**
+    @param {Function} callback
+    runs getContainer and checks if the container exists
+    @calls {dockerode.getContainer}
+  */
+  getContainer = callback => {
+    const { getContainer } = this.dockerode;
+    const container = getContainer(config.containerName);
+
+    container.modem = this.dockerode.modem;
+
+    container.inspect((err, gigantumContainer) => {
+      if (err) {
+        this.runGigantum(callback);
+      } else {
+        this.handleGigantumState(gigantumContainer, callback);
+      }
+    });
+  };
+
+  /**
+    @param {Object} gigantumContainer
+    @param {Function} callback
+    checks if gigantum is running
+  */
+  handleGigantumState = (gigantumContainer, callback) => {
+    if (
+      gigantumContainer.Config.Image === config.imageName &&
+      gigantumContainer.State.Running
+    ) {
+      this.checkApi(callback, { openPopup: true });
+    } else {
+      this.cleanUp(gigantumContainer, callback);
+    }
+  };
+
+  /**
+    @param {Object} gigantumContainer
+    @param {Function} callback
+    stops gignatum
+    stops gignatum projects
+    removes gigantum container
+    starts gigantum
+  */
+  cleanUp = (gigantumContainer, callback) => {
+    this.stopGigantum(gigantumContainer)
+      .then(() => this.stopProjects())
+      .then(() =>
+        this.dockerRequest.delete(
+          `/containers/${config.containerName}`,
+          err => {
+            if (err) {
+              console.log(err);
+            }
+            this.runGigantum(callback);
+          }
+        )
+      )
+      .catch(() => this.runGigantum(callback));
+  };
+
+  /**
+    @param {} -
+    prunes running gigantum projects
+  */
   stopProjects = () => {
     const handleContainerList = data => {
       if (data) {
@@ -95,19 +218,26 @@ class Gigantum extends Docker {
     );
   };
 
+  /**
+    @param {} -
+    stops and removes gigantum container
+  */
   stopGigantum = () => {
-    this.uiManager.changeStatus('closing');
     this.purposelyStopped = true;
-
-    return this.trackedContainer
+    return this.dockerode
+      .getContainer(config.containerName)
       .stop()
       .then(container => container.remove())
       .catch(() => true);
   };
 
-  checkApi = (options, attemptCount = 0) => {
-    // testPing
-    const self = this;
+  /**
+    @param {Function} callback
+    @param {Object} options
+    @param {Number} attemptCount
+    stops and removes container
+  */
+  checkApi = (callback, options, attemptCount = 0) => {
     const apiURL = `http://localhost:10000/api/ping?v=${uuidv4()}`;
     const nextAttempt = attemptCount + 1;
     // setTimeout is used due to a bug during runtime
@@ -116,75 +246,76 @@ class Gigantum extends Docker {
         return fetch(apiURL, {
           method: 'GET'
         })
-          .then(res => {
+          .then(data => {
             if (
-              res.status === 200 &&
-              res.headers.get('content-type') === 'application/json'
+              data.status === 200 &&
+              data.headers.get('content-type') === 'application/json'
             ) {
               if (options.openPopup) {
                 open(config.defaultUrl);
               }
-              this.uiManager.handleAppEvent({
-                toolTip: 'Gigantum is running',
-                status: 'running'
-              });
-              setTimeout(() => {
-                if (!this.ranOnce) {
-                  this.internetAvailable()
-                    .then(() => {
-                      // checkForUpdates(this.uiManager, false);
-                      console.log(this);
-                      return null;
-                    })
-                    .catch(() => {
-                      console.log('internet not available');
-                    });
-                  this.ranOnce = true;
-                }
-              }, 2000);
+
+              callback({ success: true, running: true, data: {} });
             } else {
               setTimeout(() => {
-                self.testPing(options, nextAttempt);
+                this.checkApi(callback, options, nextAttempt);
               }, 1000);
             }
-
             return null;
           })
           .catch(() => {
             setTimeout(() => {
-              self.testPing(options, nextAttempt);
+              this.checkApi(callback, options, nextAttempt);
             }, 1000);
           });
       }
 
-      this.inspectGigantum()
-        .then(res => {
-          if (res && res.State && res.State.Status === 'running') {
-            if (options.openPopup) {
-              // shell.openExternal(config.defaultUrl);
-            }
-            this.uiManager.handleAppEvent({
-              toolTip: 'Gigantum is running',
-              status: 'running'
-            });
-          } else {
-            self.uiManager.handleAppEvent({
-              toolTip: 'ERROR: Client Failed To Start',
-              status: 'notRunning',
-              window: 'failed'
-            });
+      this.inspectGigantum(callback, options);
+    }, 0);
+  };
+
+  /**
+   * @param {Function} callback
+   * @param {Object} options
+    checks if container is running
+    reports state back to start
+  */
+  inspectGigantum = (callback, options) => {
+    const { getContainer } = this.dockerode;
+    const container = getContainer(config.containerName);
+
+    const errorResponse = () => {
+      callback({
+        success: false,
+        running: false,
+        error: {
+          message: 'ERROR: Client Failed To Start'
+        }
+      });
+    };
+
+    container
+      .inspect()
+      .then(data => {
+        if (data && data.State && data.State.Status === 'running') {
+          if (options.openPopup) {
+            open(config.defaultUrl);
           }
 
-          return null;
-        })
-        .catch(() => {
-          self.uiManager.handleAppEvent({
-            toolTip: 'ERROR: Client Failed To Start',
-            status: 'notRunning',
-            window: 'failed'
+          callback({
+            success: true,
+            running: true,
+            data: {}
           });
-        });
-    }, 0);
+        } else {
+          errorResponse();
+        }
+
+        return null;
+      })
+      .catch(() => {
+        errorResponse();
+      });
   };
 
   handleAppQuit(updating = false) {
@@ -227,14 +358,7 @@ class Gigantum extends Docker {
     }
   }
 
-  inspectGigantum() {
-    if (this.trackedContainer) {
-      return this.trackedContainer.inspect();
-    }
-    return Promise.reject(new Error());
-  }
-
-  restartGigantum() {
+  restartGigantum(callback) {
     this.uiManager.changeStatus('starting');
     this.uiManager.restartingEnabled(false);
     this.inspectGigantum()
@@ -245,7 +369,7 @@ class Gigantum extends Docker {
             .restart()
             .then(() => {
               this.purposelyStopped = false;
-              this.testPing({});
+              this.checkApi(callback, {});
               return null;
             })
             .catch(err => {
@@ -258,7 +382,7 @@ class Gigantum extends Docker {
               ) {
                 this.uiManager.setupApp();
               } else {
-                this.testPing({});
+                this.checkApi(callback, {});
               }
             });
           this.runGigantum();
@@ -267,22 +391,6 @@ class Gigantum extends Docker {
         return null;
       })
       .catch(() => this.runGigantum());
-  }
-
-  createGigantum() {
-    this.stopLabbooks();
-    this.dockerode
-      .createContainer(
-        Object.assign(config.containerConfig, { name: config.containerName })
-      )
-      .then(container => {
-        this.trackedContainer = container;
-        this.startGigantum();
-        return null;
-      })
-      .catch(error => {
-        console.log(error);
-      });
   }
 
   pullGigantum(type = 'install', tag = config.imageTag) {
