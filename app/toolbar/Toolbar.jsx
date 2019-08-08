@@ -20,6 +20,14 @@ export default class Routes extends Component<Props> {
 
   toolbarInterface = new ToolbarInterface();
 
+  interfaceFunction = interfaceToCall => {
+    const callback = response => {
+      console.log(response);
+    };
+
+    interfaceToCall(callback, true);
+  };
+
   render() {
     const { storage } = this.props;
     return (
@@ -39,16 +47,30 @@ export default class Routes extends Component<Props> {
 
         <button
           type="button"
-          onClick={() => this.toolbarInterface.startDockerApplication()}
+          onClick={() => this.interfaceFunction(this.toolbarInterface.start)}
         >
-          start docker
+          start
         </button>
 
         <button
           type="button"
-          onClick={() => this.toolbarInterface.stopDockerApplication()}
+          onClick={() => this.interfaceFunction(this.toolbarInterface.stop)}
         >
-          stop docker
+          stop
+        </button>
+
+        <button
+          type="button"
+          onClick={() => this.interfaceFunction(this.toolbarInterface.restart)}
+        >
+          restart
+        </button>
+
+        <button
+          type="button"
+          onClick={() => this.interfaceFunction(this.toolbarInterface.check)}
+        >
+          check
         </button>
 
         <Router>

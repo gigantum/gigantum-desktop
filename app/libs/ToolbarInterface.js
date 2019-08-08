@@ -17,46 +17,51 @@ class ToolbarInterface {
    */
 
   /**
-   * @param {} -
-   *
+   * @param {callback} callback
+   * checks if docker is installed
    */
-  check = () => {
+  check = callback => {
     const success = true;
     const data = {};
     const dockerPS = childProcess.spawn('docker', ['ps']);
-    console.log(dockerPS);
+    console.log(dockerPS, callback);
 
     return { success, data };
   };
 
   /**
-   * @param {} -
-   *
+   * @param {Function} callback
+   * restarts gigantum container
    */
-  restart = () => {
+  restart = callback => {
     const success = true;
     const data = {};
-
+    console.log(callback);
     return { success, data };
   };
 
   /**
-   * @param {} -
-   *
+   * @param {Function} callback
+   * starts gigntum and docker
    */
-  start = () => {
+  start = callback => {
     const success = true;
     const data = {};
+    console.log(callback);
     return { success, data };
   };
 
   /**
-   * @param {} -
-   *
+   * @param {Boolean} closeDocker
+   * @param {Function} callback
+   * stops gigantum container
+   * stops docker if closeDocker is true
    */
-  stop = () => {
+  stop = (callback, closeDocker) => {
     const success = true;
     const data = {};
+
+    console.log(closeDocker, callback);
     return { success, data };
   };
 }
