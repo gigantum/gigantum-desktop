@@ -59,7 +59,13 @@ export default class Routes extends Component<Props> {
               path={routes.Info}
               component={Info}
             />
-            <Route storage={storage} path={routes.Main} component={Main} />
+            <Route
+              storage={storage}
+              path={routes.Main}
+              component={renderProps => (
+                <Main storage={storage} {...renderProps} />
+              )}
+            />
           </Switch>
         </Router>
       </div>

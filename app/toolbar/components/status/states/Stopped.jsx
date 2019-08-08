@@ -19,7 +19,7 @@ class Stopped extends React.Component<Props> {
       message: 'Starting Gigantum'
     });
 
-    // start docker
+    // start gigantum
     setTimeout(() => {
       const error = false;
       if (error) {

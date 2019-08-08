@@ -15,11 +15,29 @@ import './Confirm.scss';
 type Props = {
   message: string,
   category: string,
-  transition: () => void
+  transition: () => void,
+  storage: object
 };
 
 class Confirm extends React.Component<Props> {
   props: Props;
+
+  state = {
+    isChecked: false
+  };
+
+  /**
+    @param {Boolean} isChecked
+    handles checkbox and storage
+  */
+  handleCheckbox = isChecked => {
+    const { props } = this;
+    const { category, storage } = props;
+    if (category !== 'close.docker') {
+      storage.set(`${category}Confirm`, isChecked);
+    }
+    this.setState({ isChecked });
+  };
 
   /**
     @param {Boolean} confirm
@@ -82,30 +100,42 @@ class Confirm extends React.Component<Props> {
     handleds confirm action buttons
   */
   confirmAction = confirm => {
-    const { props } = this;
-    const { category } = props;
+    const { props, state } = this;
+    const { category, storage } = props;
     // TODO check config to see if setting is remembered
-    const validateDockerClose = true;
+    const shouldCloseDockerConfig = storage.get('close.dockerConfirm');
+    const validateDockerClose = shouldCloseDockerConfig === undefined;
 
-    if (category === 'closeDocker') {
+    if (category === 'close.docker') {
       this.stopGigantumState();
       this.handleGigantumClose(confirm);
-    } else if (category === 'closeGigantum') {
+      if (state.isChecked) {
+        storage.set(`${category}Confirm`, confirm);
+      }
+    } else if (category === 'close.gigantum') {
       if (!confirm) {
         props.transition(CANCEL, {
           message: 'Click to Quit'
         });
       } else if (validateDockerClose) {
-        props.transition(REPROMPT, {
-          message: 'Would you like to close Docker?',
-          category: 'closeDocker'
-        });
+        this.setState(
+          {
+            isChecked: false
+          },
+          () => {
+            console.log('this ran');
+            console.log(this.state);
+            props.transition(REPROMPT, {
+              message: 'Would you like to close Docker?',
+              category: 'close.docker'
+            });
+          }
+        );
       } else {
-        const shouldCloseDockerConfig = true;
         this.stopGigantumState();
         this.handleGigantumClose(shouldCloseDockerConfig);
       }
-    } else if (category === 'restartGigantum') {
+    } else if (category === 'restart.gigantum') {
       if (!confirm) {
         props.transition(CANCEL, {
           message: 'Click to Quit'
@@ -117,11 +147,10 @@ class Confirm extends React.Component<Props> {
   };
 
   render() {
-    const { props } = this;
+    const { props, state } = this;
     const { category } = props;
-
     const checkboxText =
-      category === 'closeDocker'
+      category === 'close.docker'
         ? 'Remember my selection next time'
         : "Don't ask me this again";
     return (
@@ -144,8 +173,13 @@ class Confirm extends React.Component<Props> {
           </button>
         </div>
         <div className="Confirm__checkbox-Container">
-          <label htmlFor="guideShown" className="Confirm__checkbox">
-            <input id="guideShown" type="checkbox" />
+          <label htmlFor="confirmAction" className="Confirm__checkbox">
+            <input
+              id="confirmAction"
+              type="checkbox"
+              checked={state.isChecked}
+              onChange={evt => this.handleCheckbox(evt.target.checked)}
+            />
             <span>{checkboxText}</span>
           </label>
         </div>
