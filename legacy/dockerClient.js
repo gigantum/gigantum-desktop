@@ -59,6 +59,9 @@ export default class GigDockerClient {
     this.updatedImageDownloaded = false;
     this.electronAppDownloaded = false;
     this.dockerRequest = new DockerApi(this.dockerOptions);
+
+
+    // move this to messeneger
     autoUpdater.on('update-downloaded', (info) => {
       this.uiManager.updateInstallImageWindow({ isDownloaded: true }, 'update');
       if (this.updatedImageDownloaded) {
@@ -73,7 +76,7 @@ export default class GigDockerClient {
     });
   }
 
-  setupDocker() {
+  setupDocker(callback) {
     const self = this;
 
     const statusList = [
@@ -104,6 +107,9 @@ export default class GigDockerClient {
 
       cb();
     };
+
+    var promises = []
+
 
     this.dockerode.getEvents({}).then(
       (response) => {
@@ -150,6 +156,7 @@ export default class GigDockerClient {
       },
     );
   }
+
   internetAvailable() {
     return Promise.race([
       fetch('https://www.google.com/', {
@@ -160,6 +167,7 @@ export default class GigDockerClient {
       )
     ]);
   }
+
   dockerConnectionTest() {
     return this.dockerode.ping().then(() => true, () => false);
   }
@@ -397,9 +405,11 @@ export default class GigDockerClient {
           window: 'update',
         });
       }
+
       const dataObj = {};
       const extractObj = {};
       let extractInARow = 0;
+
       const handlePull = (data, enc, cb) => {
         if (data.error) return cb(new Error(data.error.trim()));
         if (!data.id || !data.progressDetail || !data.progressDetail.current) {
