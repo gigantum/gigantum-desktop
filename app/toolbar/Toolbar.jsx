@@ -24,33 +24,6 @@ export default class Routes extends Component<Props> {
     const { storage } = this.props;
     return (
       <div className="Routes">
-        <button
-          type="button"
-          onClick={() => this.toolbarMessenger.showInstaller()}
-        >
-          Show
-        </button>
-        <button
-          type="button"
-          onClick={() => this.toolbarMessenger.hideInstaller()}
-        >
-          hide
-        </button>
-
-        <button
-          type="button"
-          onClick={() => this.toolbarInterface.startDockerApplication()}
-        >
-          start docker
-        </button>
-
-        <button
-          type="button"
-          onClick={() => this.toolbarInterface.stopDockerApplication()}
-        >
-          stop docker
-        </button>
-
         <Router>
           <Switch>
             <Route
