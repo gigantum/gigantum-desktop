@@ -16,7 +16,11 @@ type Props = {
   message: string,
   category: string,
   transition: () => void,
-  storage: object
+  storage: object,
+  interface: {
+    stop: () => void,
+    restart: () => void
+  }
 };
 
 class Confirm extends React.Component<Props> {
@@ -54,21 +58,21 @@ class Confirm extends React.Component<Props> {
     @param {Boolean} closeDocker
     handles Gigantum Close
   */
-  handleGigantumClose = () => {
+  handleGigantumClose = closeDocker => {
     const { props } = this;
-    // closeDocker variable passed to async docker method
-    setTimeout(() => {
-      const error = false;
-      if (error) {
-        props.transition(ERROR, {
-          message: 'response.error'
-        });
-      } else {
+    const callback = response => {
+      console.log(response);
+      if (response.success) {
         props.transition(SUCCESS, {
           message: 'Click to Start'
         });
+      } else {
+        props.transition(ERROR, {
+          message: 'response.error'
+        });
       }
-    }, 5000);
+    };
+    props.interface.stop(callback, closeDocker);
   };
 
   /**
@@ -80,19 +84,18 @@ class Confirm extends React.Component<Props> {
     props.transition(CONFIRM_RESTART, {
       message: 'Restarting Gigantum'
     });
-    // call restartGigantum
-    setTimeout(() => {
-      const error = false;
-      if (error) {
-        props.transition(ERROR, {
-          message: 'response.error'
-        });
-      } else {
+    const callback = response => {
+      if (response.success) {
         props.transition(SUCCESS, {
           message: 'Click to Stop'
         });
+      } else {
+        props.transition(ERROR, {
+          message: 'Gigantum failed to start'
+        });
       }
-    }, 5000);
+    };
+    props.interface.restart(callback);
   };
 
   /**

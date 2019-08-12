@@ -21,7 +21,10 @@ type Props = {
     value: ''
   },
   transition: () => void,
-  storage: object
+  storage: object,
+  interface: {
+    restart: () => void
+  }
 };
 
 export default class Buttons extends PureComponent<Props> {
@@ -45,26 +48,25 @@ export default class Buttons extends PureComponent<Props> {
       props.transition(FORCE_RESTART, {
         message: 'Restarting Gigantum'
       });
-      // call restartGigantum
-      setTimeout(() => {
-        const error = false;
-        if (error) {
-          props.transition(ERROR, {
-            message: 'response.error'
-          });
-        } else {
+      const callback = response => {
+        if (response.success) {
           props.transition(SUCCESS, {
             message: 'Click to Stop'
           });
+        } else {
+          props.transition(ERROR, {
+            message: 'Gigantum failed to start'
+          });
         }
-      }, 5000);
+      };
+      props.interface.restart(callback);
     }
   };
 
   render() {
     const { props } = this;
     const disableButtons =
-      [STOPPING, LOADING, STOPPED, STARTING, CONFIRM_ACTION].indexOf(
+      [STOPPING, LOADING, STOPPED, STARTING, CONFIRM_ACTION, ERROR].indexOf(
         props.machine.value
       ) > -1;
     // TODO get this from a config
@@ -72,25 +74,35 @@ export default class Buttons extends PureComponent<Props> {
 
     return (
       <div data-tid="container" className="Buttons">
-        <button
-          className="Btn__Toolbar"
-          disabled={disableButtons}
-          type="button"
-          onClick={() => shell.openExternal(defaultUrl)}
-        >
-          Open in Browser
-        </button>
-        <button
-          className="Btn__Toolbar Btn--noBorder"
-          disabled={disableButtons}
-          onClick={() => this.handleGigantumRestart()}
-          type="button"
-        >
-          Restart
-        </button>
-        <button className="Btn__Toolbar" type="button">
-          Check for Updates
-        </button>
+        <div className="Buttons__Actions">
+          <button
+            className="Btn__Toolbar Btn--external"
+            disabled={disableButtons}
+            type="button"
+            onClick={() => shell.openExternal(defaultUrl)}
+          >
+            Open in Browser
+          </button>
+          <button
+            className="Btn__Toolbar Btn--noBorder"
+            disabled={disableButtons}
+            onClick={() => this.handleGigantumRestart()}
+            type="button"
+          >
+            Restart
+          </button>
+          <button className="Btn__Toolbar" type="button">
+            Check for Updates
+          </button>
+        </div>
+        <div className="Buttons__Links">
+          <button className="Btn__Link" type="button">
+            Help
+          </button>
+          <button type="button" className="Btn__Link">
+            Docs
+          </button>
+        </div>
       </div>
     );
   }

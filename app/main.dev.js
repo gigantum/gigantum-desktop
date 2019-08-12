@@ -78,8 +78,8 @@ app.on('ready', async () => {
   const tray = new Tray(icon);
   const toolbarWindow = new BrowserWindow({
     name: 'toolbar',
-    width: 351,
-    height: 500,
+    width: 375,
+    height: 419,
     transparent: true,
     resizable: false,
     frame: false,

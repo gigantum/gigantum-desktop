@@ -87,21 +87,19 @@ class Docker {
   checkIsDockerReady = (callback, reconnectCount = 0) => {
     const nextInterval = reconnectCount + 1;
     const { dockerode } = this;
-    console.log(reconnectCount);
 
     const checkAgain = () => {
       setTimeout(() => {
         this.checkIsDockerReady(callback, nextInterval);
-      }, 100);
+      }, 1000);
     };
 
-    if (reconnectCount < 101) {
-      console.log(reconnectCount);
+    if (reconnectCount < 601) {
       dockerode.ping(
         (error, response) => {
-          console.log(error, response);
           // TODO test for errors coming from response
           if (response === 'OK') {
+            console.log('this ran');
             callback({ success: true, data: response });
           } else {
             checkAgain();
@@ -109,12 +107,10 @@ class Docker {
           return null;
         },
         () => {
-          console.log('asasdasd');
           checkAgain();
         }
       );
     } else {
-      console.log('20004');
       callback({
         success: false,
         data: {
@@ -210,6 +206,7 @@ class Docker {
   startDockerApplication = callback => {
     const dockerSpawn = childProcess.spawn('open', ['-a', 'docker']);
     window.docker = dockerSpawn;
+    console.log('ran here');
     // TODO uninstall docker to get error state
     callback({ success: true, data: dockerSpawn });
   };
@@ -219,17 +216,13 @@ class Docker {
     stops the docker application
   */
   stopDockerApplication = () => {
-    if (window.dockerSpawn && !window.dockerSpawn.killed) {
-      childProcess.exec(
-        'osascript -e \'quit app "docker"\'',
-        {},
-        (response, error) => {
-          console.log(response, error);
-        }
-      );
-
-      delete window.docker;
-    }
+    childProcess.exec(
+      'osascript -e \'quit app "docker"\'',
+      {},
+      (response, error) => {
+        console.log(response, error);
+      }
+    );
   };
 
   /**

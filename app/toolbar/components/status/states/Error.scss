@@ -1,3 +1,59 @@
+@import '~Styles/_imports.scss';
+
 .Error {
   display: block;
+  @include flex(flex-start, column);
+  align-items: center;
+  padding: 0 40px;
+}
+.Error__message {
+  font-size: 19px;
+  color: $warning;
+  text-align: center;
+  padding-top: 20px;
+  margin-left: 24px;
+  position: relative;
+  &::before {
+    content: '';
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    left: -30px;
+    position: absolute;
+    background: $warning url(~Images/icons/notifications/info-exclamation.svg)
+      no-repeat center center;
+    background-size: 24px;
+  }
+}
+
+.Error__subText {
+  color: $mineShaft;
+  text-align: center;
+  margin: 20px 0;
+  font-size: 18px;
+  a {
+    color: $primary;
+    text-decoration: underline;
+    cursor: pointer;
+    outline: none;
+  }
+}
+
+.Btn {
+  &__Error {
+    width: 160px;
+    padding: 5px;
+    border-radius: 4px;
+    border: 1px solid $primary;
+    margin: 9px;
+    font-size: 14px;
+    outline: none;
+    cursor: pointer;
+    color: white;
+    background: $primary;
+
+    &:hover {
+      @include boxShadowDark();
+    }
+  }
 }

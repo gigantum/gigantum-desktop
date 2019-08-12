@@ -37,13 +37,12 @@ class ToolbarInterface {
    * checks if docker is installed
    */
   check = callback => {
-    const dockerPS = childProcess.spawn('docker', ['ps']);
-
-    dockerPS.on('exit', code => {
-      const data = {};
-      const success = code === 1;
-      callback({ success, data });
-    });
+    try {
+      childProcess.execSync('docker --version').toString();
+      callback({ success: true, data: {} });
+    } catch (error) {
+      callback({ success: false, data: error });
+    }
   };
 
   /**
@@ -51,10 +50,13 @@ class ToolbarInterface {
    * restarts gigantum container
    */
   restart = callback => {
-    const success = true;
-    const data = {};
+    const { restart } = this.gigantum;
 
-    callback({ success, data });
+    const restartGigantumCallback = response => {
+      callback(response);
+    };
+
+    restart(restartGigantumCallback);
   };
 
   /**
@@ -68,7 +70,6 @@ class ToolbarInterface {
    */
   start = callback => {
     const { docker, gigantum } = this;
-    const success = true;
     const data = {};
     const {
       dockerConnectionTest,
@@ -81,6 +82,7 @@ class ToolbarInterface {
      * checks if docker is installed
      */
     const gigantumStartCallback = response => {
+      console.log('this ran');
       callback(response);
     };
 
@@ -130,9 +132,6 @@ class ToolbarInterface {
 
     /* STEP 1 */
     pingDocker(dockerConnectionTest, dockerRunningCallback);
-
-    // check if docker is running
-    callback({ success, data });
   };
 
   /**
@@ -142,10 +141,20 @@ class ToolbarInterface {
    * stops docker if closeDocker is true
    */
   stop = (callback, closeDocker) => {
-    const success = true;
-    const data = {};
-    console.log(closeDocker);
-    callback({ success, data });
+    const { stop } = this.gigantum;
+    const { stopDockerApplication } = this.docker;
+
+    const closeGigantumCallback = response => {
+      if (closeDocker) {
+        console.log('this ran');
+        stopDockerApplication();
+      }
+      callback(response);
+    };
+
+    stop(closeGigantumCallback);
+
+    // callback({ success, data });
   };
 }
 
