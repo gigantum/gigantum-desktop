@@ -218,16 +218,20 @@ class Docker {
     @param {} -
     stops the docker application
   */
-  stopDockerApplication = () => {
-    if (window.dockerSpawn && !window.dockerSpawn.killed) {
-      childProcess.exec(
-        'osascript -e \'quit app "docker"\'',
-        {},
-        (response, error) => {
-          console.log(response, error);
+  stopDockerApplication = callback => {
+    childProcess.exec(
+      'osascript -e \'quit app "docker"\'',
+      {},
+      (response, error) => {
+        console.log(response, error);
+        if (error) {
+          callback({ success: false, data: { error } });
+        } else {
+          callback({ success: true, data: {} });
         }
-      );
-
+      }
+    );
+    if (window.dockerSpawn && !window.dockerSpawn.killed) {
       delete window.docker;
     }
   };
