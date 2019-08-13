@@ -47,11 +47,6 @@ export default class Installer extends Component<Props> {
     };
 
     installer.downloadDocker(downloadDockerCallback);
-
-    // dndCallback({success: true})
-    // installer.openDragAndDrop(`${os.homedir()}/Downloads/docker.dmg`, dndCallback)
-    //
-    // installer.updateSettings(updateSettingsCallback)
   };
 
   render() {
