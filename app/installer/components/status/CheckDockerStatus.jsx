@@ -1,7 +1,8 @@
 // @flow
 import React, { Component } from 'react';
 // assets
-import './CheckDocker.scss';
+import './Status.scss';
+import './CheckDockerStatus.scss';
 
 type Props = {};
 

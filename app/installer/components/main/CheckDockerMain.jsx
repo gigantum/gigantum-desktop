@@ -1,0 +1,14 @@
+// @flow
+import React, { Component } from 'react';
+// assets
+import './CheckDockerMain.scss';
+
+type Props = {};
+
+export default class CheckDocker extends Component<Props> {
+  props: Props;
+
+  render() {
+    return <div data-tid="container">CheckDocker</div>;
+  }
+}
