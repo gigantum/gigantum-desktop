@@ -6,6 +6,7 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import ToolbarMessenger from './messenger/ToolbarMessenger';
 // docker
 import ToolbarInterface from '../libs/ToolbarInterface';
+import Installer from '../libs/Installer';
 // components
 import routes from '../redux/constants/routes';
 import Info from './containers/Info';
@@ -20,10 +21,18 @@ export default class Routes extends Component<Props> {
 
   toolbarInterface = new ToolbarInterface();
 
+  installer = new Installer();
+
   render() {
     const { storage } = this.props;
     return (
       <div className="Routes">
+        <button
+          onClick={() => this.toolbarMessenger.showInstaller()}
+          type="button"
+        >
+          show installer
+        </button>
         <Router>
           <Switch>
             <Route

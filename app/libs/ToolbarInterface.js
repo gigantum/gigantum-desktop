@@ -171,7 +171,7 @@ class ToolbarInterface {
 
     const closeGigantumCallback = response => {
       if (closeDocker) {
-        stopDockerApplication();
+        stopDockerApplication(() => {});
       }
       callback(response);
     };
