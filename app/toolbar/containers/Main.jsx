@@ -3,6 +3,7 @@
 import React, { Component } from 'react';
 // state
 import stateMachine from '../machine/ToolbarMachine';
+import { STOPPED, ERROR } from '../machine/ToolbarConstants';
 // components
 import Status from '../components/status/Status';
 import Header from '../components/common/Header';
@@ -11,7 +12,11 @@ import Buttons from '../components/common/Buttons';
 import './Main.scss';
 
 type Props = {
-  storage: object
+  storage: object,
+  interface: {
+    check: () => void
+  },
+  messenger: {}
 };
 
 export default class Main extends Component<Props> {
@@ -23,9 +28,15 @@ export default class Main extends Component<Props> {
   };
 
   componentDidMount() {
-    setTimeout(() => {
-      this.transition('STOPPED', { message: 'Click to Start' });
-    }, 5000);
+    const { props } = this;
+    const callback = response => {
+      if (response.success) {
+        this.transition(STOPPED, { message: 'Click to Start' });
+      } else {
+        this.transition(ERROR, { message: 'Docker is not installed' });
+      }
+    };
+    props.interface.check(callback);
   }
 
   /**
@@ -74,6 +85,8 @@ export default class Main extends Component<Props> {
           transition={this.transition}
           category={state.category}
           storage={props.storage}
+          interface={props.interface}
+          messenger={props.messenger}
         />
         <Buttons
           machine={state.machine}

@@ -45,7 +45,12 @@ export default class Routes extends Component<Props> {
               storage={storage}
               path={routes.Main}
               component={renderProps => (
-                <Main storage={storage} {...renderProps} />
+                <Main
+                  storage={storage}
+                  {...renderProps}
+                  messenger={this.toolbarMessenger}
+                  interface={this.toolbarInterface}
+                />
               )}
             />
           </Switch>

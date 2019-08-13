@@ -1,10 +1,14 @@
 @import '~Styles/_imports.scss';
 
-.Buttons {
+.Buttons__Actions {
   display: block;
   @include flex(flex-start, column);
   border-top: 1px solid $grey-border;
   border-bottom: 1px solid $grey-border;
+}
+.Buttons__Links {
+  display: block;
+  @include flex(flex-start, row);
 }
 .Btn {
   &__Toolbar {
@@ -16,16 +20,42 @@
     font-size: 15px;
     outline: 0;
     &:hover {
-      background: $primary;
+      background-color: $primary;
       color: white;
     }
     &:disabled {
-      color: $romanSilver;
-      background: $lightGrey;
+      color: $romanSilver !important;
+      background: $lightGrey !important;
       cursor: auto;
     }
   }
   &--noBorder {
     border: 0;
+  }
+  &--external {
+    background: white url('~Images/icons/offsite-primary.svg') no-repeat center
+      right 105px;
+    &:hover {
+      background: $primary url('~Images/icons/offsite.svg') no-repeat center
+        right 105px;
+    }
+  }
+  &__Link {
+    flex: 1;
+    background: #f8f8f8 url('~Images/icons/offsite-primary.svg') no-repeat top
+      11px right 60px;
+    background-size: 12px;
+    height: 35px;
+    font-size: 15px;
+    color: $primary;
+    border: 0.5px solid $grey-border;
+    outline: 0;
+    cursor: pointer;
+    &:hover {
+      background: $primary url('~Images/icons/offsite.svg') no-repeat top 11px
+        right 60px;
+      background-size: 12px;
+      color: white;
+    }
   }
 }

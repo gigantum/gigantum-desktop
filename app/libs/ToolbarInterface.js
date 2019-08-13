@@ -20,6 +20,8 @@ const pingDocker = (dockerConnectionTest, callback) => {
     });
 };
 
+const isMac = process.platform === 'darwin';
+
 class ToolbarInterface {
   /**
    * Declare defaults here
@@ -37,13 +39,36 @@ class ToolbarInterface {
    * checks if docker is installed
    */
   check = callback => {
-    const dockerPS = childProcess.spawn('docker', ['ps']);
+    if (isMac) {
+      const dockerVersion = childProcess.spawn('docker', ['-v']);
+      dockerVersion.on('error', error => {
+        console.log(error);
+      });
 
-    dockerPS.on('exit', code => {
-      const data = {};
-      const success = code === 1;
-      callback({ success, data });
-    });
+      dockerVersion.on('close', code => {
+        if (code === 0) {
+          callback({ success: true, data: {} });
+        } else {
+          callback({
+            success: false,
+            data: {
+              error: {
+                message: 'Docker is not installed'
+              }
+            }
+          });
+        }
+      });
+    } else {
+      callback({
+        success: false,
+        data: {
+          error: {
+            message: "Can't find docker appliation"
+          }
+        }
+      });
+    }
   };
 
   /**
@@ -51,10 +76,13 @@ class ToolbarInterface {
    * restarts gigantum container
    */
   restart = callback => {
-    const success = true;
-    const data = {};
+    const { restart } = this.gigantum;
 
-    callback({ success, data });
+    const restartGigantumCallback = response => {
+      callback(response);
+    };
+
+    restart(restartGigantumCallback);
   };
 
   /**
@@ -68,7 +96,6 @@ class ToolbarInterface {
    */
   start = callback => {
     const { docker, gigantum } = this;
-    const success = true;
     const data = {};
     const {
       dockerConnectionTest,
@@ -130,9 +157,6 @@ class ToolbarInterface {
 
     /* STEP 1 */
     pingDocker(dockerConnectionTest, dockerRunningCallback);
-
-    // check if docker is running
-    callback({ success, data });
   };
 
   /**
@@ -142,10 +166,17 @@ class ToolbarInterface {
    * stops docker if closeDocker is true
    */
   stop = (callback, closeDocker) => {
-    const success = true;
-    const data = {};
-    console.log(closeDocker);
-    callback({ success, data });
+    const { stop } = this.gigantum;
+    const { stopDockerApplication } = this.docker;
+
+    const closeGigantumCallback = response => {
+      if (closeDocker) {
+        stopDockerApplication(() => {});
+      }
+      callback(response);
+    };
+
+    stop(closeGigantumCallback);
   };
 }
 

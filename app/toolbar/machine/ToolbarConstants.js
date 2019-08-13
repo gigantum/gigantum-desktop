@@ -18,5 +18,4 @@ export const FORCE_STOP = 'FORCE_STOP';
 export const CONFIRM = 'CONFIRM';
 export const CANCEL = 'CANCEL';
 export const REPROMPT = 'REPROMPT';
-// export const TRY_AGAIN_STOPPED = 'TRY_AGAIN_STOPPED';
-// export const TRY_AGAIN_RUNNING = 'TRY_AGAIN_RUNNING';
+export const TRY_AGAIN = 'TRY_AGAIN';

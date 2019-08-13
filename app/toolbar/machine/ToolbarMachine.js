@@ -77,8 +77,7 @@ const stateMachine = Machine({
         additionalInfo: ''
       },
       on: {
-        TRY_AGAIN_STOPPED: STARTING,
-        TRY_AGAIN_RUNNING: STOPPING
+        TRY_AGAIN: STARTING
       }
     }
   }

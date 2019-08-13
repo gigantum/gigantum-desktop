@@ -88,8 +88,6 @@ class Gigantum extends Docker {
           .then(() => {
             this.checkApi(callback, { openPopup: true });
 
-            callback({ success: true, data: {} });
-
             return null;
           })
           .catch(error => {
@@ -110,6 +108,22 @@ class Gigantum extends Docker {
     };
 
     this.getContainer(getContainerCallback);
+  };
+
+  /**
+    @param {Function} callback
+    stops and cleansup gigantum
+  */
+  stop = callback => {
+    this.stopGigantum()
+      .then(() => this.stopProjects())
+      .then(() =>
+        this.dockerRequest.delete(`/containers/${config.containerName}`, () => {
+          callback({ success: true, data: {} });
+          return null;
+        })
+      )
+      .catch(error => callback({ success: false, error }));
   };
 
   /**
@@ -144,20 +158,20 @@ class Gigantum extends Docker {
     ) {
       this.checkApi(callback, { openPopup: true });
     } else {
-      this.cleanUp(gigantumContainer, callback);
+      this.cleanUp(callback);
     }
   };
 
   /**
-    @param {Object} gigantumContainer
+    @param {Object}
     @param {Function} callback
     stops gignatum
     stops gignatum projects
     removes gigantum container
     starts gigantum
   */
-  cleanUp = (gigantumContainer, callback) => {
-    this.stopGigantum(gigantumContainer)
+  cleanUp = callback => {
+    this.stopGigantum()
       .then(() => this.stopProjects())
       .then(() =>
         this.dockerRequest.delete(
@@ -318,6 +332,30 @@ class Gigantum extends Docker {
       });
   };
 
+  /**
+   * @param {Function} callback
+    restarts gigantum container
+  */
+  restart = callback => {
+    const { getContainer } = this.dockerode;
+    const container = getContainer(config.containerName);
+
+    container.modem = this.dockerode.modem;
+    container
+      .restart()
+      .then(() => {
+        this.checkApi(callback, {});
+        return null;
+      })
+      .catch(error => {
+        if (error.json) {
+          callback({ success: false, error: error.json });
+        } else {
+          this.checkApi(callback, {});
+        }
+      });
+  };
+
   handleAppQuit(updating = false) {
     if (this.removePreviousVersion && updating) {
       this.removeGigantumImage()
@@ -356,41 +394,6 @@ class Gigantum extends Docker {
       app.quitting = true;
       app.quit();
     }
-  }
-
-  restartGigantum(callback) {
-    this.uiManager.changeStatus('starting');
-    this.uiManager.restartingEnabled(false);
-    this.inspectGigantum()
-      .then(valid => {
-        this.purposelyStopped = true;
-        if (valid) {
-          this.trackedContainer
-            .restart()
-            .then(() => {
-              this.purposelyStopped = false;
-              this.checkApi(callback, {});
-              return null;
-            })
-            .catch(err => {
-              this.purposelyStopped = false;
-              if (
-                err.json &&
-                err.json.message.split(':')[
-                  err.json.message.split(':').length - 1
-                ] === ' port is already allocated'
-              ) {
-                this.uiManager.setupApp();
-              } else {
-                this.checkApi(callback, {});
-              }
-            });
-          this.runGigantum();
-        }
-
-        return null;
-      })
-      .catch(() => this.runGigantum());
   }
 
   pullGigantum(type = 'install', tag = config.imageTag) {

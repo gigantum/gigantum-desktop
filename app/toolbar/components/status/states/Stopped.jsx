@@ -7,7 +7,10 @@ import './Stopped.scss';
 
 type Props = {
   transition: () => void,
-  message: string
+  message: string,
+  interface: {
+    start: () => void
+  }
 };
 
 class Stopped extends React.Component<Props> {
@@ -19,19 +22,23 @@ class Stopped extends React.Component<Props> {
       message: 'Starting Gigantum'
     });
 
-    // start gigantum
-    setTimeout(() => {
-      const error = false;
-      if (error) {
-        props.transition(ERROR, {
-          message: 'error.message'
-        });
+    const handleErrorTransition = message => {
+      props.transition(ERROR, message);
+    };
+
+    const callback = response => {
+      const errorMessage = response.error && response.error.message;
+      if (response.success) {
+        props.transition(SUCCESS, { message: 'Click to Quit' });
+      } else if (errorMessage.indexOf('no such image') > -1) {
+        handleErrorTransition('Gigantum is not configured');
+      } else if (errorMessage.indexOf('port is already allocated') > -1) {
+        handleErrorTransition('Gigantum could not start');
       } else {
-        props.transition(SUCCESS, {
-          message: 'Click to Quit'
-        });
+        handleErrorTransition('Gigantum failed to start');
       }
-    }, 5000);
+    };
+    props.interface.start(callback);
   };
 
   render() {
