@@ -162,7 +162,7 @@ export default class MenuBuilder {
         {
           label: 'Community Discussions',
           click() {
-            shell.openExternal('https://discuss.atom.io/c/electron');
+            shell.openExternal('https://www.gigantum.com');
           }
         },
         {
