@@ -126,8 +126,6 @@ class Confirm extends React.Component<Props> {
             isChecked: false
           },
           () => {
-            console.log('this ran');
-            console.log(this.state);
             props.transition(REPROMPT, {
               message: 'Would you like to close Docker?',
               category: 'close.docker'

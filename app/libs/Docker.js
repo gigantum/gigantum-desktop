@@ -99,7 +99,6 @@ class Docker {
         (error, response) => {
           // TODO test for errors coming from response
           if (response === 'OK') {
-            console.log('this ran');
             callback({ success: true, data: response });
           } else {
             checkAgain();
@@ -206,7 +205,6 @@ class Docker {
   startDockerApplication = callback => {
     const dockerSpawn = childProcess.spawn('open', ['-a', 'docker']);
     window.docker = dockerSpawn;
-    console.log('ran here');
     // TODO uninstall docker to get error state
     callback({ success: true, data: dockerSpawn });
   };

@@ -83,17 +83,19 @@ class Error extends React.Component<Props> {
   */
   handleAction = buttonText => {
     const { props } = this;
+    const handleErrorTransition = message => {
+      props.transition(ERROR, message);
+    };
     const callback = response => {
+      const errorMessage = response.error && response.error.message;
       if (response.success) {
         props.transition(SUCCESS, { message: 'Click to Quit' });
-      } else if (response.error.message.indexOf('no such image') > -1) {
-        props.transition(ERROR, { message: 'Gigantum is not configured' });
-      } else if (
-        response.error.message.indexOf('port is already allocated') > -1
-      ) {
-        props.transition(ERROR, { message: 'Gigantum could not start' });
+      } else if (errorMessage.indexOf('no such image') > -1) {
+        handleErrorTransition('Gigantum is not configured');
+      } else if (errorMessage.indexOf('port is already allocated') > -1) {
+        handleErrorTransition('Gigantum could not start');
       } else {
-        props.transition(ERROR, { message: 'Gigantum failed to start' });
+        handleErrorTransition('Gigantum failed to start');
       }
     };
 

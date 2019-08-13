@@ -20,6 +20,8 @@ const pingDocker = (dockerConnectionTest, callback) => {
     });
 };
 
+const isMac = process.platform === 'darwin';
+
 class ToolbarInterface {
   /**
    * Declare defaults here
@@ -37,11 +39,35 @@ class ToolbarInterface {
    * checks if docker is installed
    */
   check = callback => {
-    try {
-      childProcess.execSync('docker --version').toString();
-      callback({ success: true, data: {} });
-    } catch (error) {
-      callback({ success: false, data: error });
+    if (isMac) {
+      const dockerVersion = childProcess.spawn('docker', ['-v']);
+      dockerVersion.on('error', error => {
+        console.log(error);
+      });
+
+      dockerVersion.on('close', code => {
+        if (code === 0) {
+          callback({ success: true, data: {} });
+        } else {
+          callback({
+            success: false,
+            data: {
+              error: {
+                message: 'Docker is not installed'
+              }
+            }
+          });
+        }
+      });
+    } else {
+      callback({
+        success: false,
+        data: {
+          error: {
+            message: "Can't find docker appliation"
+          }
+        }
+      });
     }
   };
 
@@ -82,7 +108,6 @@ class ToolbarInterface {
      * checks if docker is installed
      */
     const gigantumStartCallback = response => {
-      console.log('this ran');
       callback(response);
     };
 
@@ -146,15 +171,12 @@ class ToolbarInterface {
 
     const closeGigantumCallback = response => {
       if (closeDocker) {
-        console.log('this ran');
         stopDockerApplication();
       }
       callback(response);
     };
 
     stop(closeGigantumCallback);
-
-    // callback({ success, data });
   };
 }
 
