@@ -14,7 +14,6 @@ import { app, BrowserWindow, Tray, nativeImage } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
-import Storage from './storage/Storage';
 import MainMessenger, {
   showToolbar,
   toolbarLaunch
@@ -71,8 +70,7 @@ app.on('ready', async () => {
   ) {
     await installExtensions();
   }
-  const storage = new Storage();
-  const install = storage.get('install');
+
   const appPath = 'app.html';
   const icon = nativeImage.createFromDataURL(gigantumBase64);
   const tray = new Tray(icon);
@@ -124,11 +122,6 @@ app.on('ready', async () => {
 
   installerWindow.loadURL(`file://${__dirname}/${appPath}?installer`);
 
-  // @TODO: Use 'ready-to-show' event
-  //        https://github.com/electron/electron/blob/master/docs/api/browser-window.md#using-ready-to-show-event
-  //
-  //
-
   toolbarWindow.webContents.on('did-finish-load', () => {
     if (!toolbarWindow) {
       throw new Error('"toolbarWindow" is not defined');
@@ -136,9 +129,8 @@ app.on('ready', async () => {
     if (process.env.START_MINIMIZED) {
       toolbarWindow.minimize();
     } else {
-      if (install.complete) {
-        showToolbar(toolbarWindow, tray);
-      }
+      showToolbar(toolbarWindow, tray);
+
       toolbarWindow.show();
       toolbarWindow.focus();
     }

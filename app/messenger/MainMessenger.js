@@ -1,4 +1,4 @@
-import { ipcMain } from 'electron';
+import { ipcMain, screen } from 'electron';
 
 const TRAY_ARROW_HEIGHT = 5;
 
@@ -34,13 +34,12 @@ const toolbarLaunch = (toolbarWindow, tray) => {
   });
 
   // Commented out for development purposes
-
-  // toolbarWindow.on('blur', () => {
-  //   if (!toolbarWindow.webContents.isDevToolsOpened()) {
-  //     toolbarWindow.hide();
-  //   }
-  //   toolbarWindow.hide();
-  // });
+  toolbarWindow.on('blur', () => {
+    if (!toolbarWindow.webContents.isDevToolsOpened()) {
+      toolbarWindow.hide();
+    }
+    toolbarWindow.hide();
+  });
 };
 
 /**
@@ -52,17 +51,58 @@ const showToolbar = (toolbarWindow, tray) => {
   const trayPos = tray.getBounds();
   const windowPos = toolbarWindow.getBounds();
   let x = 0;
+  let y = 0;
+  console.log(
+    trayPos,
+    windowPos.height,
+    windowPos.width,
+    screen.getDisplayNearestPoint(trayPos)
+  );
 
   if (process.platform === 'darwin') {
     x = Math.round(trayPos.x + trayPos.width / 2 - windowPos.width / 2);
+    y = TRAY_ARROW_HEIGHT;
   } else {
-    x = Math.round(trayPos.x + trayPos.width / 2 - windowPos.width / 2);
+    const screenInfo = screen.getDisplayNearestPoint(trayPos);
+    const isAtRight =
+      screenInfo.workArea.width < trayPos.x &&
+      screenInfo.workArea.height === screenInfo.size.height;
+    const isAtBottom =
+      screenInfo.workArea.height < trayPos.y + trayPos.height &&
+      screenInfo.workArea.width === screenInfo.size.width;
+    const isAtTop =
+      screenInfo.workArea.y > trayPos.y &&
+      screenInfo.workArea.width === screenInfo.size.width;
+    const isAtLeft =
+      screenInfo.workArea.x > trayPos.x &&
+      screenInfo.workArea.height === screenInfo.size.height;
+
+    if (isAtRight) {
+      // right
+      x = screenInfo.workArea.width - windowPos.width - TRAY_ARROW_HEIGHT;
+      y =
+        y + windowPos.height > y - windowPos.height
+          ? screenInfo.workArea.height - windowPos.height - 50
+          : y;
+    } else if (isAtBottom) {
+      // bottom
+      x = Math.round(trayPos.x + trayPos.width / 2 - windowPos.width / 2);
+      y = screenInfo.workArea.height - windowPos.height - TRAY_ARROW_HEIGHT;
+    } else if (isAtTop) {
+      x = Math.round(trayPos.x + trayPos.width / 2 - windowPos.width / 2);
+      y = screenInfo.workArea.y + TRAY_ARROW_HEIGHT;
+    } else if (isAtLeft) {
+      x = screenInfo.workArea.x + TRAY_ARROW_HEIGHT;
+      y = Math.round(trayPos.y + trayPos.height - windowPos.height / 2);
+      y =
+        y + windowPos.height > y - windowPos.height
+          ? screenInfo.workArea.height - windowPos.height - 50
+          : y;
+    }
   }
 
-  // const currentDisplay = screen.getDisplayNearestPoint({ x, y: TRAY_ARROW_HEIGHT });
-  // toolbarWindow.setPosition(currentDisplay.workArea.x, currentDisplay.workArea.y, false);
   toolbarWindow.setVisibleOnAllWorkspaces(true);
-  toolbarWindow.setPosition(x, TRAY_ARROW_HEIGHT, false);
+  toolbarWindow.setPosition(x, y, false);
   toolbarWindow.show();
   toolbarWindow.focus();
 };
