@@ -1,11 +1,18 @@
 // @flow
 import React, { Component } from 'react';
+// constants
+import {
+  PROMPT,
+  INSTALLING,
+  INSTALLED
+} from '../../containers/machine/InstallDockerConstants';
 // assets
 import './InstallDockerMain.scss';
 
 type Props = {
-  installing: boolean,
-  installed: boolean
+  machine: {
+    value: string
+  }
 };
 
 const isMac = process.platform === 'darwin';
@@ -21,41 +28,38 @@ export default class InstallDockerMain extends Component<Props> {
 
     const installedText = `The Docker for ${OS} installer has been opened.`;
 
-    if (props.installing) {
-      return (
+    const renderMap = {
+      [PROMPT]: (
+        <div className="Layout__Main">
+          To use Gigantum locally, please download & install Docker.
+          <div className="InstallDockerMain__subtext">
+            <p>
+              Docker Desktop for Mac is available for <a>free</a>.{'\n'}
+              Requires Apple Mac OS Sierra 10.12 or above.
+            </p>
+
+            <p>
+              By downloading, you agree to the terms of the{' '}
+              <a>Docker Software End User License Agreement</a> and the{' '}
+              <a>Docker Data Processing Agreement.</a>
+            </p>
+            <p>Gigantum is not affiliated or endorsed by Docker.</p>
+          </div>
+        </div>
+      ),
+      [INSTALLING]: (
         <div className="Layout__Main">
           Please wait while the Docker installer is downloaded to your computer.
         </div>
-      );
-    }
-    if (props.installed) {
-      return (
+      ),
+      [INSTALLED]: (
         <div className="Layout__Main">
-          {installedText}
-          <br />
-          <br />
-          Follow the steps shown to complete the install process.
+          <p>{installedText}</p>
+          <p>Follow the steps shown to complete the install process.</p>
         </div>
-      );
-    }
-    return (
-      <div className="Layout__Main">
-        To use Gigantum locally, please download & install Docker.
-        <div className="InstallDockerMain__subtext">
-          Docker Desktop for Mac is available for <a>free</a>
-          .
-          <br />
-          Requires Apple Mac OS Sierra 10.12 or above.
-          <br />
-          <br />
-          By downloading, you agree to the terms of the{' '}
-          <a>Docker Software End User License Agreement</a> and the{' '}
-          <a>Docker Data Processing Agreement.</a>
-          <br />
-          <br />
-          Gigantum is not affiliated or endorsed by Docker.
-        </div>
-      </div>
-    );
+      )
+    };
+
+    return renderMap[props.machine.value];
   }
 }

@@ -6,15 +6,22 @@ import 'react-circular-progressbar/dist/styles.css';
 import './Status.scss';
 import './InstallDockerStatus.scss';
 import DockerSrc from 'Images/logos/docker.png';
+// constants
+import {
+  PROMPT,
+  INSTALLING,
+  INSTALLED
+} from '../../containers/machine/InstallDockerConstants';
 
 type Props = {
   startInstall: () => void,
   progress: number,
-  installing: boolean,
-  installed: boolean
+  machine: {
+    value: string
+  }
 };
 
-export default class CheckDocker extends Component<Props> {
+export default class CheckDockerStatus extends Component<Props> {
   props: Props;
 
   /**
@@ -29,8 +36,8 @@ export default class CheckDocker extends Component<Props> {
   render() {
     const { props } = this;
     const { progress } = props;
-    if (props.installing) {
-      return (
+    const renderMap = {
+      [INSTALLING]: (
         <div className="Layout__Status InstallDockerStatus">
           <div className="InstallDockerStatus__body">
             <CircularProgressbar
@@ -49,24 +56,23 @@ export default class CheckDocker extends Component<Props> {
             </div>
           </div>
         </div>
-      );
-    }
-    if (props.installed) {
-      return <div className="Layout__Status">GIF HERE</div>;
-    }
-    return (
-      <div className="Layout__Status InstallDockerStatus">
-        <div className="InstallDockerStatus__body">
-          <img alt="docker" src={DockerSrc} width="150" height="150" />
-          <button
-            type="button"
-            className="Btn__Status Btn--primary"
-            onClick={() => this.handleInstallButton()}
-          >
-            Download & Install
-          </button>
+      ),
+      [INSTALLED]: <div className="Layout__Status">GIF HERE</div>,
+      [PROMPT]: (
+        <div className="Layout__Status InstallDockerStatus">
+          <div className="InstallDockerStatus__body">
+            <img alt="docker" src={DockerSrc} width="150" height="150" />
+            <button
+              type="button"
+              className="Btn__Status Btn--primary"
+              onClick={() => this.handleInstallButton()}
+            >
+              Download & Install
+            </button>
+          </div>
         </div>
-      </div>
-    );
+      )
+    };
+    return renderMap[props.machine.value];
   }
 }

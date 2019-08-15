@@ -74,6 +74,7 @@ class Installer {
         return null;
       })
       .catch(error => {
+        console.log('this ran');
         callback({
           success: false,
           finished: false,
@@ -100,6 +101,40 @@ class Installer {
   };
 
   /**
+    @param {Function} - callback
+    checks to see if docker is installed
+  */
+  checkDockerInstall = callback => {
+    if (isMac) {
+      let repeatCount = 0;
+      let lastSize = 0;
+      const checkDocker = () => {
+        const dockerSize = childProcess.spawn('du', [
+          '-sh',
+          '-k',
+          '/Applications/Docker.app'
+        ]);
+        dockerSize.stdout.on('data', data => {
+          const size = data.toString();
+          if (size === lastSize) {
+            repeatCount += 1;
+          } else {
+            repeatCount = 0;
+          }
+          lastSize = size;
+        });
+        if (repeatCount <= 5) {
+          setTimeout(checkDocker, 500);
+        } else {
+          childProcess.spawn('diskutil', ['eject', 'Docker']);
+          callback({ success: true });
+        }
+      };
+      checkDocker();
+    }
+  };
+
+  /**
    * @param {Function} callback
    * @param {Number} count
    *
@@ -117,9 +152,7 @@ class Installer {
         console.log(`${code}`);
 
         if (code === 0) {
-          setTimeout(() => {
-            callback({ success: true, data: {} });
-          }, 30000); // TODO remove timeout, figure out how to detect when app is ready
+          this.checkDockerInstall(callback);
         } else {
           setTimeout(() => {
             this.checkForApplication(callback);
@@ -173,13 +206,14 @@ class Installer {
       const settingsRawData = fs.readFileSync(settingsPath);
       const settings = JSON.parse(settingsRawData);
 
+      const selectHigherValue = (current, lowerBound) =>
+        current >= lowerBound ? current : lowerBound;
+
       settings.autoStart = false;
       settings.analyticsEnabled = false;
-      settings.memoryMiB =
-        settings.memoryMiB >= 10240 ? settings.memoryMiB : 10240;
-      settings.cpus = settings.cpus >= 2 ? settings.cpus : 2;
-      settings.diskSizeMiB =
-        settings.diskSizeMiB >= 102400 ? settings.diskSizeMiB : 102400;
+      settings.memoryMiB = selectHigherValue(settings.memoryMiB, 10240);
+      settings.cpus = selectHigherValue(settings.cpus, 2);
+      settings.diskSizeMiB = selectHigherValue(settings.diskSizeMiB, 102400);
 
       const newSettings = JSON.stringify(settings);
 
@@ -194,7 +228,6 @@ class Installer {
       };
 
       const dockerStopCallback = response => {
-        console.log(response);
         if (response.success) {
           this.docker.startDockerApplication(startDockerApplicationCallback);
         } else {

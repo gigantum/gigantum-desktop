@@ -204,9 +204,21 @@ class Docker {
   */
   startDockerApplication = callback => {
     const dockerSpawn = childProcess.spawn('open', ['-a', 'docker']);
-    window.docker = dockerSpawn;
-    // TODO uninstall docker to get error state
-    callback({ success: true, data: dockerSpawn });
+
+    dockerSpawn.on('close', code => {
+      if (code === 0) {
+        callback({ success: true, data: {} });
+      } else {
+        callback({
+          success: false,
+          data: {
+            error: {
+              message: 'Docker is not installed'
+            }
+          }
+        });
+      }
+    });
   };
 
   /**

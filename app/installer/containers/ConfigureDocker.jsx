@@ -1,7 +1,10 @@
 // @flow
 import React, { Component } from 'react';
+// States
+import configureDockerMachine from './machine/ConfigureDockerMachine';
 // constants
 import { ERROR, SUCCESS } from '../machine/InstallerConstants';
+import { CONFIGURE, LAUNCH } from './machine/ConfigureDockerConstants';
 // containers
 import Layout from './Layout';
 // componenets
@@ -14,9 +17,28 @@ export default class ConfigureDocker extends Component<Props> {
   props: Props;
 
   state = {
-    configuring: false,
+    machine: configureDockerMachine.initialState,
     skipConfigure: false,
     configured: false
+  };
+
+  /**
+    @param {string} eventType
+    sets transition of the state machine
+  */
+  configureDockerTransition = eventType => {
+    const { state } = this;
+
+    const newState = configureDockerMachine.transition(
+      state.machine.value,
+      eventType,
+      {
+        state
+      }
+    );
+    this.setState({
+      machine: newState
+    });
   };
 
   /**
@@ -25,20 +47,20 @@ export default class ConfigureDocker extends Component<Props> {
    */
   configureDocker = skipConfigure => {
     const { props } = this;
-    this.setState({ configuring: true, skipConfigure });
+    this.setState({ skipConfigure });
+    const action = skipConfigure ? LAUNCH : CONFIGURE;
+    this.configureDockerTransition(action);
     const callback = response => {
-      console.log(response);
       if (response.success) {
         this.setState({ configured: true });
         setTimeout(() => {
           props.transition(SUCCESS, {
             message: 'Configure Gigantum'
           });
-          this.setState({ configuring: false });
         }, 3000);
       } else {
         props.transition(ERROR, {
-          message: 'Docker Install Failed'
+          message: 'Docker Configuration Failed'
         });
       }
     };
@@ -56,13 +78,13 @@ export default class ConfigureDocker extends Component<Props> {
           progress={2}
           main={
             <ConfigureDockerMain
-              configuring={state.configuring}
+              machine={state.machine}
               skipConfigure={state.skipConfigure}
             />
           }
           status={
             <ConfigureDockerStatus
-              configuring={state.configuring}
+              machine={state.machine}
               configured={state.configured}
               configureDocker={this.configureDocker}
               skipConfigure={state.skipConfigure}

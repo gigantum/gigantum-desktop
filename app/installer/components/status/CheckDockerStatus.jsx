@@ -6,7 +6,7 @@ import './CheckDockerStatus.scss';
 
 type Props = {};
 
-export default class CheckDocker extends Component<Props> {
+export default class CheckDockerStatus extends Component<Props> {
   props: Props;
 
   render() {

@@ -8,7 +8,9 @@ import {
   CONFIGURE_DOCKER,
   CONFIGURE_GIGANTUM,
   INSTALL_COMPLETE,
-  TRY_AGAIN
+  TRY_AGAIN_INSTALL_DOCKER,
+  TRY_AGAIN_CONFIGURE_GIGANTUM,
+  TRY_AGAIN_CONFIGURE_DOCKER
 } from './InstallerConstants';
 
 const stateMachine = Machine({
@@ -60,7 +62,9 @@ const stateMachine = Machine({
     [ERROR]: {
       meta: { message: 'Click to Start', additionalInfo: '' },
       on: {
-        [TRY_AGAIN]: CHECKING
+        [TRY_AGAIN_INSTALL_DOCKER]: CHECKING,
+        [TRY_AGAIN_CONFIGURE_DOCKER]: CONFIGURE_DOCKER,
+        [TRY_AGAIN_CONFIGURE_GIGANTUM]: CONFIGURE_GIGANTUM
       }
     }
   }

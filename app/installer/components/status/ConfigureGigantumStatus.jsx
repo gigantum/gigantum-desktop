@@ -11,7 +11,7 @@ type Props = {
   progress: number
 };
 
-export default class ConfigureDocker extends Component<Props> {
+export default class ConfigureGigantumStatus extends Component<Props> {
   props: Props;
 
   componentDidMount = () => {

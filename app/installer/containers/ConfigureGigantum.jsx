@@ -37,7 +37,7 @@ export default class Checking extends Component<Props> {
         }
       } else {
         props.transition(ERROR, {
-          message: 'Gigantum Install Failed'
+          message: 'Gigantum Configuration Failed'
         });
       }
     };

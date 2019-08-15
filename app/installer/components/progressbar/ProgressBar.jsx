@@ -14,24 +14,24 @@ export default class ProgressBar extends Component<Props> {
   render() {
     const { progress } = this.props;
     const firstStepCSS = classNames({
-      'first-item': true,
-      'is-active': progress === 1,
-      'is-completed': progress > 1
+      'ProgressBar__Steps--first': true,
+      'ProgressBar__Steps--active': progress === 1,
+      'ProgressBar__Steps--completed': progress > 1
     });
     const secondStepCSS = classNames({
-      'middle-item': true,
-      'is-active': progress === 2,
-      'is-completed': progress > 2
+      'ProgressBar__Steps--middle': true,
+      'ProgressBar__Steps--active': progress === 2,
+      'ProgressBar__Steps--completed': progress > 2
     });
     const thirdStepCSS = classNames({
-      'last-item': true,
-      'is-active': progress === 3,
-      'is-completed': progress > 3
+      'ProgressBar__Steps--last': true,
+      'ProgressBar__Steps--active': progress === 3,
+      'ProgressBar__Steps--completed': progress > 3
     });
     return (
       <div className="ProgressBar">
         <div className="ProgressBar__container">
-          <ul className="list-unstyled multi-steps">
+          <ul className="ProgressBar__Steps">
             <li className={firstStepCSS}>Install Docker</li>
             <li className={secondStepCSS}>Configure Docker</li>
             <li className={thirdStepCSS}>Configure Gigantum</li>

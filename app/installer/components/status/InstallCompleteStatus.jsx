@@ -11,7 +11,7 @@ type Props = {
   }
 };
 
-export default class InstallComplete extends Component<Props> {
+export default class InstallCompleteStatus extends Component<Props> {
   props: Props;
 
   render() {

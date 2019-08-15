@@ -78,5 +78,18 @@ export default {
       answer: 'asdassad'
     }
   ],
-  [ERROR]: []
+  [ERROR]: [
+    {
+      question: 'How is storage used?',
+      answer: 'asdassad'
+    },
+    {
+      question: 'Why is so much storage required?',
+      answer: 'asdassad'
+    },
+    {
+      question: 'What can I do if I don’t have enough space?',
+      answer: 'asdassad'
+    }
+  ]
 };

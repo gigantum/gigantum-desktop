@@ -366,7 +366,6 @@ class Gigantum extends Docker {
     fetches image data
   */
   fetchImageData = callback => {
-    console.log('this ran');
     fetch(
       `https://hub.docker.com/v2/repositories/gigantum/labmanager/tags/${config.imageTag}`
     )
@@ -463,6 +462,8 @@ class Gigantum extends Docker {
         response.error.message.indexOf('no such image') > -1;
       if (isNotInstalled) {
         this.pullImage(callback);
+      } else if (response && response.error) {
+        callback({ success: false, data: response.error });
       } else {
         callback({ success: true, data: { finished: true } });
       }

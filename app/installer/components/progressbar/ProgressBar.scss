@@ -4,119 +4,115 @@
   padding: 0 150px;
 }
 
-%remain-steps {
-  &::before {
-    // content: counter(stepNum);
-    font-family: inherit;
-    font-weight: 700;
-  }
-  &::after {
-    background-color: $romanSilver;
-  }
-}
-.multi-steps {
-  display: table;
-  table-layout: fixed;
-  width: 100%;
-  padding: 0;
+.ProgressBar {
+  &__Steps {
+    display: table;
+    table-layout: fixed;
+    width: 100%;
+    padding: 0;
 
-  > li {
-    counter-increment: stepNum;
-    text-align: center;
-    display: table-cell;
-    position: relative;
-    color: $romanSilver;
-    padding-top: 20px;
-    transition: all 0.25s;
-    z-index: 1;
-    font-size: 12px;
-    line-height: 30px;
-
-    &::before {
-      font-size: 14px;
-      transition: all 0.25s;
-      content: '';
-      display: block;
-      margin: 0 auto 2px;
-      background-color: $lightGrey;
-      width: 24px;
-      height: 24px;
-      line-height: 20px;
-      text-align: center;
-      position: absolute;
-      top: 0;
-      border: 1px solid $romanSilver;
-      border-radius: 50%;
-      box-sizing: border-box;
-      left: 25px;
-    }
-    &::after {
-      transition: all 0.25s;
-      content: '';
-      height: 2px;
-      width: calc(150% - 30px);
-      background-color: $primary;
-      position: absolute;
-      top: 11.5px;
-      left: 25px;
-      z-index: -1;
-    }
-    &:last-child {
-      &::after {
-        transition: all 0.25s;
-        display: none;
-      }
-    }
-
-    &.is-completed {
+    &--completed {
       transition: all 0.25s;
 
       &::before {
         transition: all 0.25s;
         position: absolute;
-        background: $primary;
+        background: $primary !important;
         color: $white;
         top: 0;
 
-        border: 2px solid $primary;
+        border: 2px solid $primary !important;
       }
     }
 
-    &.is-active {
+    &--active {
       transition: all 0.25s;
-      color: $primary;
+      color: $primary !important;
       font-weight: bold;
-      @extend %remain-steps;
+      &::after {
+        background-color: $romanSilver !important;
+      }
       &::before {
-        border-color: $turquise;
+        border-color: $turquise !important;
         animation: spin 2s linear infinite;
         background: $lightGrey;
         background-size: 20px;
         width: 24px;
         height: 24px;
-        border: 2px solid $primary;
+        border: 2px solid $primary !important;
       }
 
       ~ li {
         transition: all 0.25s;
-        @extend %remain-steps;
+        &::after {
+          background-color: $romanSilver !important;
+        }
       }
     }
-    &.first-item {
-      text-align: left;
+    &--first {
+      text-align: left !important;
     }
-    &.middle-item {
+    &--middle {
       &::before,
       &::after {
-        left: calc(50% - 12px);
+        left: calc(50% - 12px) !important;
       }
     }
-    &.last-item {
-      text-align: right;
+    &--last {
+      text-align: right !important;
 
       &::before {
-        right: 40px;
-        left: auto;
+        right: 40px !important;
+        left: auto !important;
+      }
+    }
+
+    > li {
+      counter-increment: stepNum;
+      text-align: center;
+      display: table-cell;
+      position: relative;
+      color: $romanSilver;
+      padding-top: 20px;
+      transition: all 0.25s;
+      z-index: 1;
+      font-size: 12px;
+      line-height: 30px;
+
+      &::before {
+        font-size: 14px;
+        transition: all 0.25s;
+        content: '';
+        display: block;
+        margin: 0 auto 2px;
+        background-color: $lightGrey;
+        width: 24px;
+        height: 24px;
+        line-height: 20px;
+        text-align: center;
+        position: absolute;
+        top: 0;
+        border: 1px solid $romanSilver;
+        border-radius: 50%;
+        box-sizing: border-box;
+        left: 25px;
+      }
+      &::after {
+        transition: all 0.25s;
+        content: '';
+        height: 2px;
+        width: calc(150% - 30px);
+        background-color: $primary;
+        position: absolute;
+        top: 11.5px;
+        left: 25px;
+        z-index: -1;
+      }
+      &:last-child {
+        &::after {
+          transition: all 0.25s;
+          display: none;
+        }
       }
     }
   }

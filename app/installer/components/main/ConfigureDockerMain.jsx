@@ -1,46 +1,50 @@
 // @flow
 import React, { Component } from 'react';
+import {
+  PROMPT,
+  LAUNCHING,
+  CONFIGURING
+} from '../../containers/machine/ConfigureDockerConstants';
 // assets
 import './ConfigureDockerMain.scss';
 
 type Props = {
-  configuring: boolean,
-  skipConfigure: () => void
+  machine: {
+    value: string
+  }
 };
 
-export default class ConfigureDocker extends Component<Props> {
+export default class ConfigureDockerMain extends Component<Props> {
   props: Props;
 
   render() {
     const { props } = this;
-    if (props.configuring && props.skipConfigure) {
-      return (
+
+    const renderMap = {
+      [LAUNCHING]: (
         <div className="Layout__Main">
-          We are starting Docker with existing settings.
-          <br />
-          <br />
-          Docker can take up to 5 minutes to start.
+          <p>We are starting Docker with existing settings.</p>
+          <p>Docker can take up to 5 minutes to start.</p>
         </div>
-      );
-    }
-    if (props.configuring) {
-      return (
+      ),
+      [CONFIGURING]: (
         <div className="Layout__Main">
-          We are configuring Docker for you and restarting the application.
-          <br />
-          <br />
-          Docker can take up to 10 minutes to restart.
+          <p>
+            We are configuring Docker for you and restarting the application.
+          </p>
+          <p>Docker can take up to 10 minutes to restart.</p>
         </div>
-      );
-    }
-    return (
-      <div className="Layout__Main">
-        For optimal use with Gigantum, Docker requires some additional
-        configuration.
-        <br />
-        <br />
-        Click “Configure” to automatically set up Docker.
-      </div>
-    );
+      ),
+      [PROMPT]: (
+        <div className="Layout__Main">
+          <p>
+            For optimal use with Gigantum, Docker requires some additional
+            configuration.
+          </p>
+          <p>Click “Configure” to automatically set up Docker.</p>
+        </div>
+      )
+    };
+    return renderMap[props.machine.value];
   }
 }

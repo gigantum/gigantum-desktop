@@ -18,6 +18,7 @@ import InstallerMessenger from './messenger/InstallerMessenger';
 import InstallerClass from '../libs/Installer';
 // containers
 import Checking from './containers/Checking';
+import Error from './containers/Error';
 import InstallDocker from './containers/InstallDocker';
 import ConfigureDocker from './containers/ConfigureDocker';
 import ConfigureGigantum from './containers/ConfigureGigantum';
@@ -38,23 +39,6 @@ export default class Installer extends Component<Props> {
     machine: stateMachine.initialState,
     message: 'Checking for Docker'
   };
-
-  componentDidMount() {
-    const { props } = this;
-    const callback = response => {
-      if (response.success) {
-        if (props.storage.get('dockerConfigured')) {
-          this.transition(CONFIGURE_GIGANTUM, {
-            message: 'Configure Gigantum'
-          });
-        }
-        this.transition(CONFIGURE_DOCKER, { message: 'Configure Docker' });
-      } else {
-        this.transition(INSTALL_DOCKER, { message: 'Install Docker' });
-      }
-    };
-    this.interface.check(callback);
-  }
 
   messenger = new InstallerMessenger();
 
@@ -90,7 +74,7 @@ export default class Installer extends Component<Props> {
     this.setState({
       machine: newState,
       message: nextState && nextState.message ? nextState.message : '',
-      category: nextState && nextState.category ? nextState.category : ''
+      metaData: nextState && nextState.metaData ? nextState.metaData : ''
       // installNeeded:
       //   nextState && nextState.installNeeded ? nextState.installNeeded : false
     });
@@ -141,7 +125,7 @@ export default class Installer extends Component<Props> {
         />
       ),
       [ERROR]: (
-        <Checking
+        <Error
           {...props}
           {...state}
           transition={transition}

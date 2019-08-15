@@ -5,7 +5,7 @@ import './CheckDockerMain.scss';
 
 type Props = {};
 
-export default class CheckDocker extends Component<Props> {
+export default class CheckDockerMain extends Component<Props> {
   props: Props;
 
   render() {
