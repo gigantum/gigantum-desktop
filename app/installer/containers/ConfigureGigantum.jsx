@@ -1,25 +1,65 @@
 // @flow
 import React, { Component } from 'react';
 // constants
-import { CHECKING } from '../machine/InstallerConstants';
+import { ERROR, SUCCESS } from '../machine/InstallerConstants';
 // containers
 import Layout from './Layout';
 // componenets
-import CheckDockerMain from '../components/main/CheckDockerMain';
-import CheckDockerStatus from '../components/status/CheckDockerStatus';
+import ConfigureGigantumMain from '../components/main/ConfigureGigantumMain';
+import ConfigureGigantumStatus from '../components/status/ConfigureGigantumStatus';
 // assets
 import './Container.scss';
 
-export default class Container extends Component<Props> {
+export default class Checking extends Component<Props> {
   props: Props;
 
+  state = {
+    progress: 0
+  };
+
+  /**
+   * @param {Boolean} skipConfigure
+   *  configures gigantum
+   */
+  configureGigantum = () => {
+    const { props } = this;
+    const callback = response => {
+      if (response.success) {
+        if (response.data.finished) {
+          this.setState({ progress: 100 });
+          setTimeout(() => {
+            props.transition(SUCCESS, {
+              message: 'Configuration Complete'
+            });
+          }, 3000);
+        } else {
+          this.setState({ progress: response.data.percentage });
+        }
+      } else {
+        props.transition(ERROR, {
+          message: 'Gigantum Install Failed'
+        });
+      }
+    };
+    props.interface.configureGigantum(callback);
+  };
+
   render() {
+    const { props, state } = this;
+    const { machine, message } = props;
     return (
       <div data-tid="container">
         <Layout
-          currentState={CHECKING}
-          main={CheckDockerMain}
-          status={CheckDockerStatus}
+          currentState={machine.value}
+          message={message}
+          progress={3}
+          main={<ConfigureGigantumMain />}
+          status={
+            <ConfigureGigantumStatus
+              configureGigantum={this.configureGigantum}
+              progress={state.progress}
+            />
+          }
         />
       </div>
     );

@@ -1,0 +1,9 @@
+@import '~Styles/_imports.scss';
+
+.InstallCompleteStatus {
+  @include flex(center, column);
+  align-items: center;
+  img {
+    margin-bottom: 20px;
+  }
+}

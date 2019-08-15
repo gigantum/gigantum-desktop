@@ -3,8 +3,8 @@ import React, { Component } from 'react';
 // containers
 import Layout from './Layout';
 // componenets
-import CheckDockerMain from '../components/main/CheckDockerMain';
-import CheckDockerStatus from '../components/status/CheckDockerStatus';
+import InstallCompleteMain from '../components/main/InstallCompleteMain';
+import InstallCompleteStatus from '../components/status/InstallCompleteStatus';
 // assets
 import './Container.scss';
 
@@ -12,15 +12,15 @@ export default class Checking extends Component<Props> {
   props: Props;
 
   render() {
-    const { machine, message } = this.props;
+    const { machine, message, messenger } = this.props;
     return (
       <div data-tid="container">
         <Layout
           currentState={machine.value}
           message={message}
-          progress={1}
-          main={<CheckDockerMain />}
-          status={<CheckDockerStatus />}
+          progress={4}
+          main={<InstallCompleteMain />}
+          status={<InstallCompleteStatus messenger={messenger} />}
         />
       </div>
     );

@@ -10,60 +10,57 @@ import {
   ERROR
 } from './machine/InstallerConstants';
 import stateMachine from './machine/InstallerMachine';
+// docker
+import InstallerInterface from '../libs/InstallerInterface';
+// messenger
+import InstallerMessenger from './messenger/InstallerMessenger';
 // libs
 import InstallerClass from '../libs/Installer';
 // containers
 import Checking from './containers/Checking';
+import InstallDocker from './containers/InstallDocker';
+import ConfigureDocker from './containers/ConfigureDocker';
+import ConfigureGigantum from './containers/ConfigureGigantum';
+import InstallComplete from './containers/InstallComplete';
 // assets
 import './Installer.scss';
 
-type Props = {};
+type Props = {
+  storage: {
+    get: () => void
+  }
+};
 
 export default class Installer extends Component<Props> {
   props: Props;
 
   state = {
-    machine: stateMachine.initialState
+    machine: stateMachine.initialState,
+    message: 'Checking for Docker'
   };
+
+  componentDidMount() {
+    const { props } = this;
+    const callback = response => {
+      if (response.success) {
+        if (props.storage.get('dockerConfigured')) {
+          this.transition(CONFIGURE_GIGANTUM, {
+            message: 'Configure Gigantum'
+          });
+        }
+        this.transition(CONFIGURE_DOCKER, { message: 'Configure Docker' });
+      } else {
+        this.transition(INSTALL_DOCKER, { message: 'Install Docker' });
+      }
+    };
+    this.interface.check(callback);
+  }
+
+  messenger = new InstallerMessenger();
 
   installer = new InstallerClass();
 
-  triggerInstall = () => {
-    const { installer } = this;
-
-    const updateSettingsCallback = response => {
-      console.log(response);
-    };
-
-    const checkIfDockerIsReadyCallback = response => {
-      if (response.success) {
-        installer.updateSettings(updateSettingsCallback);
-      }
-    };
-
-    const checkForApplicationCallback = response => {
-      console.log(response);
-      if (response.success) {
-        installer.checkIfDockerIsReady(checkIfDockerIsReadyCallback);
-      }
-    };
-
-    const dndCallback = response => {
-      console.log(response);
-      if (response.success) {
-        installer.checkForApplication(checkForApplicationCallback, 0);
-      }
-    };
-
-    const downloadDockerCallback = response => {
-      console.log(response);
-      if (response.success) {
-        installer.openDragAndDrop(response.data.downloadedFile, dndCallback);
-      }
-    };
-
-    installer.downloadDocker(downloadDockerCallback);
-  };
+  interface = new InstallerInterface();
 
   /**
     @param {object} state
@@ -102,22 +99,57 @@ export default class Installer extends Component<Props> {
   render() {
     const { props, state, transition } = this;
     const renderMap = {
-      [CHECKING]: <Checking {...props} {...state} transition={transition} />,
+      [CHECKING]: (
+        <Checking
+          {...props}
+          {...state}
+          transition={transition}
+          interface={this.interface}
+        />
+      ),
       [INSTALL_DOCKER]: (
-        <Checking {...props} {...state} transition={transition} />
+        <InstallDocker
+          {...props}
+          {...state}
+          transition={transition}
+          interface={this.interface}
+        />
       ),
       [CONFIGURE_DOCKER]: (
-        <Checking {...props} {...state} transition={transition} />
+        <ConfigureDocker
+          {...props}
+          {...state}
+          transition={transition}
+          interface={this.interface}
+        />
       ),
       [CONFIGURE_GIGANTUM]: (
-        <Checking {...props} {...state} transition={transition} />
+        <ConfigureGigantum
+          {...props}
+          {...state}
+          transition={transition}
+          interface={this.interface}
+        />
       ),
       [INSTALL_COMPLETE]: (
-        <Checking {...props} {...state} transition={transition} />
+        <InstallComplete
+          {...props}
+          {...state}
+          transition={transition}
+          interface={this.interface}
+          messenger={this.messenger}
+        />
       ),
-      [ERROR]: <Checking {...props} {...state} transition={transition} />
+      [ERROR]: (
+        <Checking
+          {...props}
+          {...state}
+          transition={transition}
+          interface={this.interface}
+        />
+      )
     };
 
-    return <div data-tid="container">{renderMap[state.machine.value]}</div>;
+    return <div className="Installer">{renderMap[state.machine.value]}</div>;
   }
 }

@@ -19,7 +19,8 @@ const stateMachine = Machine({
       on: {
         ERROR,
         INSTALL_DOCKER,
-        CONFIGURE_DOCKER
+        CONFIGURE_DOCKER,
+        CONFIGURE_GIGANTUM
       }
     },
     [INSTALL_DOCKER]: {

@@ -10,21 +10,73 @@ import {
 export default {
   [CHECKING]: [
     {
-      question: 'asdsadds',
+      question: 'What is Docker?',
       answer: 'asdassad'
     },
     {
-      question: 'asdsadds',
+      question: 'Why do I need to install Docker?',
       answer: 'asdassad'
     },
     {
-      question: 'asdsadds',
+      question: 'Can I run Gigantum without Docker?',
       answer: 'asdassad'
     }
   ],
-  [INSTALL_DOCKER]: {},
-  [CONFIGURE_DOCKER]: {},
-  [CONFIGURE_GIGANTUM]: {},
-  [INSTALL_COMPLETE]: {},
-  [ERROR]: {}
+  [INSTALL_DOCKER]: [
+    {
+      question: 'What is Docker?',
+      answer: 'asdassad'
+    },
+    {
+      question: 'Why do I need to install Docker?',
+      answer: 'asdassad'
+    },
+    {
+      question: 'Can I run Gigantum without Docker?',
+      answer: 'asdassad'
+    }
+  ],
+  [CONFIGURE_DOCKER]: [
+    {
+      question: 'Why is this needed?',
+      answer: 'asdassad'
+    },
+    {
+      question: 'How do I configure Docker myself?',
+      answer: 'asdassad'
+    },
+    {
+      question: 'What is the default configuration?',
+      answer: 'asdassad'
+    }
+  ],
+  [CONFIGURE_GIGANTUM]: [
+    {
+      question: 'Why is this needed?',
+      answer: 'asdassad'
+    },
+    {
+      question: 'How do I configure Docker myself?',
+      answer: 'asdassad'
+    },
+    {
+      question: 'What is the default configuration?',
+      answer: 'asdassad'
+    }
+  ],
+  [INSTALL_COMPLETE]: [
+    {
+      question: 'Why is this needed?',
+      answer: 'asdassad'
+    },
+    {
+      question: 'How do I configure Docker myself?',
+      answer: 'asdassad'
+    },
+    {
+      question: 'What is the default configuration?',
+      answer: 'asdassad'
+    }
+  ],
+  [ERROR]: []
 };

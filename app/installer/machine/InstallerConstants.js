@@ -8,3 +8,4 @@ export const ERROR = 'ERROR';
 
 // actions
 export const TRY_AGAIN = 'TRY_AGAIN';
+export const SUCCESS = 'SUCCESS';

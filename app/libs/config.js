@@ -31,7 +31,7 @@ const envHost = isWindows
 
 // gigantum image name
 const imageLabel = 'gigantum/labmanager';
-const imageTag = '82dd56ab4';
+const imageTag = 'c21042b3';
 const clientVersion = '0.13.1';
 
 // env constants

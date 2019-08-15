@@ -1,3 +1,26 @@
+@import '~Styles/_imports.scss';
+
 .CheckDockerStatus {
+  @include flex(center, column);
+  align-items: center;
+
+  border: 0 !important;
+  &::before {
+    display: none;
+  }
+}
+
+.CheckDockerStatus__spinner {
   display: block;
+  background: url('~Images/loaders/spinner.svg') no-repeat center center;
+  width: 130px;
+  height: 130px;
+  background-size: 130px;
+  margin: 0 0 40px 0;
+}
+
+.CheckDockerStatus__message {
+  color: $primary;
+  font-size: 15px;
+  text-align: center;
 }

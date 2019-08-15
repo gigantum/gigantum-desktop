@@ -43,16 +43,42 @@ class Installer {
       downloadedFile = `${downloadDirectory}/ Docker%20for%20Windows%20Installer.exe`;
     }
 
-    download(downloadLink, downloadDirectory)
+    let downloadProgress = 0;
+
+    download(downloadLink, downloadDirectory, { extract: true, strip: 1 })
+      .on('response', response => {
+        const totalSize = response.headers['content-length'];
+        let count = 0;
+        response.on('data', data => {
+          count += 1;
+          downloadProgress += data.length;
+          // delay frequency of callback firing - causes UI to crash
+          if (count % 50 === 0) {
+            callback({
+              success: true,
+              finished: false,
+              data: {
+                progress: (downloadProgress / totalSize) * 100
+              }
+            });
+          }
+        });
+      })
       .then(() => {
         callback({
           success: true,
+          finished: true,
           data: { downloadedFile }
         });
 
         return null;
       })
       .catch(error => {
+        callback({
+          success: false,
+          finished: false,
+          data: { downloadedFile }
+        });
         console.log(error);
       });
   };
@@ -92,10 +118,8 @@ class Installer {
 
         if (code === 0) {
           setTimeout(() => {
-            this.docker.startDockerApplication(callback);
+            callback({ success: true, data: {} });
           }, 30000); // TODO remove timeout, figure out how to detect when app is ready
-
-          // callback({sucess: true })
         } else {
           setTimeout(() => {
             this.checkForApplication(callback);
@@ -151,18 +175,28 @@ class Installer {
 
       settings.autoStart = false;
       settings.analyticsEnabled = false;
-      settings.memoryMiB = 10240;
-      settings.cpus = 2;
-      settings.diskSizeMiB = 102400;
+      settings.memoryMiB =
+        settings.memoryMiB >= 10240 ? settings.memoryMiB : 10240;
+      settings.cpus = settings.cpus >= 2 ? settings.cpus : 2;
+      settings.diskSizeMiB =
+        settings.diskSizeMiB >= 102400 ? settings.diskSizeMiB : 102400;
 
       const newSettings = JSON.stringify(settings);
 
       fs.writeFileSync(settingsPath, newSettings);
 
+      const startDockerApplicationCallback = response => {
+        if (response.success) {
+          this.checkIfDockerIsReady(callback);
+        } else {
+          callback({ success: false });
+        }
+      };
+
       const dockerStopCallback = response => {
         console.log(response);
         if (response.success) {
-          this.docker.startDockerApplication(callback);
+          this.docker.startDockerApplication(startDockerApplicationCallback);
         } else {
           callback({ success: false });
         }

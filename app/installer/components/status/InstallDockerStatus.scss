@@ -1,0 +1,17 @@
+@import '~Styles/_imports.scss';
+
+.InstallDockerStatus__body {
+  @include flex(center, column);
+  align-items: center;
+  height: 100%;
+
+  img {
+    margin-bottom: 40px;
+  }
+}
+
+.CircularProgressbar {
+  width: 130px;
+  height: 130px;
+  margin: 0 0 40px 0;
+}

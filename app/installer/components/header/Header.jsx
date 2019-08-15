@@ -3,12 +3,15 @@ import React, { Component } from 'react';
 // assets
 import './Header.scss';
 
-type Props = {};
+type Props = {
+  message: ''
+};
 
 export default class Header extends Component<Props> {
   props: Props;
 
   render() {
-    return <div data-tid="container">Header</div>;
+    const { message } = this.props;
+    return <div className="InstallHeader">{message}</div>;
   }
 }
