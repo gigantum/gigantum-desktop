@@ -1,3 +1,17 @@
-.Faq {
-  display: none;
+@import '~Styles/_imports.scss';
+
+.Faq__Question {
+  height: 78px;
+  border-bottom: 1px solid $grey-border;
+  color: $romanSilver;
+  background: url('~Images/icons/down-arrow-primary.svg') no-repeat center right;
+  background-size: 15px;
+  padding: 0 63px 0 1px;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  &:hover {
+    color: $jet;
+  }
 }

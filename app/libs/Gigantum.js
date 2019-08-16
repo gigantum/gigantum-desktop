@@ -35,10 +35,11 @@ class Gigantum extends Docker {
 
   /**
     @param {Function} callback
+    @param {Boolean} skipStart
     runs getContainer and checks if the container exists
     @calls {this.getContainer}
   */
-  runGigantum = callback => {
+  runGigantum = (callback, skipStart) => {
     this.dockerRequest.get(`/images/${config.imageName}/json`, error => {
       console.log(error);
       if (error) {
@@ -46,6 +47,10 @@ class Gigantum extends Docker {
           success: false,
           running: false,
           error
+        });
+      } else if (skipStart) {
+        callback({
+          success: true
         });
       } else {
         this.createGigantum(callback);
@@ -354,6 +359,126 @@ class Gigantum extends Docker {
           this.checkApi(callback, {});
         }
       });
+  };
+
+  /**
+   * @param {Function} callback
+    fetches image data
+  */
+  fetchImageData = callback => {
+    fetch(
+      `https://hub.docker.com/v2/repositories/gigantum/labmanager/tags/${config.imageTag}`
+    )
+      .then(response => response.json())
+      .then(response => callback({ success: true, data: response }))
+      .catch(error => callback({ sucess: false, error }));
+  };
+
+  /**
+   * @param {Function} callback
+    pulls Gigantum image
+  */
+  pullImage = callback => {
+    const downloadObj = { null: 0 };
+    const extractObj = { null: 0 };
+    const handlePull = (data, enc, cb) => {
+      if (data.error) return cb(new Error(data.error.trim()));
+      if (!data.id || !data.progressDetail || !data.progressDetail.current) {
+        return cb();
+      }
+      if (data.status === 'Downloading') {
+        downloadObj[data.id] = data.progressDetail.current;
+      } else if (data.status === 'Extracting') {
+        extractObj[data.id] = data.progressDetail.current;
+      }
+
+      const downloadPercent =
+        Object.values(downloadObj).reduce((a, b) => a + b) / this.imageSize;
+      const extractPercent =
+        Object.values(extractObj).reduce((a, b) => a + b) / this.imageSize;
+
+      const weightedDownloadPercent = Math.round(downloadPercent * 75);
+      const weightedExtractPercent = Math.round(extractPercent * 25);
+      callback({
+        success: true,
+        data: {
+          percentage: weightedDownloadPercent + weightedExtractPercent,
+          finished: false
+        }
+      });
+      cb();
+    };
+    this.dockerRequest.post(
+      '/images/create',
+      {
+        qs: {
+          fromImage: config.imageName,
+          tag: config.imageTag
+        },
+        body: null
+      },
+      (err, response) => {
+        if (response) {
+          pump(response, throughJSON(), through.obj(handlePull), error => {
+            if (error) {
+              console.log(error);
+              callback({
+                success: false,
+                data: {
+                  finished: false
+                }
+              });
+            } else {
+              callback({
+                success: true,
+                data: {
+                  percentage: 100,
+                  finished: true
+                }
+              });
+            }
+          });
+        }
+        console.log(err, response);
+      }
+    );
+  };
+
+  /**
+   * @param {Function} callback
+    pulls gigantum container
+  */
+  configureGigantum = callback => {
+    const { getContainer } = this.dockerode;
+    const container = getContainer(config.containerName);
+
+    container.modem = this.dockerode.modem;
+
+    const runGigantumCallback = response => {
+      const isNotInstalled =
+        response &&
+        response.error &&
+        response.error.message &&
+        response.error.message.indexOf('no such image') > -1;
+      if (isNotInstalled) {
+        this.pullImage(callback);
+      } else if (response && response.error) {
+        callback({ success: false, data: response.error });
+      } else {
+        callback({ success: true, data: { finished: true } });
+      }
+    };
+
+    const fetchImageDataCallback = response => {
+      if (response.success) {
+        this.imageSize = response.data.full_size;
+        this.runGigantum(runGigantumCallback, true);
+      } else {
+        callback({ success: false, data: { error: response.error } });
+      }
+    };
+
+    this.fetchImageData(fetchImageDataCallback);
   };
 
   handleAppQuit(updating = false) {

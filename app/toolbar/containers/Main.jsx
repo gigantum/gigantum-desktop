@@ -68,8 +68,6 @@ export default class Main extends Component<Props> {
       machine: newState,
       message: nextState && nextState.message ? nextState.message : '',
       category: nextState && nextState.category ? nextState.category : ''
-      // installNeeded:
-      //   nextState && nextState.installNeeded ? nextState.installNeeded : false
     });
   };
 

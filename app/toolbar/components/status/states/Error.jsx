@@ -36,7 +36,7 @@ const getSubText = message => {
       return {
         subText: (
           <div className="Error__subText">
-            Gigantum runs on Docker \n To work locally you must install Docker
+            {`Gigantum runs on Docker. \n To work locally you must install Docker`}
           </div>
         ),
         buttonText: 'Install Docker'

@@ -1,3 +1,13 @@
-.Containers {
+@import '~Styles/_imports.scss';
+
+.header-arrow {
+  display: none;
+}
+
+.Installer {
+  box-sizing: border-box;
   display: block;
+  height: 525px;
+  border-top: 6.5px solid $primary;
+  border-bottom: 6.5px solid $primary;
 }

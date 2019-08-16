@@ -78,7 +78,7 @@ app.on('ready', async () => {
   const tray = new Tray(icon);
   const toolbarWindow = new BrowserWindow({
     name: 'toolbar',
-    width: 375,
+    width: 352,
     height: 419,
     transparent: true,
     resizable: false,
@@ -95,13 +95,13 @@ app.on('ready', async () => {
 
   const installerWindow = new BrowserWindow({
     name: 'installer',
-    width: 800,
-    height: 500,
+    width: 1033,
+    height: 525,
     transparent: true,
     resizable: false,
     frame: false,
     show: false,
-    alwaysOnTop: true,
+    alwaysOnTop: false,
     fullscreenable: false,
     webPreferences: {
       // Prevents renderer process code from not running when window is

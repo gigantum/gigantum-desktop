@@ -43,16 +43,42 @@ class Installer {
       downloadedFile = `${downloadDirectory}/ Docker%20for%20Windows%20Installer.exe`;
     }
 
-    download(downloadLink, downloadDirectory)
+    let downloadProgress = 0;
+
+    download(downloadLink, downloadDirectory, { extract: true, strip: 1 })
+      .on('response', response => {
+        const totalSize = response.headers['content-length'];
+        let count = 0;
+        response.on('data', data => {
+          count += 1;
+          downloadProgress += data.length;
+          // delay frequency of callback firing - causes UI to crash
+          if (count % 50 === 0) {
+            callback({
+              success: true,
+              finished: false,
+              data: {
+                progress: (downloadProgress / totalSize) * 100
+              }
+            });
+          }
+        });
+      })
       .then(() => {
         callback({
           success: true,
+          finished: true,
           data: { downloadedFile }
         });
 
         return null;
       })
       .catch(error => {
+        callback({
+          success: false,
+          finished: false,
+          data: { downloadedFile }
+        });
         console.log(error);
       });
   };
@@ -74,6 +100,40 @@ class Installer {
   };
 
   /**
+    @param {Function} - callback
+    checks to see if docker is installed
+  */
+  checkDockerInstall = callback => {
+    if (isMac) {
+      let repeatCount = 0;
+      let lastSize = 0;
+      const checkDocker = () => {
+        const dockerSize = childProcess.spawn('du', [
+          '-sh',
+          '-k',
+          '/Applications/Docker.app'
+        ]);
+        dockerSize.stdout.on('data', data => {
+          const size = data.toString();
+          if (size === lastSize) {
+            repeatCount += 1;
+          } else {
+            repeatCount = 0;
+          }
+          lastSize = size;
+        });
+        if (repeatCount <= 5) {
+          setTimeout(checkDocker, 500);
+        } else {
+          childProcess.spawn('diskutil', ['eject', 'Docker']);
+          callback({ success: true });
+        }
+      };
+      checkDocker();
+    }
+  };
+
+  /**
    * @param {Function} callback
    * @param {Number} count
    *
@@ -91,11 +151,7 @@ class Installer {
         console.log(`${code}`);
 
         if (code === 0) {
-          setTimeout(() => {
-            this.docker.startDockerApplication(callback);
-          }, 30000); // TODO remove timeout, figure out how to detect when app is ready
-
-          // callback({sucess: true })
+          this.checkDockerInstall(callback);
         } else {
           setTimeout(() => {
             this.checkForApplication(callback);
@@ -149,20 +205,30 @@ class Installer {
       const settingsRawData = fs.readFileSync(settingsPath);
       const settings = JSON.parse(settingsRawData);
 
+      const selectHigherValue = (current, lowerBound) =>
+        current >= lowerBound ? current : lowerBound;
+
       settings.autoStart = false;
       settings.analyticsEnabled = false;
-      settings.memoryMiB = 10240;
-      settings.cpus = 2;
-      settings.diskSizeMiB = 102400;
+      settings.memoryMiB = selectHigherValue(settings.memoryMiB, 10240);
+      settings.cpus = selectHigherValue(settings.cpus, 2);
+      settings.diskSizeMiB = selectHigherValue(settings.diskSizeMiB, 102400);
 
       const newSettings = JSON.stringify(settings);
 
       fs.writeFileSync(settingsPath, newSettings);
 
-      const dockerStopCallback = response => {
-        console.log(response);
+      const startDockerApplicationCallback = response => {
         if (response.success) {
-          this.docker.startDockerApplication(callback);
+          this.checkIfDockerIsReady(callback);
+        } else {
+          callback({ success: false });
+        }
+      };
+
+      const dockerStopCallback = response => {
+        if (response.success) {
+          this.docker.startDockerApplication(startDockerApplicationCallback);
         } else {
           callback({ success: false });
         }
