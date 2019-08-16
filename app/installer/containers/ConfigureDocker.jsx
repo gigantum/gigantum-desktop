@@ -47,9 +47,7 @@ export default class ConfigureDocker extends Component<Props> {
    */
   configureDocker = skipConfigure => {
     const { props } = this;
-    this.setState({ skipConfigure });
     const action = skipConfigure ? LAUNCH : CONFIGURE;
-    this.configureDockerTransition(action);
     const callback = response => {
       if (response.success) {
         this.setState({ configured: true });
@@ -64,6 +62,9 @@ export default class ConfigureDocker extends Component<Props> {
         });
       }
     };
+
+    this.setState({ skipConfigure });
+    this.configureDockerTransition(action);
     props.interface.configureDocker(callback, skipConfigure);
   };
 

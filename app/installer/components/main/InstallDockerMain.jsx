@@ -18,13 +18,18 @@ type Props = {
 const isMac = process.platform === 'darwin';
 const isWindows = process.platform === 'win32';
 
+const getOS = () => {
+  let OS = isMac ? 'Mac' : '';
+  OS = isWindows ? 'Windows' : OS;
+  return OS;
+};
+
 export default class InstallDockerMain extends Component<Props> {
   props: Props;
 
   render() {
     const { props } = this;
-    let OS = isMac ? 'Mac' : '';
-    OS = isWindows ? 'Windows' : OS;
+    const OS = getOS();
 
     const installedText = `The Docker for ${OS} installer has been opened.`;
 

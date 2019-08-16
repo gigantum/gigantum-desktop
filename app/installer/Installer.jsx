@@ -75,8 +75,6 @@ export default class Installer extends Component<Props> {
       machine: newState,
       message: nextState && nextState.message ? nextState.message : '',
       metaData: nextState && nextState.metaData ? nextState.metaData : ''
-      // installNeeded:
-      //   nextState && nextState.installNeeded ? nextState.installNeeded : false
     });
   };
 

@@ -74,7 +74,6 @@ class Installer {
         return null;
       })
       .catch(error => {
-        console.log('this ran');
         callback({
           success: false,
           finished: false,
