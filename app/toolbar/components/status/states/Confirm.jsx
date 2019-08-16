@@ -20,6 +20,10 @@ type Props = {
   interface: {
     stop: () => void,
     restart: () => void
+  },
+  quittingApp: boolean,
+  messenger: {
+    quitApp: () => void
   }
 };
 
@@ -61,8 +65,9 @@ class Confirm extends React.Component<Props> {
   handleGigantumClose = closeDocker => {
     const { props } = this;
     const callback = response => {
-      console.log(response);
-      if (response.success) {
+      if (props.quittingApp) {
+        props.messenger.quitApp();
+      } else if (response.success) {
         props.transition(SUCCESS, {
           message: 'Click to Start'
         });

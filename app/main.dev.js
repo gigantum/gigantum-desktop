@@ -93,27 +93,10 @@ app.on('ready', async () => {
     }
   });
 
-  const installerWindow = new BrowserWindow({
-    name: 'installer',
-    width: 1033,
-    height: 525,
-    transparent: true,
-    resizable: false,
-    frame: false,
-    show: false,
-    alwaysOnTop: false,
-    fullscreenable: false,
-    webPreferences: {
-      // Prevents renderer process code from not running when window is
-      // hidden
-      backgroundThrottling: false
-    }
-  });
-
   const mainMessenger = new MainMessenger({
     tray,
-    installerWindow,
-    toolbarWindow
+    toolbarWindow,
+    app
   });
 
   mainMessenger.listeners();
@@ -121,8 +104,6 @@ app.on('ready', async () => {
   toolbarLaunch(toolbarWindow, tray);
 
   toolbarWindow.loadURL(`file://${__dirname}/${appPath}?toolbar`);
-
-  installerWindow.loadURL(`file://${__dirname}/${appPath}?installer`);
 
   // @TODO: Use 'ready-to-show' event
   //        https://github.com/electron/electron/blob/master/docs/api/browser-window.md#using-ready-to-show-event
@@ -135,21 +116,8 @@ app.on('ready', async () => {
     }
     if (process.env.START_MINIMIZED) {
       toolbarWindow.minimize();
-    } else {
-      if (install.complete) {
-        showToolbar(toolbarWindow, tray);
-      }
-      toolbarWindow.show();
-      toolbarWindow.focus();
-    }
-  });
-
-  installerWindow.webContents.on('did-finish-load', () => {
-    if (!installerWindow) {
-      throw new Error('"installerWindow" is not defined');
-    }
-    if (process.env.START_MINIMIZED) {
-      installerWindow.minimize();
+    } else if (install) {
+      showToolbar(toolbarWindow, tray);
     }
   });
 

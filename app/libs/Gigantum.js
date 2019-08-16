@@ -41,7 +41,6 @@ class Gigantum extends Docker {
   */
   runGigantum = (callback, skipStart) => {
     this.dockerRequest.get(`/images/${config.imageName}/json`, error => {
-      console.log(error);
       if (error) {
         callback({
           success: false,
@@ -168,6 +167,32 @@ class Gigantum extends Docker {
   };
 
   /**
+    @param {Object} callback
+    checks if gigantum is running
+  */
+  checkGigantumRunning = callback => {
+    const { getContainer } = this.dockerode;
+    const container = getContainer(config.containerName);
+
+    container.modem = this.dockerode.modem;
+
+    container.inspect((err, gigantumContainer) => {
+      if (err) {
+        callback({ success: false });
+      }
+      if (
+        gigantumContainer &&
+        gigantumContainer.Config.Image === config.imageName &&
+        gigantumContainer.State.Running
+      ) {
+        callback({ success: true });
+      } else {
+        callback({ success: false });
+      }
+    });
+  };
+
+  /**
     @param {Object}
     @param {Function} callback
     stops gignatum
@@ -193,11 +218,13 @@ class Gigantum extends Docker {
   };
 
   /**
-    @param {} -
+    @param {Function} callback
+    @param {Boolean} skipDelete
     prunes running gigantum projects
   */
-  stopProjects = () => {
+  stopProjects = (callback, skipDelete) => {
     const handleContainerList = data => {
+      let success = true;
       if (data) {
         data.forEach(container => {
           if (
@@ -205,13 +232,22 @@ class Gigantum extends Docker {
             (container.Image.slice(0, 5) === 'gmlb-' ||
               container.Image.slice(0, 10) === 'gmitmproxy')
           ) {
-            this.dockerRequest.delete(`/containers/${container.Id}`, {
-              qs: {
-                force: true
+            if (skipDelete) {
+              if (container.State === 'running') {
+                success = false;
               }
-            });
+            } else {
+              this.dockerRequest.delete(`/containers/${container.Id}`, {
+                qs: {
+                  force: true
+                }
+              });
+            }
           }
         });
+      }
+      if (skipDelete) {
+        callback({ success });
       }
     };
 
@@ -288,22 +324,6 @@ class Gigantum extends Docker {
             }, 1000);
           });
       }
-
-      this.inspectGigantum(callback, options);
-    }, 0);
-  };
-
-  /**
-   * @param {Function} callback
-   * @param {Object} options
-    checks if container is running
-    reports state back to start
-  */
-  inspectGigantum = (callback, options) => {
-    const { getContainer } = this.dockerode;
-    const container = getContainer(config.containerName);
-
-    const errorResponse = () => {
       callback({
         success: false,
         running: false,
@@ -311,30 +331,7 @@ class Gigantum extends Docker {
           message: 'ERROR: Client Failed To Start'
         }
       });
-    };
-
-    container
-      .inspect()
-      .then(data => {
-        if (data && data.State && data.State.Status === 'running') {
-          if (options.openPopup) {
-            open(config.defaultUrl);
-          }
-
-          callback({
-            success: true,
-            running: true,
-            data: {}
-          });
-        } else {
-          errorResponse();
-        }
-
-        return null;
-      })
-      .catch(() => {
-        errorResponse();
-      });
+    }, 0);
   };
 
   /**
@@ -479,6 +476,24 @@ class Gigantum extends Docker {
     };
 
     this.fetchImageData(fetchImageDataCallback);
+  };
+
+  /**
+   * @param {Function} callback
+    checks for gigantumImage
+  */
+  checkGigantumImage = callback => {
+    const runGigantumCallback = response => {
+      if (response.success) {
+        callback(response);
+      } else {
+        setTimeout(() => {
+          this.checkGigantumImage(callback);
+        }, 1000);
+      }
+    };
+
+    this.runGigantum(runGigantumCallback, true);
   };
 
   handleAppQuit(updating = false) {

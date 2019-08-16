@@ -1,6 +1,9 @@
-import { ipcMain } from 'electron';
+import { ipcMain, BrowserWindow } from 'electron';
+import Storage from '../storage/Storage';
 
 const TRAY_ARROW_HEIGHT = 5;
+
+const appPath = 'app.html';
 
 /**
   @param {Object} toolbarWindow
@@ -52,6 +55,7 @@ const showToolbar = (toolbarWindow, tray) => {
   const trayPos = tray.getBounds();
   const windowPos = toolbarWindow.getBounds();
   let x = 0;
+  const y = trayPos.y + TRAY_ARROW_HEIGHT;
 
   if (process.platform === 'darwin') {
     x = Math.round(trayPos.x + trayPos.width / 2 - windowPos.width / 2);
@@ -59,10 +63,8 @@ const showToolbar = (toolbarWindow, tray) => {
     x = Math.round(trayPos.x + trayPos.width / 2 - windowPos.width / 2);
   }
 
-  // const currentDisplay = screen.getDisplayNearestPoint({ x, y: TRAY_ARROW_HEIGHT });
-  // toolbarWindow.setPosition(currentDisplay.workArea.x, currentDisplay.workArea.y, false);
   toolbarWindow.setVisibleOnAllWorkspaces(true);
-  toolbarWindow.setPosition(x, TRAY_ARROW_HEIGHT, false);
+  toolbarWindow.setPosition(x, y, false);
   toolbarWindow.show();
   toolbarWindow.focus();
 };
@@ -87,8 +89,48 @@ const hideWindow = currentWindow => {
 
 class MainMessenger {
   constructor(props) {
-    this.props = { ...props };
+    this.contents = { ...props };
+    const storage = new Storage();
+    const install = storage.get('install');
+    if (!install) {
+      this.initializeInstalledWindow();
+    }
   }
+
+  /**
+  @param {} -
+  creates installer window
+  */
+  initializeInstalledWindow = () => {
+    const installerWindow = new BrowserWindow({
+      name: 'installer',
+      width: 1033,
+      height: 525,
+      transparent: true,
+      resizable: false,
+      frame: false,
+      show: false,
+      alwaysOnTop: false,
+      fullscreenable: false,
+      webPreferences: {
+        backgroundThrottling: false
+      }
+    });
+    installerWindow.loadURL(`file://${__dirname}/../${appPath}?installer`);
+
+    installerWindow.webContents.on('did-finish-load', () => {
+      if (!installerWindow) {
+        throw new Error('"installerWindow" is not defined');
+      }
+      if (process.env.START_MINIMIZED) {
+        installerWindow.minimize();
+      } else {
+        installerWindow.show();
+        installerWindow.focus();
+      }
+    });
+    this.contents.installerWindow = installerWindow;
+  };
 
   /**
     @param {} -
@@ -96,14 +138,21 @@ class MainMessenger {
   */
   listeners = () => {
     ipcMain.on('asynchronous-message', (evt, message) => {
-      const { installerWindow } = this.props;
+      const { installerWindow, app } = this.contents;
 
       if (message === 'open.installer') {
-        showWindow(installerWindow);
+        if (installerWindow) {
+          showWindow(installerWindow);
+        } else {
+          this.initializeInstalledWindow();
+        }
       }
 
       if (message === 'hide.installer') {
         hideWindow(installerWindow);
+      }
+      if (message === 'quit.app') {
+        app.quit();
       }
     });
   };
