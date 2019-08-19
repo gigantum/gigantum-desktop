@@ -17,7 +17,6 @@ class Gigantum extends Docker {
 
   constructor(props) {
     super(props);
-    console.log(this);
     this.init();
   }
 

@@ -147,7 +147,7 @@ class Error extends React.Component<Props> {
   render() {
     const { props } = this;
     const { subText, buttonText } = getSubText(props.message);
-    console.log(this);
+
     return (
       <div className="Error">
         <div className="Error__message">{props.message}</div>
