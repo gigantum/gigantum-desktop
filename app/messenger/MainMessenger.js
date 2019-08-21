@@ -79,14 +79,6 @@ const showWindow = currentWindow => {
   currentWindow.focus();
 };
 
-/**
-  @param {Object} currentWindow
-  hides currentWindow
-*/
-const hideWindow = currentWindow => {
-  currentWindow.hide();
-};
-
 class MainMessenger {
   constructor(props) {
     this.contents = { ...props };
@@ -133,12 +125,49 @@ class MainMessenger {
   };
 
   /**
+  @param {String} section
+  creates settings window
+  */
+  initializeSettingsWindow = section => {
+    const settingsWindow = new BrowserWindow({
+      name: 'installer',
+      width: 669,
+      height: 405,
+      transparent: true,
+      resizable: false,
+      frame: false,
+      show: false,
+      alwaysOnTop: false,
+      fullscreenable: false,
+      webPreferences: {
+        backgroundThrottling: false
+      }
+    });
+    settingsWindow.loadURL(
+      `file://${__dirname}/../${appPath}?settings&section=${section}`
+    );
+
+    settingsWindow.webContents.on('did-finish-load', () => {
+      if (!settingsWindow) {
+        throw new Error('"settingsWindow" is not defined');
+      }
+      if (process.env.START_MINIMIZED) {
+        settingsWindow.minimize();
+      } else {
+        settingsWindow.show();
+        settingsWindow.focus();
+      }
+    });
+    this.contents.settingsWindow = settingsWindow;
+  };
+
+  /**
     @param {} -
     sets up listener on messages and hides or shows depending on the message structure
   */
   listeners = () => {
     ipcMain.on('asynchronous-message', (evt, message) => {
-      const { installerWindow, app } = this.contents;
+      const { installerWindow, settingsWindow, app } = this.contents;
 
       if (message === 'open.installer') {
         if (installerWindow) {
@@ -148,9 +177,44 @@ class MainMessenger {
         }
       }
 
-      if (message === 'hide.installer') {
-        hideWindow(installerWindow);
+      if (message === 'close.installer') {
+        if (installerWindow) {
+          installerWindow.close();
+          delete this.contents.installerWindow;
+        }
       }
+
+      if (message === 'open.about') {
+        if (settingsWindow) {
+          settingsWindow.loadURL(
+            `file://${__dirname}/../${appPath}?settings&section=about`
+          );
+          settingsWindow.show();
+          settingsWindow.focus();
+        } else {
+          this.initializeSettingsWindow('about');
+        }
+      }
+
+      if (message === 'open.preferences') {
+        if (settingsWindow) {
+          settingsWindow.loadURL(
+            `file://${__dirname}/../${appPath}?settings&section=preferences`
+          );
+          settingsWindow.show();
+          settingsWindow.focus();
+        } else {
+          this.initializeSettingsWindow('preferences');
+        }
+      }
+
+      if (message === 'close.settings') {
+        if (settingsWindow) {
+          settingsWindow.close();
+          delete this.contents.settingsWindow;
+        }
+      }
+
       if (message === 'quit.app') {
         app.quit();
       }

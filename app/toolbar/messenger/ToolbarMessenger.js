@@ -15,8 +15,26 @@ class ToolbarMesseneger {
     sends hide.installer to ipcRenderer
     MainMessenger recieves message and hides installer window
   */
-  hideInstaller = () => {
-    ipcRenderer.send('asynchronous-message', 'hide.installer');
+  closeInstaller = () => {
+    ipcRenderer.send('asynchronous-message', 'close.installer');
+  };
+
+  /**
+    @param {} -
+    sends open.about to ipcRenderer
+    MainMessenger recieves message and opens about window
+  */
+  showAbout = () => {
+    ipcRenderer.send('asynchronous-message', 'open.about');
+  };
+
+  /**
+    @param {} -
+    sends open.preferences to ipcRenderer
+    MainMessenger recieves message and opens preferences window
+  */
+  showPreferences = () => {
+    ipcRenderer.send('asynchronous-message', 'open.preferences');
   };
 
   /**

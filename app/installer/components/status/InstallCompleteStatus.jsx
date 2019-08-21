@@ -7,7 +7,7 @@ import InstallCompleteSrc from 'Images/logos/installComplete.png';
 
 type Props = {
   messenger: {
-    hideInstaller: () => void
+    closeInstaller: () => void
   }
 };
 
@@ -22,7 +22,7 @@ export default class InstallCompleteStatus extends Component<Props> {
         <button
           type="button"
           className="Btn--primary Btn__Status"
-          onClick={() => messenger.hideInstaller()}
+          onClick={() => messenger.closeInstaller()}
         >
           Close
         </button>
