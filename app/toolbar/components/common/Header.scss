@@ -12,4 +12,13 @@
     width: 162px;
     height: 100%;
   }
+  &__Menu {
+    cursor: pointer;
+    position: absolute;
+    right: 10px;
+    background: url('~Images/icons/ellipsis-white.svg') no-repeat center center;
+    background-size: 16px;
+    width: 16px;
+    height: 16px;
+  }
 }

@@ -96,8 +96,8 @@ export default class GigDockerClient {
     const eventHandler = (data, enc, cb) => {
       if (
         data &&
-        statusList.indexOf(data.status) !== -1 &&
-        data.from === config.imageName &&
+        (statusList.indexOf(data.status) !== -1) &&
+        (data.from === config.imageName) &&
         !this.purposelyStopped
       ) {
         // Something went wrong

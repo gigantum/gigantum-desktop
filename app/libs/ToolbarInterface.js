@@ -2,6 +2,7 @@
 import childProcess from 'child_process';
 // libs
 import Docker from './Docker';
+import Installer from './Installer';
 import Gigantum from './Gigantum';
 
 const pingDocker = (dockerConnectionTest, callback) => {
@@ -28,6 +29,8 @@ class ToolbarInterface {
    */
   docker = new Docker();
 
+  installer = new Installer();
+
   gigantum = new Gigantum();
 
   /**
@@ -35,10 +38,20 @@ class ToolbarInterface {
    */
 
   /**
-   * @param {Function} callback
+   * @param {Function} dockerExistsCallback
+   * @param {Function} gigantumRunningCallback
    * checks if docker is installed
    */
-  check = callback => {
+  check = (dockerExistsCallback, gigantumRunningCallback) => {
+    const { gigantum } = this;
+    const checkGigantumCallback = response => {
+      if (response.success) {
+        gigantumRunningCallback(response);
+      } else {
+        dockerExistsCallback({ success: true });
+      }
+    };
+
     if (isMac) {
       const dockerVersion = childProcess.spawn('docker', ['-v']);
       dockerVersion.on('error', error => {
@@ -47,9 +60,9 @@ class ToolbarInterface {
 
       dockerVersion.on('close', code => {
         if (code === 0) {
-          callback({ success: true, data: {} });
+          gigantum.checkGigantumRunning(checkGigantumCallback);
         } else {
-          callback({
+          dockerExistsCallback({
             success: false,
             data: {
               error: {
@@ -60,7 +73,7 @@ class ToolbarInterface {
         }
       });
     } else {
-      callback({
+      dockerExistsCallback({
         success: false,
         data: {
           error: {
@@ -69,6 +82,24 @@ class ToolbarInterface {
         }
       });
     }
+  };
+
+  /**
+   * @param {Function} callback
+   * checks when docker has been installed
+   */
+  checkForDockerInstall = callback => {
+    const { installer } = this;
+    installer.checkForApplication(callback);
+  };
+
+  /**
+   * @param {Function} callback
+   * checks when docker has been installed
+   */
+  checkForGigantumInstall = callback => {
+    const { gigantum } = this;
+    gigantum.checkGigantumImage(callback, true);
   };
 
   /**
@@ -177,6 +208,44 @@ class ToolbarInterface {
     };
 
     stop(closeGigantumCallback);
+  };
+
+  /**
+   * @param {Function} callback
+   * restarts docker and then starts the container
+   */
+  restartDocker = callback => {
+    const { docker } = this;
+
+    const stopDockerCallback = response => {
+      if (response.success) {
+        this.start(callback);
+      } else {
+        callback({ success: false });
+      }
+    };
+
+    docker.stopDockerApplication(stopDockerCallback);
+  };
+
+  /**
+   * @param {Function} callback
+   * checks to see if any gigantum projects are running
+   */
+  checkRunningProjects = callback => {
+    const { gigantum } = this;
+
+    gigantum.stopProjects(callback, true);
+  };
+
+  /**
+   * @param {Function} callback
+   * checks to see if docker events throws bad status
+   */
+  listenToDockerEvents = callback => {
+    const { docker } = this;
+
+    docker.checkDockerState(callback);
   };
 }
 

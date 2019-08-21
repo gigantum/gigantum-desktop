@@ -2,14 +2,22 @@
 import * as React from 'react';
 import open from 'open';
 // State
-import { SUCCESS, TRY_AGAIN, ERROR } from '../../../machine/ToolbarConstants';
+import {
+  SUCCESS,
+  TRY_AGAIN,
+  TRY_AGAIN_STOPPED,
+  ERROR
+} from '../../../machine/ToolbarConstants';
 // assets
 import './Error.scss';
 
 type Props = {
   transition: () => void,
   interface: {
-    start: () => void
+    start: () => void,
+    checkForDockerInstall: () => void,
+    checkForGigantumInstall: () => void,
+    restartDocker: () => void
   },
   message: '',
   messenger: {
@@ -77,6 +85,24 @@ const getSubText = message => {
 class Error extends React.Component<Props> {
   props: Props;
 
+  componentDidMount = () => {
+    const { props } = this;
+    const { message, transition } = props;
+    const callback = response => {
+      if (response.success) {
+        transition(TRY_AGAIN_STOPPED, { message: 'Click to Start' });
+      }
+    };
+
+    // listens to see when docker is installed
+    if (message === 'Docker is not installed') {
+      props.interface.checkForDockerInstall(callback);
+    } else if (message === 'Gigantum is not configured') {
+      // listens to see when gigantum is installed
+      props.interface.checkForGigantumInstall(callback);
+    }
+  };
+
   /**
     @param {String} buttonText
     handles button action from error screen
@@ -84,10 +110,11 @@ class Error extends React.Component<Props> {
   handleAction = buttonText => {
     const { props } = this;
     const handleErrorTransition = message => {
-      props.transition(ERROR, message);
+      props.transition(ERROR, { message });
     };
     const callback = response => {
       const errorMessage = response.error && response.error.message;
+      console.log(response);
       if (response.success) {
         props.transition(SUCCESS, { message: 'Click to Quit' });
       } else if (errorMessage.indexOf('no such image') > -1) {
@@ -110,7 +137,10 @@ class Error extends React.Component<Props> {
     ) {
       props.messenger.showInstaller();
     } else if (buttonText === 'Restart Docker') {
-      // TODO handle docker restart-> app start
+      props.transition(TRY_AGAIN, {
+        message: 'Restarting Docker and Gigantum'
+      });
+      props.interface.restartDocker(callback);
     }
   };
 

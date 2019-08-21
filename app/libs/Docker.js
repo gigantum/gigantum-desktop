@@ -126,29 +126,17 @@ class Docker {
     @param {} -
     stops the docker application
   */
-  checkDockerState = () => {
-    // setupDocker
-
-    // TODO create promises for the 2 dockerode calls
-    const self = this;
-
+  checkDockerState = callback => {
     const statusList = ['stop', 'kill', 'unmount', 'disconnect', 'die'];
-    const appBroke = () => {
-      // this.uiManager.handleAppEvent({
-      //   toolTip: 'ERROR: Gigantum stopped working',
-      //   status: 'notRunning',
-      //   id: 'containerNotRunning',
-      // });
-    };
+
     const eventHandler = (data, enc, cb) => {
       if (
         data &&
         statusList.indexOf(data.status) !== -1 &&
-        data.from === config.imageName &&
-        !this.purposelyStopped
+        data.from === config.imageName
       ) {
-        // Something went wrong
-        return appBroke();
+        callback({ success: false });
+        return null;
       }
       if (data.error) return cb(new Error(data.error.trim()));
 
@@ -163,38 +151,14 @@ class Docker {
             if (error) {
               console.log(error);
             }
-            self.uiManager.setupApp();
+            callback({ success: false });
           });
-
           return null;
         },
         err => console.log(err)
       )
       .catch(error => {
         console.log(error);
-      });
-
-    this.dockerode
-      .ping()
-      .then(() => {
-        this.attemptingReconnect = false;
-        this.ensureLocalContainer();
-
-        return null;
-      })
-      .catch(err => {
-        console.log(err);
-        self.uiManager.handleAppEvent({
-          toolTip: 'ERROR: Docker is not running',
-          status: 'notRunning',
-          id: 'dockerNotRunning',
-          window: 'docker'
-        });
-
-        if (!this.attemptingReconnect) {
-          this.attemptingReconnect = true;
-          this.dockerReconnect();
-        }
       });
   };
 
@@ -230,7 +194,6 @@ class Docker {
       'osascript -e \'quit app "docker"\'',
       {},
       (response, error) => {
-        console.log(response, error);
         if (error) {
           callback({ success: false, data: { error } });
         } else {

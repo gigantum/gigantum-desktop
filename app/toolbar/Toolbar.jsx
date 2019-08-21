@@ -27,12 +27,6 @@ export default class Routes extends Component<Props> {
     const { storage } = this.props;
     return (
       <div className="Routes">
-        <button
-          onClick={() => this.toolbarMessenger.showInstaller()}
-          type="button"
-        >
-          show installer
-        </button>
         <Router>
           <Switch>
             <Route

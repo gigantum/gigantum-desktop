@@ -45,7 +45,8 @@ const stateMachine = Machine({
         STOP: CONFIRM_ACTION,
         RESTART: CONFIRM_ACTION,
         FORCE_STOP: STOPPING,
-        FORCE_RESTART: STARTING
+        FORCE_RESTART: STARTING,
+        UNEXPECTED_STOP: STOPPED
       }
     },
     [STOPPING]: {
@@ -77,7 +78,8 @@ const stateMachine = Machine({
         additionalInfo: ''
       },
       on: {
-        TRY_AGAIN: STARTING
+        TRY_AGAIN: STARTING,
+        TRY_AGAIN_STOPPED: STOPPED
       }
     }
   }

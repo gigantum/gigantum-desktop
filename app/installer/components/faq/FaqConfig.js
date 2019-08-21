@@ -11,7 +11,8 @@ export default {
   [CHECKING]: [
     {
       question: 'What is Docker?',
-      answer: 'asdassad'
+      answer:
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
     },
     {
       question: 'Why do I need to install Docker?',
@@ -25,15 +26,16 @@ export default {
   [INSTALL_DOCKER]: [
     {
       question: 'What is Docker?',
-      answer: 'asdassad'
+      answer: '1'
     },
     {
       question: 'Why do I need to install Docker?',
-      answer: 'asdassad'
+      answer:
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
     },
     {
       question: 'Can I run Gigantum without Docker?',
-      answer: 'asdassad'
+      answer: '3'
     }
   ],
   [CONFIGURE_DOCKER]: [

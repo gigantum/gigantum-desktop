@@ -18,6 +18,15 @@ class ToolbarMesseneger {
   hideInstaller = () => {
     ipcRenderer.send('asynchronous-message', 'hide.installer');
   };
+
+  /**
+    @param {} -
+    sends quit.app to ipcRenderer
+    MainMessenger recieves message and hides installer window
+  */
+  quitApp = () => {
+    ipcRenderer.send('asynchronous-message', 'quit.app');
+  };
 }
 
 export default ToolbarMesseneger;

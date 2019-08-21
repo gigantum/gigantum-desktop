@@ -23,7 +23,7 @@ class Stopped extends React.Component<Props> {
     });
 
     const handleErrorTransition = message => {
-      props.transition(ERROR, message);
+      props.transition(ERROR, { message });
     };
 
     const callback = response => {
