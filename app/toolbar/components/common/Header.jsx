@@ -65,39 +65,40 @@ export default class Header extends PureComponent<Props> {
         const { props } = this;
         const { machine, storage, messenger } = props;
         const currentState = machine.value;
-        if (currentState === RUNNING) {
+        const stopCallback = () => {
+          messenger.quitApp();
+        };
+        const checkRunningProjectsCallback = response => {
           let validateGigantumClose = !storage.get('close.gigantumConfirm');
           const shouldCloseDockerConfig = storage.get('close.dockerConfirm');
           const validateDockerClose = shouldCloseDockerConfig === undefined;
-          const stopCallback = () => {
-            messenger.quitApp();
-          };
-          const checkRunningProjectsCallback = response => {
-            if (response.success) {
-              validateGigantumClose = false;
-            }
-            if (validateGigantumClose) {
-              props.transition(STOP, {
-                message: 'Are you sure?',
-                category: 'close.gigantum',
-                quittingApp: true
-              });
-            } else if (validateDockerClose) {
-              props.transition(STOP, {
-                message: 'Would you like to close Docker?',
-                category: 'close.docker',
-                quittingApp: true
-              });
-            } else {
-              props.transition(FORCE_STOP, {
-                message: 'Closing Gigantum'
-              });
-              props.interface.stop(stopCallback, shouldCloseDockerConfig);
-            }
-          };
+          if (response.success) {
+            validateGigantumClose = false;
+          }
+          if (validateGigantumClose) {
+            props.transition(STOP, {
+              message: 'Are you sure?',
+              category: 'close.gigantum',
+              quittingApp: true
+            });
+          } else if (validateDockerClose) {
+            props.transition(STOP, {
+              message: 'Would you like to close Docker?',
+              category: 'close.docker',
+              quittingApp: true
+            });
+          } else {
+            props.transition(FORCE_STOP, {
+              message: 'Closing Gigantum'
+            });
+            props.interface.stop(stopCallback, shouldCloseDockerConfig);
+          }
+        };
+
+        if (currentState === RUNNING) {
           props.interface.checkRunningProjects(checkRunningProjectsCallback);
         } else {
-          messenger.quitApp();
+          stopCallback();
         }
       }
     }
