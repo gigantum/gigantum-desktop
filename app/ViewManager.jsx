@@ -22,7 +22,8 @@ class ViewManager extends Component<Props> {
   }
 
   static View(props) {
-    const subString = props.location.search.substr(1).split('&');
+    const { search } = props.location;
+    const subString = search.substr(1).split('&');
     const name = subString[0];
     const ViewComponent = ViewManager.Views(props)[name];
 

@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import classNames from 'classnames';
 // componenets
 import Header from '../components/Header';
+import Setting from '../components/Setting';
 // assets
 import './Preferences.scss';
 
@@ -113,6 +114,27 @@ export default class Preferences extends Component<Props> {
     this.cancelPreference();
   };
 
+  /**
+    @param {} -
+    gets renderData
+  */
+  getOptions = () => {
+    const { state } = this;
+    const defaultOptions = ['Yes', 'No'];
+    const dockerOptions = ['Yes', 'No', 'Prompt'];
+    const saveDisabled =
+      state.shutDownDockerText === null &&
+      state.launchOnStartText === null &&
+      state.gigantumConfirmText === null;
+
+    return {
+      gigantumOptions: defaultOptions,
+      launchOptions: defaultOptions,
+      dockerOptions,
+      saveDisabled
+    };
+  };
+
   render() {
     const { props, state } = this;
     const { message } = props;
@@ -121,14 +143,12 @@ export default class Preferences extends Component<Props> {
       gigantumConfirmText,
       launchOnStartText
     } = this.getText();
-    const gigantumOptions = ['Yes', 'No'];
-    const launchOptions = ['Yes', 'No'];
-    const dockerOptions = ['Yes', 'No', 'Prompt'];
-    const saveDisabled =
-      state.shutDownDockerText === null &&
-      state.launchOnStartText === null &&
-      state.gigantumConfirmText === null;
-
+    const {
+      gigantumOptions,
+      launchOptions,
+      dockerOptions,
+      saveDisabled
+    } = this.getOptions();
     const gigantumConfirmCSS = classNames({
       'Dropdown relative': true,
       'Dropdown--open': state.gigantumDropdownVisible,
@@ -153,133 +173,55 @@ export default class Preferences extends Component<Props> {
         <div className="Preferences__body">
           <div className="Preferences__category">
             <div className="Preferences__category-title">Startup</div>
-            <div className="Preferences__setting">
-              <div className="Preferences__text">
-                Start Gigantum Desktop at system start
-              </div>
-              <div
-                className={launchConfirmCSS}
-                onClick={() =>
-                  this.toggleDropdown(
-                    'launchDropdownVisible',
-                    !state.launchDropdownVisible
-                  )
-                }
-                onKeyDown={() =>
-                  this.toggleDropdown(
-                    'launchDropdownVisible',
-                    !state.launchDropdownVisible
-                  )
-                }
-                role="button"
-                tabIndex="0"
-              >
-                {launchOnStartText}
-                <ul className="Dropdown__menu">
-                  {state.launchDropdownVisible &&
-                    launchOptions.map(item => (
-                      <li
-                        className="Dropdown__item"
-                        key={item}
-                        role="menuitem"
-                        onClick={() =>
-                          this.setPreference('launchOnStartText', item)
-                        }
-                        onKeyDown={() =>
-                          this.setPreference('launchOnStartText', item)
-                        }
-                      >
-                        {item}
-                      </li>
-                    ))}
-                </ul>
-              </div>
-            </div>
+            <Setting
+              css={launchConfirmCSS}
+              visible={state.launchDropdownVisible}
+              settingsText="Start Gigantum Desktop at system start"
+              currentText={launchOnStartText}
+              options={launchOptions}
+              listAction={() =>
+                this.toggleDropdown(
+                  'launchDropdownVisible',
+                  !state.launchDropdownVisible
+                )
+              }
+              itemAction={item => this.setPreference('launchOnStartText', item)}
+            />
           </div>
           <div className="Preferences__category">
             <div className="Preferences__category-title">Shutdown</div>
-            <div className="Preferences__setting">
-              <div className="Preferences__text">
-                Show confirmation when stopping Gigantum Client
-              </div>
-              <div
-                className={gigantumConfirmCSS}
-                onClick={() =>
-                  this.toggleDropdown(
-                    'gigantumDropdownVisible',
-                    !state.gigantumDropdownVisible
-                  )
-                }
-                onKeyDown={() =>
-                  this.toggleDropdown(
-                    'gigantumDropdownVisible',
-                    !state.gigantumDropdownVisible
-                  )
-                }
-                role="button"
-                tabIndex="-1"
-              >
-                {gigantumConfirmText}
-                <ul className="Dropdown__menu">
-                  {state.gigantumDropdownVisible &&
-                    gigantumOptions.map(item => (
-                      <li
-                        className="Dropdown__item"
-                        key={item}
-                        role="menuitem"
-                        onClick={() =>
-                          this.setPreference('gigantumConfirmText', item)
-                        }
-                        onKeyDown={() =>
-                          this.setPreference('gigantumConfirmText', item)
-                        }
-                      >
-                        {item}
-                      </li>
-                    ))}
-                </ul>
-              </div>
-            </div>
-            <div className="Preferences__setting">
-              <div className="Preferences__text">Shutdown Docker on Stop</div>
-              <div
-                className={dockerConfirmCSS}
-                onClick={() =>
-                  this.toggleDropdown(
-                    'dockerDropdownVisible',
-                    !state.dockerDropdownVisible
-                  )
-                }
-                onKeyDown={() =>
-                  this.toggleDropdown(
-                    'dockerDropdownVisible',
-                    !state.dockerDropdownVisible
-                  )
-                }
-                role="button"
-                tabIndex="-2"
-              >
-                {shutDownDockerText}
-                <ul className="Dropdown__menu">
-                  {state.dockerDropdownVisible &&
-                    dockerOptions.map(item => (
-                      <li
-                        className="Dropdown__item"
-                        key={item}
-                        role="menuitem"
-                        onClick={() =>
-                          this.setPreference('shutDownDockerText', item)
-                        }
-                        onKeyDown={() =>
-                          this.setPreference('shutDownDockerText', item)
-                        }
-                      >
-                        {item}
-                      </li>
-                    ))}
-                </ul>
-              </div>
-            </div>
+            <Setting
+              css={gigantumConfirmCSS}
+              visible={state.gigantumDropdownVisible}
+              settingsText="Show confirmation when stopping Gigantum Client"
+              currentText={gigantumConfirmText}
+              options={gigantumOptions}
+              listAction={() =>
+                this.toggleDropdown(
+                  'gigantumDropdownVisible',
+                  !state.gigantumDropdownVisible
+                )
+              }
+              itemAction={item =>
+                this.setPreference('gigantumConfirmText', item)
+              }
+            />
+            <Setting
+              css={dockerConfirmCSS}
+              visible={state.dockerDropdownVisible}
+              settingsText="Shutdown Docker on Stop"
+              currentText={shutDownDockerText}
+              options={dockerOptions}
+              listAction={() =>
+                this.toggleDropdown(
+                  'dockerDropdownVisible',
+                  !state.dockerDropdownVisible
+                )
+              }
+              itemAction={item =>
+                this.setPreference('shutDownDockerText', item)
+              }
+            />
           </div>
           <div className="Preferences__buttons">
             <button
