@@ -26,7 +26,9 @@ type Props = {
     get: () => void
   },
   messenger: {
-    quitApp: () => void
+    quitApp: () => void,
+    showAbout: () => void,
+    showPreferences: () => void
   },
   interface: {
     stop: () => void,
@@ -41,7 +43,10 @@ export default class Header extends PureComponent<Props> {
   menu = Menu.buildFromTemplate([
     {
       label: 'About',
-      click: () => {}
+      click: () => {
+        const { messenger } = this.props;
+        messenger.showAbout();
+      }
     },
     {
       label: 'Feedback',
@@ -52,11 +57,10 @@ export default class Header extends PureComponent<Props> {
     { type: 'separator' },
     {
       label: 'Preferences',
-      click: () => {}
-    },
-    {
-      label: 'Open Log File',
-      click: () => {}
+      click: () => {
+        const { messenger } = this.props;
+        messenger.showPreferences();
+      }
     },
     { type: 'separator' },
     {

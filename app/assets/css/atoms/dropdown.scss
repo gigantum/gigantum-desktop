@@ -3,7 +3,7 @@
   display: inline-block;
 
   /* box size */
-  min-width: 200px;
+  min-width: 100px;
   height: 31px;
   margin-left: 20px;
   padding: 0 30px 0 10px;
@@ -13,20 +13,20 @@
   user-select: none;
 
   /* border */
-  border: 1px solid $font-grey;
+  border: 1px solid $primary;
 
   /* text */
   line-height: 31px;
 
   &--open {
     /* background */
-    background: url('~Images/icons/up-arrow-silver.svg') no-repeat
+    background: url('~Images/icons/up-arrow-primary.svg') no-repeat
       calc(100% - 10px);
     background-size: 15px;
   }
 
   &--collapsed {
-    background: url('~Images/icons/down-arrow-silver.svg') no-repeat
+    background: url('~Images/icons/down-arrow-primary.svg') no-repeat
       calc(100% - 10px);
     background-size: 15px;
   }
@@ -36,11 +36,11 @@
   /* position */
   position: absolute;
   z-index: index($elements, popup);
-  top: 31px;
-  right: 0;
+  top: 30px;
+  right: -1px;
 
   /* box size */
-  width: 200px;
+  width: 100px;
   padding: 3px;
 
   /* other */
@@ -51,8 +51,34 @@
   text-align: left;
 
   /* border */
-  border: 1px solid $grey;
+  border: 1px solid $primary;
 
   /* background */
   background: $white;
+}
+
+.Dropdown--collapsed > .Dropdown__menu {
+  padding: 0;
+  border: 0;
+}
+
+.Dropdown__item {
+  height: 40px;
+  padding: 10px 5px !important;
+  padding-top: 2px;
+
+  user-select: none;
+
+  border-bottom: 1px solid $mineShaft;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &:hover {
+    transition: background-color 0.25s ease-in-out;
+
+    background: $primary;
+    color: $white;
+  }
 }

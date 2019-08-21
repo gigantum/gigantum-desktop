@@ -9,7 +9,6 @@ import ToolbarInterface from '../libs/ToolbarInterface';
 import Installer from '../libs/Installer';
 // components
 import routes from '../redux/constants/routes';
-import Info from './containers/Info';
 import Main from './containers/Main';
 
 type Props = {
@@ -29,12 +28,6 @@ export default class Routes extends Component<Props> {
       <div className="Routes">
         <Router>
           <Switch>
-            <Route
-              storage={storage}
-              exact
-              path={routes.Info}
-              component={Info}
-            />
             <Route
               storage={storage}
               path={routes.Main}

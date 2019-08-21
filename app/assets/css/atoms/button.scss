@@ -17,7 +17,7 @@ button {
   border-radius: 4px;
 
   /* BACKGROUND */
-  background: $azure;
+  background: $primary;
 
   /* font */
   font-weight: 400;
@@ -53,7 +53,7 @@ button {
   border-radius: 4px;
 
   /* BACKGROUND */
-  background-color: $azure;
+  background-color: $primary;
 
   &:hover {
     @include boxShadowDark();
@@ -83,7 +83,7 @@ button {
     text-decoration: underline;
 
     /* text */
-    color: $azure;
+    color: $primary;
 
     /* BORDER */
     border: 0;
@@ -192,7 +192,7 @@ button {
 
   &--bordered {
     /* BORDER */
-    border: 1px solid $azure;
+    border: 1px solid $primary;
 
     &:disabled {
       /* BORDER */
@@ -331,13 +331,13 @@ button {
         content: 'Collapse';
 
         /* TEXT */
-        color: $azure;
+        color: $primary;
         line-height: 16px;
       }
     }
     &--down {
       /* BACKGROUND */
-      background: url('~Images/icons/down-arrow-azure.svg') no-repeat
+      background: url('~Images/icons/down-arrow-primary.svg') no-repeat
         calc(50% + 50px) 5px;
       background-size: 20px;
 
@@ -345,7 +345,7 @@ button {
         content: 'Expand';
 
         /* TEXT */
-        color: $azure;
+        color: $primary;
         line-height: 16px;
       }
     }
@@ -358,14 +358,14 @@ button {
 
     &:focus {
       /* BACKGROUND */
-      background: $azure url(~Images/icons/trash-white.svg) no-repeat center
+      background: $primary url(~Images/icons/trash-white.svg) no-repeat center
         center;
       background-size: 18px;
     }
 
     &:hover {
       /* BACKGROUND */
-      background: $azure url(~Images/icons/trash-white.svg) no-repeat center
+      background: $primary url(~Images/icons/trash-white.svg) no-repeat center
         center;
       background-size: 18px;
     }
@@ -385,14 +385,14 @@ button {
 
     &:focus {
       /* BACKGROUND */
-      background: $azure url(~Images/icons/rename-white.svg) no-repeat center
+      background: $primary url(~Images/icons/rename-white.svg) no-repeat center
         center;
       background-size: 21px !important;
     }
 
     &:hover {
       /* BACKGROUND */
-      background: $azure url(~Images/icons/rename-white.svg) no-repeat center
+      background: $primary url(~Images/icons/rename-white.svg) no-repeat center
         center;
       background-size: 21px !important;
     }
@@ -413,14 +413,14 @@ button {
 
     &:focus {
       /* BACKGROUND */
-      background: $azure url(~Images/icons/folder-add-new-hover.svg) no-repeat
+      background: $primary url(~Images/icons/folder-add-new-hover.svg) no-repeat
         left 4px top 2px;
       background-size: 18px;
     }
 
     &:hover {
       /* BACKGROUND */
-      background: $azure url(~Images/icons/folder-add-new-hover.svg) no-repeat
+      background: $primary url(~Images/icons/folder-add-new-hover.svg) no-repeat
         left 4px top 2px;
       background-size: 18px;
     }
@@ -468,14 +468,14 @@ button {
 
     &:focus {
       /* BACKGROUND */
-      background: $azure url(~Images/icons/database-add-hover.svg) no-repeat
+      background: $primary url(~Images/icons/database-add-hover.svg) no-repeat
         center center;
       background-size: 18px;
     }
 
     &:hover {
       /* BACKGROUND */
-      background: $azure url(~Images/icons/database-add-hover.svg) no-repeat
+      background: $primary url(~Images/icons/database-add-hover.svg) no-repeat
         center center;
       background-size: 18px;
     }
@@ -495,14 +495,14 @@ button {
 
     &:focus {
       /* BACKGROUND */
-      background: $azure url(~Images/icons/update-white.svg) no-repeat center
+      background: $primary url(~Images/icons/update-white.svg) no-repeat center
         center;
       background-size: 18px;
     }
 
     &:hover {
       /* BACKGROUND */
-      background: $azure url(~Images/icons/update-white.svg) no-repeat center
+      background: $primary url(~Images/icons/update-white.svg) no-repeat center
         center;
       background-size: 18px;
     }
@@ -522,15 +522,15 @@ button {
 
     &:focus {
       /* BACKGROUND */
-      background: $azure url(~Images/icons/star__off-white.svg) no-repeat center
-        top 2px;
+      background: $primary url(~Images/icons/star__off-white.svg) no-repeat
+        center top 2px;
       background-size: 18px;
     }
 
     &:hover {
       /* BACKGROUND */
-      background: $azure url(~Images/icons/star__off-white.svg) no-repeat center
-        top 2px;
+      background: $primary url(~Images/icons/star__off-white.svg) no-repeat
+        center top 2px;
       background-size: 18px;
     }
 
@@ -548,14 +548,14 @@ button {
 
     &:focus {
       /* BACKGROUND */
-      background: $azure url(~Images/icons/star__on.svg) no-repeat center top
+      background: $primary url(~Images/icons/star__on.svg) no-repeat center top
         2px;
       background-size: 18px;
     }
 
     &:hover {
       /* BACKGROUND */
-      background: $azure url(~Images/icons/star__on.svg) no-repeat center top
+      background: $primary url(~Images/icons/star__on.svg) no-repeat center top
         2px;
       background-size: 18px;
     }
@@ -601,7 +601,7 @@ button {
 
   &__redirect {
     /* BACKGROUND */
-    background: $azure url('~Images/icons/continue-arrow.svg') no-repeat -1px center;
+    background: $primary url('~Images/icons/continue-arrow.svg') no-repeat -1px center;
     background-size: 30px;
     &:hover,
     &:focus {
@@ -618,13 +618,13 @@ button {
 
   &__edit {
     /* BACKGROUND */
-    background: $azure url('~Images/icons/edit.svg') no-repeat center center;
+    background: $primary url('~Images/icons/edit.svg') no-repeat center center;
     background-size: 18px;
 
     &:hover,
     &:focus {
       /* BACKGROUND */
-      background: $azure url('~Images/icons/edit.svg') no-repeat right 7px
+      background: $primary url('~Images/icons/edit.svg') no-repeat right 7px
         center;
       background-size: 18px;
     }
@@ -699,7 +699,7 @@ button {
 
   &__remove {
     /* BACKGROUND */
-    background: $azure url('~Images/icons/close-white.svg') no-repeat center
+    background: $primary url('~Images/icons/close-white.svg') no-repeat center
       center;
     background-size: 20px;
 
@@ -732,7 +732,7 @@ button {
     border-radius: 30px;
 
     /* BACKGROUND */
-    background: $azure url('~Images/icons/close-white.svg') no-repeat center
+    background: $primary url('~Images/icons/close-white.svg') no-repeat center
       center;
     background-size: 15px;
 
@@ -751,7 +751,7 @@ button {
       border: none;
 
       /* BACKGROUND */
-      background: $azure url('~Images/icons/close-white.svg') no-repeat right
+      background: $primary url('~Images/icons/close-white.svg') no-repeat right
         10px center;
       background-size: 15px;
 
@@ -768,7 +768,7 @@ button {
 
   &__plus {
     /* BACKGROUND */
-    background: $azure url('~Images/icons/add-white.svg') no-repeat center
+    background: $primary url('~Images/icons/add-white.svg') no-repeat center
       center;
     background-size: 20px !important;
 
