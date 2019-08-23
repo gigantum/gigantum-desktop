@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Route } from 'react-router-dom';
 import Toolbar from './toolbar/Toolbar';
 import Settings from './settings/Settings';
 import Installer from './installer/Installer';
+import Updater from './updater/Updater';
 // assets
 import './assets/css/critical.scss';
 
@@ -17,7 +18,8 @@ class ViewManager extends Component<Props> {
     return {
       toolbar: <Toolbar {...props} />,
       settings: <Settings {...props} />,
-      installer: <Installer {...props} />
+      installer: <Installer {...props} />,
+      updater: <Updater {...props} />
     };
   }
 

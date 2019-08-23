@@ -1,4 +1,6 @@
 import { ipcMain, BrowserWindow } from 'electron';
+import { autoUpdater } from 'electron-updater';
+import checkForUpdates from '../updater';
 import Storage from '../storage/Storage';
 
 const TRAY_ARROW_HEIGHT = 5;
@@ -74,6 +76,7 @@ const showToolbar = (toolbarWindow, tray) => {
   shows current window
 */
 const showWindow = currentWindow => {
+  console.log('this ran show window');
   currentWindow.setVisibleOnAllWorkspaces(true);
   currentWindow.show();
   currentWindow.focus();
@@ -88,6 +91,41 @@ class MainMessenger {
       this.initializeInstalledWindow();
     }
   }
+
+  /**
+  @param {Object} - changeLog
+  creates updater window
+  */
+  initializeUpdaterWindow = changeLog => {
+    const updaterWindow = new BrowserWindow({
+      name: 'updater',
+      width: 669,
+      height: 405,
+      transparent: true,
+      resizable: false,
+      frame: false,
+      show: false,
+      alwaysOnTop: false,
+      fullscreenable: false,
+      webPreferences: {
+        backgroundThrottling: false
+      }
+    });
+    updaterWindow.loadURL(`file:///${__dirname}/../${appPath}?updater`);
+    updaterWindow.changeLog = changeLog;
+    updaterWindow.webContents.on('did-finish-load', () => {
+      if (!updaterWindow) {
+        throw new Error('"updaterWindow" is not defined');
+      }
+      if (process.env.START_MINIMIZED) {
+        updaterWindow.minimize();
+      } else {
+        updaterWindow.show();
+        updaterWindow.focus();
+      }
+    });
+    this.contents.updaterWindow = updaterWindow;
+  };
 
   /**
   @param {} -
@@ -108,7 +146,7 @@ class MainMessenger {
         backgroundThrottling: false
       }
     });
-    installerWindow.loadURL(`file://${__dirname}/../${appPath}?installer`);
+    installerWindow.loadURL(`file:///${__dirname}/../${appPath}?installer`);
 
     installerWindow.webContents.on('did-finish-load', () => {
       if (!installerWindow) {
@@ -133,7 +171,7 @@ class MainMessenger {
       name: 'installer',
       width: 669,
       height: 405,
-      transparent: true,
+      transparent: false,
       resizable: false,
       frame: false,
       show: false,
@@ -144,7 +182,7 @@ class MainMessenger {
       }
     });
     settingsWindow.loadURL(
-      `file://${__dirname}/../${appPath}?settings&section=${section}`
+      `file:///${__dirname}/../${appPath}?settings&section=${section}`
     );
 
     settingsWindow.webContents.on('did-finish-load', () => {
@@ -162,12 +200,48 @@ class MainMessenger {
   };
 
   /**
+  @param {String} section
+  creates settings window
+  */
+  sendChangeLog = log => {
+    const { updaterWindow } = this.contents;
+    if (updaterWindow) {
+      showWindow(updaterWindow);
+    } else {
+      this.initializeUpdaterWindow(log);
+    }
+  };
+
+  /**
+  @param {Boolean} updateFound
+  sends update response to renderer
+  */
+  sendUpdateResponse = updateFound => {
+    const { toolbarWindow } = this.contents;
+    toolbarWindow.webContents.send('asynchronous-message', updateFound);
+  };
+
+  /**
+  @param {Object} progress
+  sends downlad progress to renderer
+  */
+  sendDownloadProgress = progress => {
+    const { updaterWindow } = this.contents;
+    updaterWindow.webContents.send('asynchronous-message', progress);
+  };
+
+  /**
     @param {} -
     sets up listener on messages and hides or shows depending on the message structure
   */
   listeners = () => {
     ipcMain.on('asynchronous-message', (evt, message) => {
-      const { installerWindow, settingsWindow, app } = this.contents;
+      const {
+        installerWindow,
+        updaterWindow,
+        settingsWindow,
+        app
+      } = this.contents;
 
       if (message === 'open.installer') {
         if (installerWindow) {
@@ -184,10 +258,25 @@ class MainMessenger {
         }
       }
 
+      // if (message === 'open.updater') {
+      //   if (updaterWindow) {
+      //     showWindow(updaterWindow);
+      //   } else {
+      //     this.initializeUpdaterWindow();
+      //   }
+      // }
+
+      if (message === 'close.updater') {
+        if (updaterWindow) {
+          updaterWindow.close();
+          delete this.contents.updaterWindow;
+        }
+      }
+
       if (message === 'open.about') {
         if (settingsWindow) {
           settingsWindow.loadURL(
-            `file://${__dirname}/../${appPath}?settings&section=about`
+            `file:///${__dirname}/../${appPath}?settings&section=about`
           );
           settingsWindow.show();
           settingsWindow.focus();
@@ -199,7 +288,7 @@ class MainMessenger {
       if (message === 'open.preferences') {
         if (settingsWindow) {
           settingsWindow.loadURL(
-            `file://${__dirname}/../${appPath}?settings&section=preferences`
+            `file:///${__dirname}/../${appPath}?settings&section=preferences`
           );
           settingsWindow.show();
           settingsWindow.focus();
@@ -217,6 +306,13 @@ class MainMessenger {
 
       if (message === 'quit.app') {
         app.quit();
+      }
+
+      if (message === 'check.updates') {
+        checkForUpdates(this, true);
+      }
+      if (message === 'download.update') {
+        autoUpdater.downloadUpdate();
       }
     });
   };

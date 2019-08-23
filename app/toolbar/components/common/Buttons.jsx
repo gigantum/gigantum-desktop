@@ -1,6 +1,8 @@
 // @flow
 import React, { PureComponent } from 'react';
+import classNames from 'classnames';
 import open from 'open';
+import { remote } from 'electron';
 // States
 import {
   STOPPED,
@@ -24,11 +26,31 @@ type Props = {
   storage: object,
   interface: {
     restart: () => void
+  },
+  messenger: {
+    checkUpdatesResponse: () => void,
+    checkUpdates: () => void
   }
 };
 
 export default class Buttons extends PureComponent<Props> {
   props: Props;
+
+  state = {
+    updateAvailable: null,
+    checkingUpdate: false
+  };
+
+  componentDidMount = () => {
+    const { props } = this;
+    const callback = response => {
+      this.setState({ updateAvailable: response, checkingUpdate: false });
+    };
+    // sets event listener
+    props.messenger.checkUpdatesResponse(callback);
+    // checks initially on mount
+    remote.getCurrentWindow().checkForUpdates();
+  };
 
   /**
     @param {}
@@ -63,14 +85,51 @@ export default class Buttons extends PureComponent<Props> {
     }
   };
 
+  /**
+    @param {}
+    handles check for udpate
+  */
+  checkForUpdate = () => {
+    const { props, state } = this;
+    props.messenger.checkUpdates();
+    if (state.updateAvailable === null) {
+      this.setState({ checkingUpdate: true });
+    }
+  };
+
+  /**
+    @param {}
+    gets update button text
+  */
+  getUpdateText = () => {
+    const { state } = this;
+    if (state.checkingUpdate) {
+      return 'Checking for Updates';
+    }
+    if (state.updateAvailable === null) {
+      return 'Check for Updates';
+    }
+    if (state.updateAvailable) {
+      return 'Update Available';
+    }
+    return 'Up To Date';
+  };
+
   render() {
-    const { props } = this;
+    const { props, state } = this;
     const disableButtons =
       [STOPPING, LOADING, STOPPED, STARTING, CONFIRM_ACTION, ERROR].indexOf(
         props.machine.value
       ) > -1;
+    const updateText = this.getUpdateText();
     // TODO get this from a config
     const defaultUrl = 'http://localhost:10000/';
+
+    const updateButtonCSS = classNames({
+      Btn__Toolbar: true,
+      'Btn__Toolbar--checking': state.checkingUpdate,
+      'Btn__Toolbar--available': state.updateAvailable
+    });
 
     return (
       <div data-tid="container" className="Buttons">
@@ -91,8 +150,13 @@ export default class Buttons extends PureComponent<Props> {
           >
             Restart
           </button>
-          <button className="Btn__Toolbar" type="button">
-            Check for Updates
+          <button
+            className={updateButtonCSS}
+            type="button"
+            onClick={() => this.checkForUpdate()}
+            disabled={state.updateAvailable === false}
+          >
+            {updateText}
           </button>
         </div>
         <div className="Buttons__Links">
