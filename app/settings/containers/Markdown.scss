@@ -1,0 +1,20 @@
+@import '~Styles/_imports.scss';
+
+.Markdown__back {
+  cursor: pointer;
+  position: absolute;
+  top: 25px;
+  left: 25px;
+  width: 24px;
+  height: 24px;
+  background: url('~Images/icons/back-arrow.svg') no-repeat center center;
+  border: 0;
+  background-size: 32px;
+  outline: none;
+}
+
+.Markdown__body {
+  padding: 20px 30px;
+  overflow: auto;
+  max-height: 287px;
+}

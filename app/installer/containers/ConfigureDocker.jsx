@@ -50,6 +50,7 @@ export default class ConfigureDocker extends Component<Props> {
     const action = skipConfigure ? LAUNCH : CONFIGURE;
     const callback = response => {
       if (response.success) {
+        props.storage.set('dockerConfigured', true);
         this.setState({ configured: true });
         setTimeout(() => {
           props.transition(SUCCESS, {

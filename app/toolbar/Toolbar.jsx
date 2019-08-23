@@ -9,7 +9,6 @@ import ToolbarInterface from '../libs/ToolbarInterface';
 import Installer from '../libs/Installer';
 // components
 import routes from '../redux/constants/routes';
-import Info from './containers/Info';
 import Main from './containers/Main';
 
 type Props = {
@@ -27,20 +26,8 @@ export default class Routes extends Component<Props> {
     const { storage } = this.props;
     return (
       <div className="Routes">
-        <button
-          onClick={() => this.toolbarMessenger.showInstaller()}
-          type="button"
-        >
-          show installer
-        </button>
         <Router>
           <Switch>
-            <Route
-              storage={storage}
-              exact
-              path={routes.Info}
-              component={Info}
-            />
             <Route
               storage={storage}
               path={routes.Main}

@@ -21,7 +21,7 @@
   margin: auto;
 
   /* border */
-  border: 3px solid $azure;
+  border: 3px solid $primary;
   border-radius: 100%;
 }
 
@@ -152,7 +152,7 @@
   border-radius: 10px;
 
   /* background */
-  background: $azure;
+  background: $primary;
 }
 
 .Download__line-point::before {
@@ -242,6 +242,6 @@
     border: 4px solid transparent;
   }
   100% {
-    border: 4px solid $azure;
+    border: 4px solid $primary;
   }
 }

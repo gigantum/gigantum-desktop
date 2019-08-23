@@ -1,0 +1,35 @@
+@import '~Styles/_imports.scss';
+
+.UpdateAvailable {
+  height: 100%;
+}
+
+.UpdateAvailable__subText {
+  text-align: center;
+  color: $slateBlue;
+  font-size: 16px;
+  margin-bottom: 6px;
+}
+
+.UpdateAvailable__body {
+  padding: 11px 12px;
+  @include flex(flex-start, column);
+  height: 325px;
+}
+
+.UpdateAvailable__buttons {
+  @include flex(flex-end, row);
+  margin-top: auto;
+}
+
+.UpdateAvailable__noteHeader {
+  text-align: center;
+  font-weight: bold;
+}
+
+.UpdateAvailable__releaseNotes {
+  height: 200px;
+  padding: 20px 30px;
+  overflow: auto;
+  border: 1px solid $grey;
+}

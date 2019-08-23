@@ -20,6 +20,7 @@ body,
 }
 
 body {
+  -webkit-app-region: drag;
   overflow-y: auto;
   overflow-x: hidden;
   background-color: $background-color;
@@ -27,7 +28,7 @@ body {
 }
 
 a {
-  color: $azure;
+  color: $primary;
   text-decoration: underline;
 }
 
@@ -35,6 +36,7 @@ p,
 a {
   margin: 1em 0 1rem 0;
   font-size: $body-fontsize;
+  -webkit-app-region: no-drag;
 }
 
 a:hover {
@@ -126,4 +128,8 @@ li {
 
 table {
   width: 100%;
+}
+
+button {
+  -webkit-app-region: no-drag;
 }

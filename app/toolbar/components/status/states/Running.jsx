@@ -5,7 +5,8 @@ import {
   STOP,
   FORCE_STOP,
   ERROR,
-  SUCCESS
+  SUCCESS,
+  UNEXPECTED_STOP
 } from '../../../machine/ToolbarConstants';
 // assets
 import './Running.scss';
@@ -15,12 +16,26 @@ type Props = {
   message: string,
   storage: object,
   interface: {
-    stop: () => void
+    stop: () => void,
+    listenToDockerEvents: () => void,
+    checkRunningProjects: () => void
   }
 };
 
 class Running extends React.Component<Props> {
   props: Props;
+
+  componentDidMount = () => {
+    const { props } = this;
+    const callback = response => {
+      if (!response.success) {
+        props.transition(UNEXPECTED_STOP, {
+          message: 'Click to Start'
+        });
+      }
+    };
+    props.interface.listenToDockerEvents(callback);
+  };
 
   /**
     @param {Boolean} closeDocker
@@ -36,7 +51,7 @@ class Running extends React.Component<Props> {
         });
       } else {
         props.transition(ERROR, {
-          message: 'response.error'
+          message: 'Gigantum Failed to Stop'
         });
       }
     };
@@ -46,28 +61,33 @@ class Running extends React.Component<Props> {
   confirmClose = () => {
     const { props } = this;
     const { storage } = props;
-    // TODO check to see if any project containers are running, true if there are, false otherwise. False if setting is remembered
-    const validateGigantumClose = !storage.get('close.gigantumConfirm');
-    // TODO check config to see if setting is remembered
+    let validateGigantumClose = !storage.get('close.gigantumConfirm');
     const shouldCloseDockerConfig = storage.get('close.dockerConfirm');
     const validateDockerClose = shouldCloseDockerConfig === undefined;
 
-    if (validateGigantumClose) {
-      props.transition(STOP, {
-        message: 'Are you sure?',
-        category: 'close.gigantum'
-      });
-    } else if (validateDockerClose) {
-      props.transition(STOP, {
-        message: 'Would you like to close Docker?',
-        category: 'close.docker'
-      });
-    } else {
-      props.transition(FORCE_STOP, {
-        message: 'Closing Gigantum'
-      });
-      this.handleGigantumClose(shouldCloseDockerConfig);
-    }
+    const checkRunningProjectsCallback = response => {
+      if (response.success) {
+        validateGigantumClose = false;
+      }
+      // resume confirmation checking
+      if (validateGigantumClose) {
+        props.transition(STOP, {
+          message: 'Are you sure?',
+          category: 'close.gigantum'
+        });
+      } else if (validateDockerClose) {
+        props.transition(STOP, {
+          message: 'Would you like to close Docker?',
+          category: 'close.docker'
+        });
+      } else {
+        props.transition(FORCE_STOP, {
+          message: 'Closing Gigantum'
+        });
+        this.handleGigantumClose(shouldCloseDockerConfig);
+      }
+    };
+    props.interface.checkRunningProjects(checkRunningProjectsCallback);
   };
 
   render() {

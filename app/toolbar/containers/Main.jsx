@@ -3,7 +3,7 @@
 import React, { Component } from 'react';
 // state
 import stateMachine from '../machine/ToolbarMachine';
-import { STOPPED, ERROR } from '../machine/ToolbarConstants';
+import { STOPPED, ERROR, RUNNING } from '../machine/ToolbarConstants';
 // components
 import Status from '../components/status/Status';
 import Header from '../components/common/Header';
@@ -29,14 +29,19 @@ export default class Main extends Component<Props> {
 
   componentDidMount() {
     const { props } = this;
-    const callback = response => {
+    const gigantumRunningCallback = response => {
+      if (response.success) {
+        this.transition(RUNNING, { message: 'Click to Stop' });
+      }
+    };
+    const dockerExistsCallback = response => {
       if (response.success) {
         this.transition(STOPPED, { message: 'Click to Start' });
       } else {
         this.transition(ERROR, { message: 'Docker is not installed' });
       }
     };
-    props.interface.check(callback);
+    props.interface.check(dockerExistsCallback, gigantumRunningCallback);
   }
 
   /**
@@ -67,7 +72,8 @@ export default class Main extends Component<Props> {
     this.setState({
       machine: newState,
       message: nextState && nextState.message ? nextState.message : '',
-      category: nextState && nextState.category ? nextState.category : ''
+      category: nextState && nextState.category ? nextState.category : '',
+      quittingApp: (nextState && nextState.quittingApp) || false
     });
   };
 
@@ -76,12 +82,19 @@ export default class Main extends Component<Props> {
 
     return (
       <div data-tid="container">
-        <Header machine={state.machine} />
+        <Header
+          machine={state.machine}
+          storage={props.storage}
+          interface={props.interface}
+          transition={this.transition}
+          messenger={props.messenger}
+        />
         <Status
           machine={state.machine}
           message={state.message}
           transition={this.transition}
           category={state.category}
+          quittingApp={state.quittingApp}
           storage={props.storage}
           interface={props.interface}
           messenger={props.messenger}
@@ -90,6 +103,7 @@ export default class Main extends Component<Props> {
           machine={state.machine}
           transition={this.transition}
           storage={props.storage}
+          messenger={props.messenger}
         />
       </div>
     );

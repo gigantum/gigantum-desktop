@@ -28,6 +28,7 @@ export default class Checking extends Component<Props> {
         if (response.data.finished) {
           this.setState({ progress: 100 });
           setTimeout(() => {
+            props.storage.set('install', true);
             props.transition(SUCCESS, {
               message: 'Configuration Complete'
             });

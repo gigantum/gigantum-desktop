@@ -31,7 +31,7 @@
     color: $jet;
 
     /* border */
-    border-bottom: 2px solid $azure;
+    border-bottom: 2px solid $primary;
   }
 
   &--selected,
@@ -43,7 +43,7 @@
 
       /* color */
       color: $white;
-      background: $azure;
+      background: $primary;
 
       &:hover {
         /* color */

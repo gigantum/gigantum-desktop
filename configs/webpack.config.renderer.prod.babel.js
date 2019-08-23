@@ -29,8 +29,17 @@ export default merge.smart(baseConfig, {
   },
 
   resolve: {
+    extensions: [
+      '.js',
+      '.json',
+      '.jsx',
+      '.scss',
+      '.svg',
+      '.png',
+      '.jpg',
+      '.jpeg'
+    ],
     alias: {
-      Components: path.resolve(__dirname, '../app/components/'),
       Images: path.resolve(__dirname, '../app/assets/images/'),
       Styles: path.resolve(__dirname, '../app/assets/css/'),
       Fonts: path.resolve(__dirname, '../app/assets/fonts/')
@@ -38,6 +47,16 @@ export default merge.smart(baseConfig, {
   },
   module: {
     rules: [
+      {
+        test: /\.jsx?$/,
+        exclude: /node_modules/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            cacheDirectory: true
+          }
+        }
+      },
       // Extract all .global.css to style.css as is
       {
         test: /\.global\.css$/,
@@ -120,19 +139,22 @@ export default merge.smart(baseConfig, {
         test: /^((?!\.global).)*\.(scss|sass)$/,
         use: [
           {
+            loader: 'style-loader'
+          },
+          {
             loader: 'css-loader',
             options: {
-              modules: true,
-              importLoaders: 1,
-              localIdentName: '[name]__[local]__[hash:base64:5]',
-              sourceMap: true
+              modules: false,
+              sourceMap: true,
+              importLoaders: 0,
+              localIdentName: '[name]__[local]__[hash:base64:5]'
             }
           },
           {
-            loader: 'sass-loader',
-            options: {
-              sourceMap: true
-            }
+            loader: 'resolve-url-loader'
+          },
+          {
+            loader: 'sass-loader'
           }
         ]
       },
@@ -210,6 +232,10 @@ export default merge.smart(baseConfig, {
       {
         test: /\.(?:ico|gif|png|jpg|jpeg|webp)$/,
         use: 'url-loader'
+      },
+      {
+        test: /\.md$/,
+        use: 'raw-loader'
       }
     ]
   },
