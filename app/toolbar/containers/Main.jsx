@@ -103,6 +103,7 @@ export default class Main extends Component<Props> {
           machine={state.machine}
           transition={this.transition}
           storage={props.storage}
+          messenger={props.messenger}
         />
       </div>
     );

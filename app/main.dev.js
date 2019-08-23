@@ -12,21 +12,15 @@
  */
 import { app, BrowserWindow, Tray, nativeImage } from 'electron';
 import { autoUpdater } from 'electron-updater';
-import log from 'electron-log';
+import path from 'path';
+import isDev from 'electron-is-dev';
 import MenuBuilder from './menu';
 import Storage from './storage/Storage';
 import MainMessenger, {
   showToolbar,
   toolbarLaunch
 } from './messenger/MainMessenger';
-
-export default class AppUpdater {
-  constructor() {
-    log.transports.file.level = 'info';
-    autoUpdater.logger = log;
-    autoUpdater.checkForUpdatesAndNotify();
-  }
-}
+import checkForUpdates from './updater';
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');
@@ -99,11 +93,15 @@ app.on('ready', async () => {
     app
   });
 
-  mainMessenger.listeners();
+  if (isDev) {
+    autoUpdater.updateConfigPath = path.join(__dirname, 'dev-app-update.yml');
+  }
 
+  mainMessenger.listeners();
+  toolbarWindow.checkForUpdates = () => checkForUpdates(mainMessenger, false);
   toolbarLaunch(toolbarWindow, tray);
 
-  toolbarWindow.loadURL(`file://${__dirname}/${appPath}?toolbar`);
+  toolbarWindow.loadURL(`file:///${__dirname}/${appPath}?toolbar`);
 
   // @TODO: Use 'ready-to-show' event
   //        https://github.com/electron/electron/blob/master/docs/api/browser-window.md#using-ready-to-show-event
@@ -128,7 +126,6 @@ app.on('ready', async () => {
 
   // Remove this if your app does not use auto updates
   // eslint-disable-next-line
-  new AppUpdater();
 });
 
 let gigantumBase64 =

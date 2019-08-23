@@ -28,6 +28,25 @@
       background: $lightGrey !important;
       cursor: auto;
     }
+    &--available {
+      position: relative;
+      &::before {
+        content: '';
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        left: 90px;
+        top: 8px;
+        position: absolute;
+        background: $orange
+          url(~Images/icons/notifications/info-exclamation.svg) no-repeat center
+          center;
+        background-size: 16px;
+      }
+    }
+    &--checking {
+      background: url('~Images/loaders/spinner.svg') no-repeat left 70px center;
+    }
   }
   &--noBorder {
     border: 0;
