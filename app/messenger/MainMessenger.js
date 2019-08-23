@@ -258,14 +258,6 @@ class MainMessenger {
         }
       }
 
-      // if (message === 'open.updater') {
-      //   if (updaterWindow) {
-      //     showWindow(updaterWindow);
-      //   } else {
-      //     this.initializeUpdaterWindow();
-      //   }
-      // }
-
       if (message === 'close.updater') {
         if (updaterWindow) {
           updaterWindow.close();

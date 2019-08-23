@@ -2,8 +2,6 @@
 import React, { Component } from 'react';
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
-// assets
-// import './UpdateProgress.scss';
 
 type Props = {
   progress: number
