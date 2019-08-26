@@ -5,7 +5,9 @@ import Storage from '../storage/Storage';
 
 const TRAY_ARROW_HEIGHT = 5;
 
-const appPath = 'app.html';
+const appPath = process.env.HOT
+  ? `file:///${__dirname}/../app.html`
+  : `file:///${__dirname}/app.html`;
 
 /**
   @param {Object} toolbarWindow
@@ -76,7 +78,6 @@ const showToolbar = (toolbarWindow, tray) => {
   shows current window
 */
 const showWindow = currentWindow => {
-  console.log('this ran show window');
   currentWindow.setVisibleOnAllWorkspaces(true);
   currentWindow.show();
   currentWindow.focus();
@@ -98,10 +99,11 @@ class MainMessenger {
   */
   initializeUpdaterWindow = changeLog => {
     const updaterWindow = new BrowserWindow({
+      allowEval: true,
       name: 'updater',
       width: 669,
       height: 405,
-      transparent: true,
+      transparent: false,
       resizable: false,
       frame: false,
       show: false,
@@ -111,7 +113,8 @@ class MainMessenger {
         backgroundThrottling: false
       }
     });
-    updaterWindow.loadURL(`file:///${__dirname}/../${appPath}?updater`);
+
+    updaterWindow.loadURL(`${appPath}?updater`);
     updaterWindow.changeLog = changeLog;
     updaterWindow.webContents.on('did-finish-load', () => {
       if (!updaterWindow) {
@@ -125,6 +128,7 @@ class MainMessenger {
       }
     });
     this.contents.updaterWindow = updaterWindow;
+    updaterWindow.webContents.openDevTools();
   };
 
   /**
@@ -146,7 +150,7 @@ class MainMessenger {
         backgroundThrottling: false
       }
     });
-    installerWindow.loadURL(`file:///${__dirname}/../${appPath}?installer`);
+    installerWindow.loadURL(`${appPath}?installer`);
 
     installerWindow.webContents.on('did-finish-load', () => {
       if (!installerWindow) {
@@ -181,9 +185,7 @@ class MainMessenger {
         backgroundThrottling: false
       }
     });
-    settingsWindow.loadURL(
-      `file:///${__dirname}/../${appPath}?settings&section=${section}`
-    );
+    settingsWindow.loadURL(`${appPath}?settings&section=${section}`);
 
     settingsWindow.webContents.on('did-finish-load', () => {
       if (!settingsWindow) {
@@ -267,9 +269,7 @@ class MainMessenger {
 
       if (message === 'open.about') {
         if (settingsWindow) {
-          settingsWindow.loadURL(
-            `file:///${__dirname}/../${appPath}?settings&section=about`
-          );
+          settingsWindow.loadURL(`${appPath}?settings&section=about`);
           settingsWindow.show();
           settingsWindow.focus();
         } else {
@@ -279,9 +279,7 @@ class MainMessenger {
 
       if (message === 'open.preferences') {
         if (settingsWindow) {
-          settingsWindow.loadURL(
-            `file:///${__dirname}/../${appPath}?settings&section=preferences`
-          );
+          settingsWindow.loadURL(`${appPath}?settings&section=preferences`);
           settingsWindow.show();
           settingsWindow.focus();
         } else {

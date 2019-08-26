@@ -28,7 +28,6 @@ class ViewManager extends Component<Props> {
     const subString = search.substr(1).split('&');
     const name = subString[0];
     const ViewComponent = ViewManager.Views(props)[name];
-
     if (ViewComponent == null) {
       throw new Error(ViewComponent);
     }

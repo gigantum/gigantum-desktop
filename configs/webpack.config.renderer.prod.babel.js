@@ -20,7 +20,7 @@ export default merge.smart(baseConfig, {
 
   target: 'electron-renderer',
 
-  entry: [require.resolve('../app/index')],
+  entry: path.join(__dirname, '..', 'app/index'),
 
   output: {
     path: path.join(__dirname, '..', 'app/dist'),
@@ -28,23 +28,6 @@ export default merge.smart(baseConfig, {
     filename: 'renderer.prod.js'
   },
 
-  resolve: {
-    extensions: [
-      '.js',
-      '.json',
-      '.jsx',
-      '.scss',
-      '.svg',
-      '.png',
-      '.jpg',
-      '.jpeg'
-    ],
-    alias: {
-      Images: path.resolve(__dirname, '../app/assets/images/'),
-      Styles: path.resolve(__dirname, '../app/assets/css/'),
-      Fonts: path.resolve(__dirname, '../app/assets/fonts/')
-    }
-  },
   module: {
     rules: [
       {
@@ -62,10 +45,7 @@ export default merge.smart(baseConfig, {
         test: /\.global\.css$/,
         use: [
           {
-            loader: MiniCssExtractPlugin.loader,
-            options: {
-              publicPath: './'
-            }
+            loader: 'style-loader'
           },
           {
             loader: 'css-loader',
@@ -75,39 +55,65 @@ export default merge.smart(baseConfig, {
           }
         ]
       },
-      // Pipe other styles through css modules and append to style.css
       {
         test: /^((?!\.global).)*\.css$/,
         use: [
           {
-            loader: MiniCssExtractPlugin.loader
+            loader: 'style-loader'
           },
           {
             loader: 'css-loader',
             options: {
-              modules: true,
-              localIdentName: '[name]__[local]__[hash:base64:5]',
-              sourceMap: true
+              modules: false,
+              sourceMap: true,
+              importLoaders: 0,
+              localIdentName: '[name]__[local]__[hash:base64:5]'
             }
           }
         ]
       },
-      // Add SASS support  - compile all .global.scss files and pipe it to style.css
+      // SASS support - compile all .global.scss files and pipe it to style.css
       {
         test: /\.global\.(scss|sass)$/,
         use: [
           {
-            loader: 'css-loader',
-            options: {
-              sourceMap: true,
-              importLoaders: 1
-            }
+            loader: 'style-loader'
           },
           {
-            loader: 'sass-loader',
+            loader: 'css-loader',
             options: {
               sourceMap: true
             }
+          },
+          {
+            loader: 'resolve-url-loader'
+          },
+          {
+            loader: 'sass-loader'
+          }
+        ]
+      },
+      // SASS support - compile all other .scss files and pipe it to style.css
+      {
+        test: /^((?!\.global).)*\.(scss|sass)$/,
+        use: [
+          {
+            loader: 'style-loader'
+          },
+          {
+            loader: 'css-loader',
+            options: {
+              modules: false,
+              sourceMap: true,
+              importLoaders: 0,
+              localIdentName: '[name]__[local]__[hash:base64:5]'
+            }
+          },
+          {
+            loader: 'resolve-url-loader'
+          },
+          {
+            loader: 'sass-loader'
           }
         ]
       },
@@ -260,5 +266,15 @@ export default merge.smart(baseConfig, {
         process.env.OPEN_ANALYZER === 'true' ? 'server' : 'disabled',
       openAnalyzer: process.env.OPEN_ANALYZER === 'true'
     })
+    //
+    // new webpack.LoaderOptionsPlugin({
+    //   debug: true,
+    //   alias: {
+    //     Components: path.resolve(__dirname, '../app/components/'),
+    //     Images: path.resolve(__dirname, '../app/assets/images/'),
+    //     Styles: path.resolve(__dirname, '../app/assets/css/'),
+    //     Fonts: path.resolve(__dirname, '../app/assets/fonts/')
+    //   }
+    // })
   ]
 });
