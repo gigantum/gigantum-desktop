@@ -58,12 +58,11 @@
   },
   "main": "./app/main.prod.js",
   "build": {
-    "productName": "GigantumRemoteClient",
-    "appId": "com.gigantum.GigantumRemoteClient",
+    "productName": "GigantumDesktop",
+    "appId": "com.gigantum.GigantumDesktop",
     "files": [
       "app/dist/",
-      "app/dashapp/dashapp.html",
-      "app/installer/installer.html",
+      "app/app.html",
       "app/main.prod.js",
       "app/main.prod.js.map",
       "package.json"
@@ -131,7 +130,7 @@
   ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/gigantum/gigantum-remote-client"
+    "url": "https://github.com/gigantum/gigantum-desktop"
   },
   "keywords": [
     "electron",

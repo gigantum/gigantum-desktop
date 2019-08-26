@@ -62,7 +62,7 @@ const dockerOptions = (() => {
 
   return dockerOptionsTemp;
 })();
-console.log(dockerodeOptions);
+
 class Docker {
   /* set defaults here A-Z */
   attemptingReconnect = false;

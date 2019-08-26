@@ -20,7 +20,7 @@ export default merge.smart(baseConfig, {
 
   target: 'electron-renderer',
 
-  entry: [require.resolve('../app/index')],
+  entry: path.join(__dirname, '..', 'app/index'),
 
   output: {
     path: path.join(__dirname, '..', 'app/dist'),
@@ -28,23 +28,6 @@ export default merge.smart(baseConfig, {
     filename: 'renderer.prod.js'
   },
 
-  resolve: {
-    extensions: [
-      '.js',
-      '.json',
-      '.jsx',
-      '.scss',
-      '.svg',
-      '.png',
-      '.jpg',
-      '.jpeg'
-    ],
-    alias: {
-      Images: path.resolve(__dirname, '../app/assets/images/'),
-      Styles: path.resolve(__dirname, '../app/assets/css/'),
-      Fonts: path.resolve(__dirname, '../app/assets/fonts/')
-    }
-  },
   module: {
     rules: [
       {
@@ -282,16 +265,16 @@ export default merge.smart(baseConfig, {
       analyzerMode:
         process.env.OPEN_ANALYZER === 'true' ? 'server' : 'disabled',
       openAnalyzer: process.env.OPEN_ANALYZER === 'true'
-    }),
-
-    new webpack.LoaderOptionsPlugin({
-      debug: true,
-      alias: {
-        Components: path.resolve(__dirname, '../app/components/'),
-        Images: path.resolve(__dirname, '../app/assets/images/'),
-        Styles: path.resolve(__dirname, '../app/assets/css/'),
-        Fonts: path.resolve(__dirname, '../app/assets/fonts/')
-      }
     })
+    //
+    // new webpack.LoaderOptionsPlugin({
+    //   debug: true,
+    //   alias: {
+    //     Components: path.resolve(__dirname, '../app/components/'),
+    //     Images: path.resolve(__dirname, '../app/assets/images/'),
+    //     Styles: path.resolve(__dirname, '../app/assets/css/'),
+    //     Fonts: path.resolve(__dirname, '../app/assets/fonts/')
+    //   }
+    // })
   ]
 });
