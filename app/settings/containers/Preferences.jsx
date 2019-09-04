@@ -27,7 +27,7 @@ export default class Preferences extends Component<Props> {
     const { props, state } = this;
     const { storage } = props;
     let shutDownDockerText = storage.get('close.dockerConfirm');
-    let launchOnStartText = storage.get('launchOnStart');
+    let launchOnStartText = props.autoLaunch;
     let gigantumConfirmText = storage.get('close.gigantumConfirm');
 
     if (shutDownDockerText === undefined) {
@@ -85,6 +85,7 @@ export default class Preferences extends Component<Props> {
       gigantumConfirmText,
       launchOnStartText
     } = state;
+
     if (shutDownDockerText) {
       if (shutDownDockerText === 'Yes') {
         storage.set('close.dockerConfirm', true);
@@ -105,9 +106,9 @@ export default class Preferences extends Component<Props> {
 
     if (launchOnStartText) {
       if (launchOnStartText === 'Yes') {
-        storage.set('launchOnStart', true);
+        props.gigantumAutoLauncher.enable();
       } else {
-        storage.set('launchOnStart', false);
+        props.gigantumAutoLauncher.disable();
       }
     }
 
@@ -227,7 +228,6 @@ export default class Preferences extends Component<Props> {
             <button
               type="button"
               className="Btn--flat"
-              disabled={saveDisabled}
               onClick={() => this.cancelPreference()}
             >
               Cancel

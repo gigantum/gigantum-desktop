@@ -1,11 +1,13 @@
 // @flow
 import React, { Component } from 'react';
 import { remote } from 'electron';
+import log from 'electron-log';
 // States
 import {
   UPDATE_AVAILABLE,
   UPDATE_IN_PROGRESS,
-  DOWNLOAD_COMPLETE
+  DOWNLOAD_COMPLETE,
+  SUCCESS
 } from './machine/UpdaterConstants';
 import stateMachine from './machine/UpdaterMachine';
 // interface
@@ -14,6 +16,7 @@ import UpdaterInterface from '../libs/UpdaterInterface';
 import UpdaterMessenger from './messenger/UpdaterMessenger';
 // containers
 import UpdateAvailable from './containers/UpdateAvailable';
+import DownloadComplete from './containers/DownloadComplete';
 import UpdateProgress from './containers/UpdateProgress';
 // assets
 import './Updater.scss';
@@ -33,18 +36,52 @@ export default class Updater extends Component<Props> {
   };
 
   componentDidMount = () => {
-    const callback = response => {
+    // handles interface response
+    const interfaceCallback = response => {
       const { state } = this;
-      const totalDownload = response.newImageSize + response.total;
-      const downloadedBytes = response.success
-        ? response.total
-        : response.transferred;
-      this.setState({ progress: downloadedBytes / totalDownload });
-      if (!state.totalAppSize) {
-        this.setState({ totalAppSize: response.total });
+      log.warn(response);
+      if (response.success) {
+        const imageSize = Number(
+          state.changeLog
+            .split('\n')[2]
+            .split(': ')[1]
+            .split(' ')[1]
+            .slice(1, -5)
+        );
+        const rawPercentage = response.data.percentage / 100;
+        const appSize = state.totalAppSize || 0;
+        const totalDownload = appSize + imageSize;
+        const totalDownloaded = imageSize * rawPercentage + appSize;
+        const progress = (totalDownloaded / totalDownload) * 100;
+        this.setState({ progress });
+      }
+      if (response.data.finished) {
+        this.messenger.downloadComplete();
+        setTimeout(() => {
+          this.transition(SUCCESS, { message: 'Download Complete' });
+        }, 3000);
       }
     };
-    this.messenger.checkDownloadProgress(callback);
+
+    // handles response from updater event listeners
+    const progressCallback = response => {
+      const { state } = this;
+      const totalDownload = response.newImageSize + response.total;
+      log.warn(response);
+      const downloadedBytes = response.success
+        ? state.totalAppSize || 0
+        : response.transferred;
+      this.setState({ progress: (downloadedBytes / totalDownload) * 100 });
+      if (state.totalAppSize === null) {
+        this.setState({ totalAppSize: response.total });
+      }
+      if (response.success) {
+        this.interface.updateGigantumImage(interfaceCallback, response);
+      }
+    };
+
+    // subscribes to progress information
+    this.messenger.checkDownloadProgress(progressCallback);
   };
 
   messenger = new UpdaterMessenger();
@@ -90,7 +127,7 @@ export default class Updater extends Component<Props> {
         />
       ),
       [DOWNLOAD_COMPLETE]: (
-        <div
+        <DownloadComplete
           {...props}
           {...state}
           transition={transition}

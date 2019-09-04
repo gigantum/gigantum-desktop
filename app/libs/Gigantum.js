@@ -374,7 +374,7 @@ class Gigantum extends Docker {
    * @param {Function} callback
     pulls Gigantum image
   */
-  pullImage = callback => {
+  pullImage = (callback, imageName, imageTag, imageSize) => {
     const downloadObj = { null: 0 };
     const extractObj = { null: 0 };
     const handlePull = (data, enc, cb) => {
@@ -387,14 +387,14 @@ class Gigantum extends Docker {
       } else if (data.status === 'Extracting') {
         extractObj[data.id] = data.progressDetail.current;
       }
-
+      const currentImageSize = imageSize || this.imageSize;
       const downloadPercent =
-        Object.values(downloadObj).reduce((a, b) => a + b) / this.imageSize;
+        Object.values(downloadObj).reduce((a, b) => a + b) / currentImageSize;
       const extractPercent =
-        Object.values(extractObj).reduce((a, b) => a + b) / this.imageSize;
+        Object.values(extractObj).reduce((a, b) => a + b) / currentImageSize;
 
-      const weightedDownloadPercent = Math.round(downloadPercent * 75);
-      const weightedExtractPercent = Math.round(extractPercent * 25);
+      const weightedDownloadPercent = downloadPercent * 75;
+      const weightedExtractPercent = extractPercent * 25;
       callback({
         success: true,
         data: {
@@ -408,8 +408,8 @@ class Gigantum extends Docker {
       '/images/create',
       {
         qs: {
-          fromImage: config.imageName,
-          tag: config.imageTag
+          fromImage: imageName,
+          tag: imageTag
         },
         body: null
       },
@@ -457,7 +457,7 @@ class Gigantum extends Docker {
         response.error.message &&
         response.error.message.indexOf('no such image') > -1;
       if (isNotInstalled) {
-        this.pullImage(callback);
+        this.pullImage(callback, config.imageName, config.imageTag);
       } else if (response && response.error) {
         callback({ success: false, data: response.error });
       } else {
@@ -493,6 +493,35 @@ class Gigantum extends Docker {
     };
 
     this.runGigantum(runGigantumCallback, true);
+  };
+
+  /**
+   * @param {Function} callback
+    removes outdated gigantum image
+  */
+  removeGigantumImage = callback => {
+    const images = `/images/${config.imageName}`;
+    this.stopGigantum()
+      .then(() => this.stopProjects())
+      .then(() =>
+        this.dockerRequest.delete(
+          images,
+          {
+            qs: {
+              force: true
+            }
+          },
+          err => {
+            if (err) {
+              console.log(err);
+              callback({ success: false });
+            } else {
+              callback({ success: true });
+            }
+          }
+        )
+      )
+      .catch(() => callback({ success: false }));
   };
 
   handleAppQuit(updating = false) {
@@ -678,20 +707,6 @@ class Gigantum extends Docker {
           buttons: ['Close']
         });
       });
-  }
-
-  removeGigantumImage() {
-    const images = `/images/${config.imageName}`;
-
-    return this.stopGigantum()
-      .then(() => this.stopLabbooks())
-      .then(() =>
-        this.dockerRequest.delete(images, err => {
-          if (err) {
-            console.log(err);
-          }
-        })
-      );
   }
 }
 

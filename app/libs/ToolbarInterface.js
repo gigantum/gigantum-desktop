@@ -1,9 +1,12 @@
 // @flow
 import childProcess from 'child_process';
+import fixPath from 'fix-path';
 // libs
 import Docker from './Docker';
 import Installer from './Installer';
 import Gigantum from './Gigantum';
+
+fixPath();
 
 const pingDocker = (dockerConnectionTest, callback) => {
   dockerConnectionTest()
@@ -51,9 +54,13 @@ class ToolbarInterface {
         dockerExistsCallback({ success: true });
       }
     };
-
     if (isMac) {
-      const dockerVersion = childProcess.spawn('docker', ['-v']);
+      console.log(process.env.path);
+      const dockerVersion = childProcess.spawn('npm', ['-v'], {
+        env: {
+          PATH: process.env.PATH
+        }
+      });
       dockerVersion.on('error', error => {
         console.log(error);
       });
@@ -236,6 +243,16 @@ class ToolbarInterface {
     const { gigantum } = this;
 
     gigantum.stopProjects(callback, true);
+  };
+
+  /**
+   * @param {Function} callback
+   * removes gigantum image
+   */
+  removePreviousImage = callback => {
+    const { gigantum } = this;
+
+    gigantum.removeGigantumImage(callback);
   };
 
   /**

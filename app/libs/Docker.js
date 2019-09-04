@@ -8,23 +8,12 @@ import path from 'path';
 import pump from 'pump';
 import throughJSON from 'through-json';
 import through from 'through2';
+import fixPath from 'fix-path';
+
 // config
 import config from './config';
-// import storage from '../storage/Storage';
 
-// const internetAvailable = () => {
-//   return Promise.race([
-//     fetch('https://www.google.com/', {
-//       'method': 'GET'
-//     }),
-//     new Promise((resolve, reject) => {
-//         setTimeout(() => reject(new Error('timeout')), 5000)
-//
-//         return null;
-//       }
-//     )
-//   ]);
-// }
+fixPath();
 
 /**
   @param {} -
