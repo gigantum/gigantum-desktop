@@ -34,7 +34,9 @@ node_modules
 flow-typed/npm/*
 !flow-typed/npm/module_vx.x.x.js
 
+# secrets
 legacy/secrets
+secrets
 
 # App packaged
 release
