@@ -100,6 +100,7 @@ class InstallerInterface {
     const { installer } = this;
 
     const downloadDockerCallback = response => {
+      console.log('cb', response);
       if (response.success && response.finished) {
         progressCallback({ success: true, progress: 100 });
         this.handleDnD(response.data.downloadedFile, dndCallback);
