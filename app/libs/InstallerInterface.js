@@ -42,6 +42,7 @@ class InstallerInterface {
       } else {
         const path = isWindows ? 'c:' : '/';
         disk.check(path, (error, info) => {
+          console.log(path, error, info);
           if (error) {
             callback({
               success: false,
