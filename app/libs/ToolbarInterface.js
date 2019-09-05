@@ -21,6 +21,7 @@ const pingDocker = (dockerConnectionTest, callback) => {
       }
     )
     .catch(error => {
+      callback({ isRunning: false });
       console.log(error);
     });
 };
