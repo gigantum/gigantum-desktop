@@ -13,6 +13,8 @@ import fixPath from 'fix-path';
 // config
 import config from './config';
 
+const isWindows = process.platform === 'win32';
+
 fixPath();
 
 /**
@@ -156,7 +158,14 @@ class Docker {
     starts the docker application
   */
   startDockerApplication = callback => {
-    const dockerSpawn = childProcess.spawn('open', ['-a', 'docker']);
+    let dockerSpawn;
+    if (isWindows) {
+      dockerSpawn = childProcess.spawn('start', [
+        String.raw`C:\Program Files\Docker\Docker Desktop'String.raw`
+      ]);
+    } else {
+      dockerSpawn = childProcess.spawn('open', ['-a', 'docker']);
+    }
 
     dockerSpawn.on('close', code => {
       if (code === 0) {
