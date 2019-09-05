@@ -41,7 +41,7 @@ class Installer {
       downloadedFile = `${downloadDirectory}/docker.dmg`;
     } else if (isWindows) {
       downloadLink =
-        'https://download.docker.com/win/stable/ Docker%20for%20Windows%20Installer.exe';
+        'https://download.docker.com/win/stable/Docker%20for%20Windows%20Installer.exe';
       downloadDirectory = `${os.homedir()}/Downloads`;
       downloadedFile = `${downloadDirectory}/ Docker%20for%20Windows%20Installer.exe`;
     }
