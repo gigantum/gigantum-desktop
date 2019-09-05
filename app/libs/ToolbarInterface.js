@@ -24,7 +24,7 @@ const pingDocker = (dockerConnectionTest, callback) => {
     });
 };
 
-const isMac = process.platform === 'darwin';
+// const isMac = process.platform === 'darwin';
 
 class ToolbarInterface {
   /**
@@ -54,40 +54,40 @@ class ToolbarInterface {
         dockerExistsCallback({ success: true });
       }
     };
-    if (isMac) {
-      const dockerVersion = childProcess.spawn('npm', ['-v'], {
-        env: {
-          PATH: process.env.PATH
-        }
-      });
-      dockerVersion.on('error', error => {
-        console.log(error);
-      });
+    // if (isMac) {
+    const dockerVersion = childProcess.spawn('npm', ['-v'], {
+      env: {
+        PATH: process.env.PATH
+      }
+    });
+    dockerVersion.on('error', error => {
+      console.log(error);
+    });
 
-      dockerVersion.on('close', code => {
-        if (code === 0) {
-          gigantum.checkGigantumRunning(checkGigantumCallback);
-        } else {
-          dockerExistsCallback({
-            success: false,
-            data: {
-              error: {
-                message: 'Docker is not installed'
-              }
+    dockerVersion.on('close', code => {
+      if (code === 0) {
+        gigantum.checkGigantumRunning(checkGigantumCallback);
+      } else {
+        dockerExistsCallback({
+          success: false,
+          data: {
+            error: {
+              message: 'Docker is not installed'
             }
-          });
-        }
-      });
-    } else {
-      dockerExistsCallback({
-        success: false,
-        data: {
-          error: {
-            message: "Can't find docker appliation"
           }
-        }
-      });
-    }
+        });
+      }
+    });
+    // } else {
+    //   dockerExistsCallback({
+    //     success: false,
+    //     data: {
+    //       error: {
+    //         message: "Can't find docker appliation"
+    //       }
+    //     }
+    //   });
+    // }
   };
 
   /**
