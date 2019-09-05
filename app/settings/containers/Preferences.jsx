@@ -39,7 +39,6 @@ const getText = (props, state) => {
   gets option data
 */
 const getOptions = state => {
-  const { state } = this;
   const defaultOptions = ['Yes', 'No'];
   const dockerOptions = ['Yes', 'No', 'Prompt'];
   const saveDisabled =
