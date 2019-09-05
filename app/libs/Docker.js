@@ -171,9 +171,23 @@ class Docker {
     } else {
       dockerSpawn = childProcess.spawn('open', ['-a', 'docker']);
     }
-    dockerSpawn.on('exit', data => console.log('1', data));
+    dockerSpawn.on('exit', code => {
+      if (code === 0) {
+        console.log('succesds callback given');
+        callback({ success: true, data: {} });
+      } else {
+        callback({
+          success: false,
+          data: {
+            error: {
+              message: 'Docker is not installed'
+            }
+          }
+        });
+      }
+    });
+
     dockerSpawn.on('close', code => {
-      console.log('2', code);
       if (code === 0) {
         callback({ success: true, data: {} });
       } else {
