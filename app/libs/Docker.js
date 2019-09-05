@@ -159,6 +159,7 @@ class Docker {
   */
   startDockerApplication = callback => {
     let dockerSpawn;
+    console.log('step2');
     if (isWindows) {
       dockerSpawn = childProcess.spawn('cmd', [
         '/s',
@@ -171,6 +172,8 @@ class Docker {
       dockerSpawn = childProcess.spawn('open', ['-a', 'docker']);
     }
     dockerSpawn.on('exit', code => {
+      console.log('step3');
+
       if (code === 0) {
         console.log('succesds callback given');
         callback({ success: true, data: {} });
