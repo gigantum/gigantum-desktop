@@ -63,12 +63,15 @@ class UpdaterInterface {
     };
 
     const checkIsDockerReadyCallback = response => {
+      const imageData = {
+        name: imageName,
+        tag: newImageTag,
+        size: newImageSize,
+      }
       if (response.success) {
         gigantum.pullImage(
           pullImageCallback,
-          imageName,
-          newImageTag,
-          newImageSize
+          imageData,
         );
       } else {
         console.log(response);

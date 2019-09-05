@@ -374,9 +374,12 @@ class Gigantum extends Docker {
    * @param {Function} callback
     pulls Gigantum image
   */
-  pullImage = (callback, imageName, imageTag, imageSize) => {
+  pullImage = (callback, imageData) => {
+    const { tag, name, size } = imageData;
     const downloadObj = { null: 0 };
     const extractObj = { null: 0 };
+    const currentImageSize = size || this.imageSize;
+    const processPercent = obj => Object.values(obj).reduce((a, b) => a + b) / currentImageSize
     const handlePull = (data, enc, cb) => {
       if (data.error) return cb(new Error(data.error.trim()));
       if (!data.id || !data.progressDetail || !data.progressDetail.current) {
@@ -387,11 +390,8 @@ class Gigantum extends Docker {
       } else if (data.status === 'Extracting') {
         extractObj[data.id] = data.progressDetail.current;
       }
-      const currentImageSize = imageSize || this.imageSize;
-      const downloadPercent =
-        Object.values(downloadObj).reduce((a, b) => a + b) / currentImageSize;
-      const extractPercent =
-        Object.values(extractObj).reduce((a, b) => a + b) / currentImageSize;
+      const downloadPercent = processPercent(downloadObj);
+      const extractPercent = processPercent(extractObj);
 
       const weightedDownloadPercent = downloadPercent * 75;
       const weightedExtractPercent = extractPercent * 25;
@@ -408,8 +408,8 @@ class Gigantum extends Docker {
       '/images/create',
       {
         qs: {
-          fromImage: imageName,
-          tag: imageTag
+          fromImage: name,
+          tag: tag
         },
         body: null
       },
@@ -457,7 +457,11 @@ class Gigantum extends Docker {
         response.error.message &&
         response.error.message.indexOf('no such image') > -1;
       if (isNotInstalled) {
-        this.pullImage(callback, config.imageName, config.imageTag);
+        const imageData = {
+          name: config.imageName,
+          tag: config.imageTag,
+        }
+        this.pullImage(callback, imageData);
       } else if (response && response.error) {
         callback({ success: false, data: response.error });
       } else {

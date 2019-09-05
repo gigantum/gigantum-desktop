@@ -1,7 +1,6 @@
 // @flow
 import React, { Component } from 'react';
 import { remote } from 'electron';
-import log from 'electron-log';
 // States
 import {
   UPDATE_AVAILABLE,
@@ -23,6 +22,27 @@ import './Updater.scss';
 
 type Props = {};
 
+/**
+  @param {object} response
+  @param {object} state
+  processes progress data
+*/
+const getProgress = (response, state) => {
+  const imageSize = Number(
+    state.changeLog
+      .split('\n')[2]
+      .split(': ')[1]
+      .split(' ')[1]
+      .slice(1, -5)
+  );
+  const rawPercentage = response.data.percentage / 100;
+  const appSize = state.totalAppSize || 0;
+  const totalDownload = appSize + imageSize;
+  const totalDownloaded = imageSize * rawPercentage + appSize;
+  const progress = (totalDownloaded / totalDownload) * 100;
+  return progress
+}
+
 export default class Updater extends Component<Props> {
   props: Props;
 
@@ -39,20 +59,8 @@ export default class Updater extends Component<Props> {
     // handles interface response
     const interfaceCallback = response => {
       const { state } = this;
-      log.warn(response);
       if (response.success) {
-        const imageSize = Number(
-          state.changeLog
-            .split('\n')[2]
-            .split(': ')[1]
-            .split(' ')[1]
-            .slice(1, -5)
-        );
-        const rawPercentage = response.data.percentage / 100;
-        const appSize = state.totalAppSize || 0;
-        const totalDownload = appSize + imageSize;
-        const totalDownloaded = imageSize * rawPercentage + appSize;
-        const progress = (totalDownloaded / totalDownload) * 100;
+        const progress = getProgress(response, state);
         this.setState({ progress });
       }
       if (response.data.finished) {
@@ -63,11 +71,41 @@ export default class Updater extends Component<Props> {
       }
     };
 
-    // handles response from updater event listeners
-    const progressCallback = response => {
+    // subscribes to progress information
+    this.messenger.checkDownloadProgress(this.progressCallback);
+  };
+
+  messenger = new UpdaterMessenger();
+
+  interface = new UpdaterInterface({ messenger: this.messenger });
+
+
+  /**
+    @param {object} response
+    handles response from updateGigantumImage
+  */
+  interfaceCallback = response => {
+      const { state } = this;
+      if (response.success) {
+        const progress = getProgress(response, state);
+        this.setState({ progress });
+      }
+      if (response.data.finished) {
+        this.messenger.downloadComplete();
+        setTimeout(() => {
+          this.transition(SUCCESS, { message: 'Download Complete' });
+        }, 3000);
+      }
+    };
+
+
+  /**
+    @param {object} response
+    handles response from checkDownloadProgress
+  */
+  progressCallback = response => {
       const { state } = this;
       const totalDownload = response.newImageSize + response.total;
-      log.warn(response);
       const downloadedBytes = response.success
         ? state.totalAppSize || 0
         : response.transferred;
@@ -76,17 +114,9 @@ export default class Updater extends Component<Props> {
         this.setState({ totalAppSize: response.total });
       }
       if (response.success) {
-        this.interface.updateGigantumImage(interfaceCallback, response);
+        this.interface.updateGigantumImage(this.interfaceCallback, response);
       }
     };
-
-    // subscribes to progress information
-    this.messenger.checkDownloadProgress(progressCallback);
-  };
-
-  messenger = new UpdaterMessenger();
-
-  interface = new UpdaterInterface({ messenger: this.messenger });
 
   /**
     @param {string} eventType

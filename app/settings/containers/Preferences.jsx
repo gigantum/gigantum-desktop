@@ -7,6 +7,54 @@ import Setting from '../components/Setting';
 // assets
 import './Preferences.scss';
 
+/**
+  @param {Object} props
+  @param {Object} state
+  gets storage info to determine text
+*/
+const getText = (props, state) => {
+  const { storage } = props;
+  let shutDownDockerText = storage.get('close.dockerConfirm');
+  let launchOnStartText = props.autoLaunch;
+  let gigantumConfirmText = storage.get('close.gigantumConfirm');
+
+  if (shutDownDockerText === undefined) {
+    shutDownDockerText = 'Prompt';
+  } else {
+    shutDownDockerText = shutDownDockerText ? 'Yes' : 'No';
+  }
+
+  gigantumConfirmText = gigantumConfirmText ? 'No' : 'Yes';
+  launchOnStartText = launchOnStartText ? 'Yes' : 'No';
+
+  return {
+    shutDownDockerText: state.shutDownDockerText || shutDownDockerText,
+    gigantumConfirmText: state.gigantumConfirmText || gigantumConfirmText,
+    launchOnStartText: state.launchOnStartText || launchOnStartText
+  };
+};
+
+/**
+  @param {Object} state
+  gets option data
+*/
+const getOptions = state => {
+  const { state } = this;
+  const defaultOptions = ['Yes', 'No'];
+  const dockerOptions = ['Yes', 'No', 'Prompt'];
+  const saveDisabled =
+    state.shutDownDockerText === null &&
+    state.launchOnStartText === null &&
+    state.gigantumConfirmText === null;
+
+  return {
+    gigantumOptions: defaultOptions,
+    launchOptions: defaultOptions,
+    dockerOptions,
+    saveDisabled
+  };
+};
+
 export default class Preferences extends Component<Props> {
   props: Props;
 
@@ -17,33 +65,6 @@ export default class Preferences extends Component<Props> {
     launchOnStartText: null,
     shutDownDockerText: null,
     gigantumConfirmText: null
-  };
-
-  /**
-    @param {} -
-    gets storage info to determine text
-  */
-  getText = () => {
-    const { props, state } = this;
-    const { storage } = props;
-    let shutDownDockerText = storage.get('close.dockerConfirm');
-    let launchOnStartText = props.autoLaunch;
-    let gigantumConfirmText = storage.get('close.gigantumConfirm');
-
-    if (shutDownDockerText === undefined) {
-      shutDownDockerText = 'Prompt';
-    } else {
-      shutDownDockerText = shutDownDockerText ? 'Yes' : 'No';
-    }
-
-    gigantumConfirmText = gigantumConfirmText ? 'No' : 'Yes';
-    launchOnStartText = launchOnStartText ? 'Yes' : 'No';
-
-    return {
-      shutDownDockerText: state.shutDownDockerText || shutDownDockerText,
-      gigantumConfirmText: state.gigantumConfirmText || gigantumConfirmText,
-      launchOnStartText: state.launchOnStartText || launchOnStartText
-    };
   };
 
   /**
@@ -115,27 +136,6 @@ export default class Preferences extends Component<Props> {
     this.cancelPreference();
   };
 
-  /**
-    @param {} -
-    gets renderData
-  */
-  getOptions = () => {
-    const { state } = this;
-    const defaultOptions = ['Yes', 'No'];
-    const dockerOptions = ['Yes', 'No', 'Prompt'];
-    const saveDisabled =
-      state.shutDownDockerText === null &&
-      state.launchOnStartText === null &&
-      state.gigantumConfirmText === null;
-
-    return {
-      gigantumOptions: defaultOptions,
-      launchOptions: defaultOptions,
-      dockerOptions,
-      saveDisabled
-    };
-  };
-
   render() {
     const { props, state } = this;
     const { message } = props;
@@ -143,13 +143,13 @@ export default class Preferences extends Component<Props> {
       shutDownDockerText,
       gigantumConfirmText,
       launchOnStartText
-    } = this.getText();
+    } = getText(props, state);
     const {
       gigantumOptions,
       launchOptions,
       dockerOptions,
       saveDisabled
-    } = this.getOptions();
+    } = getOptions(state);
     const gigantumConfirmCSS = classNames({
       'Dropdown relative': true,
       'Dropdown--open': state.gigantumDropdownVisible,
