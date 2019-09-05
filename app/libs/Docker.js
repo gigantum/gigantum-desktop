@@ -161,8 +161,11 @@ class Docker {
     let dockerSpawn;
     if (isWindows) {
       dockerSpawn = childProcess.spawn('cmd', [
+        '/s',
+        '/c',
         'start',
-        String.raw`C:\Program Files\Docker\Docker Desktop`
+        '',
+        'C:\\Program Files\\Docker\\Docker\\Docker Desktop'
       ]);
     } else {
       dockerSpawn = childProcess.spawn('open', ['-a', 'docker']);
