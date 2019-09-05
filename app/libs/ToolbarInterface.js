@@ -12,11 +12,14 @@ const pingDocker = (dockerConnectionTest, callback) => {
   console.log('rar2');
   dockerConnectionTest()
     .then(
-      () => {
+      response => {
+        console.log('1', response);
         callback({ isRunning: true });
         return null;
       },
-      () => {
+      response => {
+        console.log('2', response);
+
         callback({ isRunning: false });
       }
     )
