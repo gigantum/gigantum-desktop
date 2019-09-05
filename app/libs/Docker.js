@@ -160,7 +160,8 @@ class Docker {
   startDockerApplication = callback => {
     let dockerSpawn;
     if (isWindows) {
-      dockerSpawn = childProcess.spawn('start', [
+      dockerSpawn = childProcess.spawn('cmd', [
+        'start',
         String.raw`C:\Program Files\Docker\Docker Desktop'String.raw`
       ]);
     } else {
