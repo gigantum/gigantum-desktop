@@ -21,6 +21,7 @@ const pingDocker = (dockerConnectionTest, callback) => {
       }
     )
     .catch(error => {
+      console.log('ran in catch');
       callback({ isRunning: false });
       console.log(error);
     });
@@ -187,6 +188,8 @@ class ToolbarInterface {
      */
     const dockerRunningCallback = response => {
       if (response.isRunning) {
+        console.log('step31');
+
         checkIsDockerReadyCallback({ success: true, data });
       } else {
         /* STEP 2 */
