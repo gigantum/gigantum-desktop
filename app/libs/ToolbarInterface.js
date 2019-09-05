@@ -9,6 +9,7 @@ import Gigantum from './Gigantum';
 fixPath();
 
 const pingDocker = (dockerConnectionTest, callback) => {
+  console.log('rar2');
   dockerConnectionTest()
     .then(
       () => {
@@ -188,11 +189,14 @@ class ToolbarInterface {
         checkIsDockerReadyCallback({ success: true, data });
       } else {
         /* STEP 2 */
+        console.log('step1');
         startDockerApplication(startDockerApplicationCallback);
       }
     };
 
     /* STEP 1 */
+    console.log('step0');
+
     pingDocker(dockerConnectionTest, dockerRunningCallback);
   };
 
