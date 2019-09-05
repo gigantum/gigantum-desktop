@@ -68,7 +68,6 @@ class Installer {
         });
       })
       .then(() => {
-        console.log('r1n');
         callback({
           success: true,
           finished: true,
@@ -78,8 +77,6 @@ class Installer {
         return null;
       })
       .catch(error => {
-        console.log('r2n');
-
         callback({
           success: false,
           finished: false,
