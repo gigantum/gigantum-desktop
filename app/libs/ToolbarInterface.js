@@ -55,7 +55,7 @@ class ToolbarInterface {
       }
     };
     // if (isMac) {
-    const dockerVersion = childProcess.spawn('npm', ['-v'], {
+    const dockerVersion = childProcess.spawn('docker', ['-v'], {
       env: {
         PATH: process.env.PATH
       }
