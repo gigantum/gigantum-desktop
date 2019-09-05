@@ -168,6 +168,7 @@ class ToolbarInterface {
      * @calls {checkIsDockerReady}
      */
     const startDockerApplicationCallback = response => {
+      console.log(response);
       if (response.success) {
         /* STEP 3 */
         checkIsDockerReady(checkIsDockerReadyCallback);
