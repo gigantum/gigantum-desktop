@@ -34,7 +34,7 @@
     "test-e2e": "node -r @babel/register ./internals/scripts/CheckBuiltsExist.js && cross-env NODE_ENV=test testcafe electron:./ ./test/e2e/HomePage.e2e.js",
     "test-e2e-live": "node -r @babel/register ./internals/scripts/CheckBuiltsExist.js && cross-env NODE_ENV=test testcafe-live electron:./ ./test/e2e/HomePage.e2e.js",
     "test-watch": "yarn test --watch",
-    "deploy": "GITHUB_TOKEN=`cat secrets/config.json | json select '.github_token'` WIN_CSC_LINK=`cat secrets/config.json | json select '.cert_directory'` WIN_CSC_KEY_PASSWORD=`cat secrets/config.json | json select '.cert_keyphrase'` electron-builder -m -w -l appimage -p always"
+    "deploy": "GITHUB_TOKEN=`cat secrets/config.json | json select '.github_token'` WIN_CSC_LINK=`cat secrets/config.json | json select '.cert_directory'` WIN_CSC_KEY_PASSWORD=`cat secrets/config.json | json select '.cert_keyphrase'` yarn package"
   },
   "lint-staged": {
     "*.{js,jsx}": [
@@ -177,6 +177,7 @@
     "@babel/preset-flow": "^7.0.0",
     "@babel/preset-react": "^7.0.0",
     "@babel/register": "^7.0.0",
+    "@sentry/cli": "^1.47.1",
     "babel-core": "7.0.0-bridge.0",
     "babel-eslint": "^10.0.1",
     "babel-jest": "^23.6.0",
@@ -193,6 +194,7 @@
     "electron": "^3.0.10",
     "electron-builder": "^21.2.0",
     "electron-devtools-installer": "^2.2.4",
+    "electron-download": "^4.1.1",
     "enzyme": "^3.7.0",
     "enzyme-adapter-react-16": "^1.7.0",
     "enzyme-to-json": "^3.3.4",
