@@ -97,7 +97,7 @@ class Installer {
     if (isMac) {
       open(downloadedFile, ['-a', 'finder']);
     } else if (isWindows) {
-      open(downloadedFile, ['-a', 'finder']);
+      open(downloadedFile);
     }
     callback({ success: true, data: {} });
   };
