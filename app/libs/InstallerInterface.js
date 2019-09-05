@@ -103,7 +103,7 @@ class InstallerInterface {
       console.log('cb', response);
       if (response.success && response.finished) {
         progressCallback({ success: true, progress: 100 });
-        // this.handleDnD(response.data.downloadedFile, dndCallback);
+        this.handleDnD(response.data.downloadedFile, dndCallback);
       } else if (response.success) {
         progressCallback({ success: true, progress: response.data.progress });
       } else {
