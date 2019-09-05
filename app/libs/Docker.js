@@ -171,9 +171,9 @@ class Docker {
     } else {
       dockerSpawn = childProcess.spawn('open', ['-a', 'docker']);
     }
-    dockerSpawn.on('exit', data => console.log(data));
+    dockerSpawn.on('exit', data => console.log('1', data));
     dockerSpawn.on('close', code => {
-      console.log(code);
+      console.log('2', code);
       if (code === 0) {
         callback({ success: true, data: {} });
       } else {
