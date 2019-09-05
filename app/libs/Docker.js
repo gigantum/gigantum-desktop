@@ -211,7 +211,7 @@ class Docker {
   */
   stopDockerApplication = callback => {
     const script = isWindows
-      ? 'taskkill /IM "docker desktop.exe" /F'
+      ? 'taskkill /IM "docker desktop.exe"'
       : 'osascript -e \'quit app "docker"\'';
     childProcess.exec(script, {}, (response, error) => {
       if (error) {
