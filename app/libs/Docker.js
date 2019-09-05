@@ -88,6 +88,7 @@ class Docker {
     if (reconnectCount < 601) {
       dockerode.ping(
         (error, response) => {
+          console.log(error, response);
           // TODO test for errors coming from response
           if (response === 'OK') {
             callback({ success: true, data: response });
