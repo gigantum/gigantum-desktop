@@ -418,7 +418,6 @@ class Gigantum extends Docker {
         if (response) {
           pump(response, throughJSON(), through.obj(handlePull), error => {
             if (error) {
-              console.log('error ran here');
               console.log(error);
             } else {
               callback({
@@ -444,9 +443,7 @@ class Gigantum extends Docker {
   */
   configureGigantum = callback => {
     const { getContainer } = this.dockerode;
-    console.log('before');
     const container = getContainer(config.containerName);
-    console.log('after');
 
     container.modem = this.dockerode.modem;
 
