@@ -9,28 +9,20 @@ import Gigantum from './Gigantum';
 fixPath();
 
 const pingDocker = (dockerConnectionTest, callback) => {
-  console.log('rar2');
   dockerConnectionTest()
     .then(
-      response => {
-        console.log('1', response);
+      () => {
         callback({ isRunning: true });
         return null;
       },
-      response => {
-        console.log('2', response);
-
+      () => {
         callback({ isRunning: false });
       }
     )
-    .catch(error => {
-      console.log('ran in catch');
+    .catch(() => {
       callback({ isRunning: false });
-      console.log(error);
     });
 };
-
-// const isMac = process.platform === 'darwin';
 
 class ToolbarInterface {
   /**
@@ -180,19 +172,14 @@ class ToolbarInterface {
      */
     const dockerRunningCallback = response => {
       if (response.isRunning) {
-        console.log('step31');
-
         checkIsDockerReadyCallback({ success: true, data });
       } else {
         /* STEP 2 */
-        console.log('step1');
         startDockerApplication(startDockerApplicationCallback);
       }
     };
 
     /* STEP 1 */
-    console.log('step0');
-
     pingDocker(dockerConnectionTest, dockerRunningCallback);
   };
 

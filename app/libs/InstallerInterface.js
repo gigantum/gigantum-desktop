@@ -7,7 +7,6 @@ import Docker from './Docker';
 import Gigantum from './Gigantum';
 import Installer from './Installer';
 
-// const isMac = process.platform === 'darwin';
 const isWindows = process.platform === 'win32';
 
 fixPath();
@@ -31,7 +30,6 @@ class InstallerInterface {
    * checks if docker is installed
    */
   check = callback => {
-    // if (isMac) {
     const dockerVersion = childProcess.spawn('docker', ['-v']);
     dockerVersion.on('error', error => {
       console.log(error);
@@ -42,7 +40,6 @@ class InstallerInterface {
       } else {
         const path = isWindows ? 'c:' : '/';
         disk.check(path, (error, info) => {
-          console.log(path, error, info);
           if (error) {
             callback({
               success: false,
@@ -78,16 +75,6 @@ class InstallerInterface {
         });
       }
     });
-    // } else {
-    //   callback({
-    //     success: false,
-    //     data: {
-    //       error: {
-    //         message: "Can't find docker appliation"
-    //       }
-    //     }
-    //   });
-    // }
   };
 
   /**
@@ -98,9 +85,7 @@ class InstallerInterface {
    */
   download = (progressCallback, dndCallback) => {
     const { installer } = this;
-    console.log(dndCallback);
     const downloadDockerCallback = response => {
-      console.log('cb', response);
       if (response.success && response.finished) {
         progressCallback({ success: true, progress: 100 });
         this.handleDnD(response.data.downloadedFile, dndCallback);
