@@ -7,7 +7,7 @@ import Docker from './Docker';
 import Gigantum from './Gigantum';
 import Installer from './Installer';
 
-const isMac = process.platform === 'darwin';
+// const isMac = process.platform === 'darwin';
 const isWindows = process.platform === 'win32';
 
 fixPath();
@@ -31,62 +31,63 @@ class InstallerInterface {
    * checks if docker is installed
    */
   check = callback => {
-    if (isMac) {
-      const dockerVersion = childProcess.spawn('docker', ['-v']);
-      dockerVersion.on('error', error => {
-        console.log(error);
-      });
-      dockerVersion.on('close', code => {
-        if (code === 0) {
-          callback({ success: true, data: {} });
-        } else {
-          const path = isWindows ? 'c:' : '/';
-          disk.check(path, (error, info) => {
-            if (error) {
+    // if (isMac) {
+    const dockerVersion = childProcess.spawn('docker', ['-v']);
+    dockerVersion.on('error', error => {
+      console.log(error);
+    });
+    dockerVersion.on('close', code => {
+      if (code === 0) {
+        callback({ success: true, data: {} });
+      } else {
+        const path = isWindows ? 'c:' : '/';
+        disk.check(path, (error, info) => {
+          console.log(path, error, info);
+          if (error) {
+            callback({
+              success: false,
+              data: {
+                error: {
+                  message: 'Could not determine disk space'
+                }
+              }
+            });
+          } else {
+            const notEnoughSpace = info.available / 1000000000 < 8;
+            if (notEnoughSpace) {
               callback({
                 success: false,
                 data: {
                   error: {
-                    message: 'Could not determine disk space'
+                    message: 'Not Enough Disk Space',
+                    spaceAvailable: (info.available / 1000000000).toFixed(1)
                   }
                 }
               });
             } else {
-              const notEnoughSpace = info.available / 1000000000 < 8;
-              if (notEnoughSpace) {
-                callback({
-                  success: false,
-                  data: {
-                    error: {
-                      message: 'Not Enough Disk Space',
-                      spaceAvailable: (info.available / 1000000000).toFixed(1)
-                    }
+              callback({
+                success: false,
+                data: {
+                  error: {
+                    message: 'Docker is not installed'
                   }
-                });
-              } else {
-                callback({
-                  success: false,
-                  data: {
-                    error: {
-                      message: 'Docker is not installed'
-                    }
-                  }
-                });
-              }
+                }
+              });
             }
-          });
-        }
-      });
-    } else {
-      callback({
-        success: false,
-        data: {
-          error: {
-            message: "Can't find docker appliation"
           }
-        }
-      });
-    }
+        });
+      }
+    });
+    // } else {
+    //   callback({
+    //     success: false,
+    //     data: {
+    //       error: {
+    //         message: "Can't find docker appliation"
+    //       }
+    //     }
+    //   });
+    // }
   };
 
   /**
@@ -97,8 +98,9 @@ class InstallerInterface {
    */
   download = (progressCallback, dndCallback) => {
     const { installer } = this;
-
+    console.log(dndCallback);
     const downloadDockerCallback = response => {
+      console.log('cb', response);
       if (response.success && response.finished) {
         progressCallback({ success: true, progress: 100 });
         this.handleDnD(response.data.downloadedFile, dndCallback);

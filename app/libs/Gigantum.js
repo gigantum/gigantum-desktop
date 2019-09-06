@@ -379,7 +379,8 @@ class Gigantum extends Docker {
     const downloadObj = { null: 0 };
     const extractObj = { null: 0 };
     const currentImageSize = size || this.imageSize;
-    const processPercent = obj => Object.values(obj).reduce((a, b) => a + b) / currentImageSize
+    const processPercent = obj =>
+      Object.values(obj).reduce((a, b) => a + b) / currentImageSize;
     const handlePull = (data, enc, cb) => {
       if (data.error) return cb(new Error(data.error.trim()));
       if (!data.id || !data.progressDetail || !data.progressDetail.current) {
@@ -409,7 +410,7 @@ class Gigantum extends Docker {
       {
         qs: {
           fromImage: name,
-          tag: tag
+          tag
         },
         body: null
       },
@@ -417,13 +418,8 @@ class Gigantum extends Docker {
         if (response) {
           pump(response, throughJSON(), through.obj(handlePull), error => {
             if (error) {
+              console.log('error ran here');
               console.log(error);
-              callback({
-                success: false,
-                data: {
-                  finished: false
-                }
-              });
             } else {
               callback({
                 success: true,
@@ -434,6 +430,8 @@ class Gigantum extends Docker {
               });
             }
           });
+        } else {
+          setTimeout(() => this.pullImage(callback, imageData), 2000);
         }
         console.log(err, response);
       }
@@ -446,7 +444,9 @@ class Gigantum extends Docker {
   */
   configureGigantum = callback => {
     const { getContainer } = this.dockerode;
+    console.log('before');
     const container = getContainer(config.containerName);
+    console.log('after');
 
     container.modem = this.dockerode.modem;
 
@@ -459,8 +459,8 @@ class Gigantum extends Docker {
       if (isNotInstalled) {
         const imageData = {
           name: config.imageName,
-          tag: config.imageTag,
-        }
+          tag: config.imageTag
+        };
         this.pullImage(callback, imageData);
       } else if (response && response.error) {
         callback({ success: false, data: response.error });

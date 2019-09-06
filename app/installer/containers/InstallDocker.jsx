@@ -67,6 +67,9 @@ export default class InstallDocker extends Component<Props> {
     const progressCallback = response => {
       if (response.success) {
         this.setState({ progress: response.progress });
+        setTimeout(() => {
+          this.installDockerTransition(SUCCESS);
+        }, 3000);
       } else {
         installErrorHandler();
       }

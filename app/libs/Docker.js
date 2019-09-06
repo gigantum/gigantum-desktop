@@ -13,6 +13,8 @@ import fixPath from 'fix-path';
 // config
 import config from './config';
 
+const isWindows = process.platform === 'win32';
+
 fixPath();
 
 /**
@@ -156,7 +158,36 @@ class Docker {
     starts the docker application
   */
   startDockerApplication = callback => {
-    const dockerSpawn = childProcess.spawn('open', ['-a', 'docker']);
+    let dockerSpawn;
+    console.log('step2');
+    if (isWindows) {
+      dockerSpawn = childProcess.spawn('cmd', [
+        '/s',
+        '/c',
+        'start',
+        '',
+        'C:\\Program Files\\Docker\\Docker\\Docker Desktop'
+      ]);
+    } else {
+      dockerSpawn = childProcess.spawn('open', ['-a', 'docker']);
+    }
+    dockerSpawn.on('exit', code => {
+      console.log('step3');
+
+      if (code === 0) {
+        console.log('succesds callback given');
+        callback({ success: true, data: {} });
+      } else {
+        callback({
+          success: false,
+          data: {
+            error: {
+              message: 'Docker is not installed'
+            }
+          }
+        });
+      }
+    });
 
     dockerSpawn.on('close', code => {
       if (code === 0) {
@@ -179,17 +210,16 @@ class Docker {
     stops the docker application
   */
   stopDockerApplication = callback => {
-    childProcess.exec(
-      'osascript -e \'quit app "docker"\'',
-      {},
-      (response, error) => {
-        if (error) {
-          callback({ success: false, data: { error } });
-        } else {
-          callback({ success: true, data: {} });
-        }
+    const script = isWindows
+      ? 'taskkill /IM "docker desktop.exe"'
+      : 'osascript -e \'quit app "docker"\'';
+    childProcess.exec(script, {}, (response, error) => {
+      if (error) {
+        callback({ success: false, data: { error } });
+      } else {
+        callback({ success: true, data: {} });
       }
-    );
+    });
     if (window.dockerSpawn && !window.dockerSpawn.killed) {
       delete window.docker;
     }

@@ -9,22 +9,28 @@ import Gigantum from './Gigantum';
 fixPath();
 
 const pingDocker = (dockerConnectionTest, callback) => {
+  console.log('rar2');
   dockerConnectionTest()
     .then(
-      () => {
+      response => {
+        console.log('1', response);
         callback({ isRunning: true });
         return null;
       },
-      () => {
+      response => {
+        console.log('2', response);
+
         callback({ isRunning: false });
       }
     )
     .catch(error => {
+      console.log('ran in catch');
+      callback({ isRunning: false });
       console.log(error);
     });
 };
 
-const isMac = process.platform === 'darwin';
+// const isMac = process.platform === 'darwin';
 
 class ToolbarInterface {
   /**
@@ -54,40 +60,29 @@ class ToolbarInterface {
         dockerExistsCallback({ success: true });
       }
     };
-    if (isMac) {
-      const dockerVersion = childProcess.spawn('npm', ['-v'], {
-        env: {
-          PATH: process.env.PATH
-        }
-      });
-      dockerVersion.on('error', error => {
-        console.log(error);
-      });
+    const dockerVersion = childProcess.spawn('docker', ['-v'], {
+      env: {
+        PATH: process.env.PATH
+      }
+    });
+    dockerVersion.on('error', error => {
+      console.log(error);
+    });
 
-      dockerVersion.on('close', code => {
-        if (code === 0) {
-          gigantum.checkGigantumRunning(checkGigantumCallback);
-        } else {
-          dockerExistsCallback({
-            success: false,
-            data: {
-              error: {
-                message: 'Docker is not installed'
-              }
+    dockerVersion.on('close', code => {
+      if (code === 0) {
+        gigantum.checkGigantumRunning(checkGigantumCallback);
+      } else {
+        dockerExistsCallback({
+          success: false,
+          data: {
+            error: {
+              message: 'Docker is not installed'
             }
-          });
-        }
-      });
-    } else {
-      dockerExistsCallback({
-        success: false,
-        data: {
-          error: {
-            message: "Can't find docker appliation"
           }
-        }
-      });
-    }
+        });
+      }
+    });
   };
 
   /**
@@ -185,14 +180,19 @@ class ToolbarInterface {
      */
     const dockerRunningCallback = response => {
       if (response.isRunning) {
+        console.log('step31');
+
         checkIsDockerReadyCallback({ success: true, data });
       } else {
         /* STEP 2 */
+        console.log('step1');
         startDockerApplication(startDockerApplicationCallback);
       }
     };
 
     /* STEP 1 */
+    console.log('step0');
+
     pingDocker(dockerConnectionTest, dockerRunningCallback);
   };
 

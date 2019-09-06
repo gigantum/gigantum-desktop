@@ -57,11 +57,12 @@ const showToolbar = (toolbarWindow, tray) => {
   const trayPos = tray.getBounds();
   const windowPos = toolbarWindow.getBounds();
   let x = 0;
-  const y = trayPos.y + TRAY_ARROW_HEIGHT;
+  let y = trayPos.y + TRAY_ARROW_HEIGHT;
 
   if (process.platform === 'darwin') {
     x = Math.round(trayPos.x + trayPos.width / 2 - windowPos.width / 2);
   } else {
+    y = trayPos.y - 409;
     x = Math.round(trayPos.x + trayPos.width / 2 - windowPos.width / 2);
   }
 
