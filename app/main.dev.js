@@ -73,7 +73,7 @@ app.on('ready', async () => {
   const toolbarWindow = new BrowserWindow({
     name: 'toolbar',
     width: 352,
-    height: 419,
+    height: 409,
     transparent: true,
     resizable: false,
     frame: false,

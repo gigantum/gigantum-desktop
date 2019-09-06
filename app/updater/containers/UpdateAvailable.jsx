@@ -30,11 +30,15 @@ export default class UpdateAvailable extends Component<Props> {
         <Header message={message} />
         <div className="UpdateAvailable__body">
           <div className="UpdateAvailable__subText">
-            <div>Click “Install Update” to download the update. </div>
+            <div>Click “Download Update” to download the update. </div>
             <div>
               You can continue to work until the download is complete and you
               choose to restart
             </div>
+            <p>
+              Note: Docker must be running to update Gigantum. The update
+              process will handle starting Docker for you.
+            </p>
           </div>
           <div className="UpdateAvailable__releaseNotes">
             <div className="UpdateAvailable__noteHeader">Release Notes</div>
@@ -53,7 +57,7 @@ export default class UpdateAvailable extends Component<Props> {
               className="Btn__Updater Btn--primary Btn--last"
               onClick={() => this.confirm()}
             >
-              Install Update
+              Download Update
             </button>
           </div>
         </div>

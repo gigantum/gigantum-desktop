@@ -2,9 +2,14 @@
 import React, { Component } from 'react';
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
+// componenets
+import Header from '../components/Header';
+// assets
+import './UpdateProgress.scss';
 
 type Props = {
-  progress: number
+  progress: number,
+  message: string
 };
 
 export default class UpdateProgress extends Component<Props> {
@@ -12,9 +17,10 @@ export default class UpdateProgress extends Component<Props> {
 
   render() {
     const { props } = this;
-    const { progress } = props;
+    const { progress, message } = props;
     return (
       <div className="UpdateProgress">
+        <Header message={message} />
         <div className="UpdateProgress__body">
           <CircularProgressbar
             value={progress}

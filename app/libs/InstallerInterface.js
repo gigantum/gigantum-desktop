@@ -1,6 +1,7 @@
 // @flow
 import childProcess from 'child_process';
 import disk from 'diskusage';
+import fixPath from 'fix-path';
 // libs
 import Docker from './Docker';
 import Gigantum from './Gigantum';
@@ -8,6 +9,8 @@ import Installer from './Installer';
 
 const isMac = process.platform === 'darwin';
 const isWindows = process.platform === 'win32';
+
+fixPath();
 
 class InstallerInterface {
   /**

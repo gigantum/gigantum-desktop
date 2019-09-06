@@ -7,6 +7,7 @@ log.transports.console.format = '{h}:{i}:{s}:{ms} {text}';
 
 let messengerController;
 let newImageSize;
+let newImageTag;
 autoUpdater.autoDownload = false;
 let checkUpToDate;
 
@@ -29,6 +30,12 @@ autoUpdater.on('update-available', info => {
         .split(' ')[1]
         .slice(1, -5)
     );
+    newImageTag = String(
+      info.releaseNotes
+        .split('\n')[2]
+        .split(': ')[1]
+        .split(' ')[0]
+    );
     messengerController.sendChangeLog(info);
     messengerController.sendUpdateResponse(true);
   } else {
@@ -49,9 +56,13 @@ autoUpdater.on('download-progress', progress => {
 });
 
 autoUpdater.on('update-downloaded', progress => {
-  const prog = progress;
+  const prog = progress || {};
   prog.newImageSize = newImageSize;
+  prog.newImageTag = newImageTag;
   prog.success = true;
+  if (!prog.total) {
+    prog.total = 0;
+  }
   messengerController.sendDownloadProgress(prog);
 });
 

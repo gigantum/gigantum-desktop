@@ -70,7 +70,7 @@ export default class Header extends PureComponent<Props> {
         const { machine, storage, messenger } = props;
         const currentState = machine.value;
         const stopCallback = () => {
-          messenger.quitApp();
+          messenger.quitApp(props.interface);
         };
         const checkRunningProjectsCallback = response => {
           let validateGigantumClose = !storage.get('close.gigantumConfirm');
