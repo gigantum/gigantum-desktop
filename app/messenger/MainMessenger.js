@@ -40,14 +40,12 @@ const toolbarLaunch = (toolbarWindow, tray) => {
     }
   });
 
-  // Commented out for development purposes
-
-  // toolbarWindow.on('blur', () => {
-  //   if (!toolbarWindow.webContents.isDevToolsOpened()) {
-  //     toolbarWindow.hide();
-  //   }
-  //   toolbarWindow.hide();
-  // });
+  toolbarWindow.on('blur', () => {
+    if (!toolbarWindow.webContents.isDevToolsOpened()) {
+      toolbarWindow.hide();
+    }
+    toolbarWindow.hide();
+  });
 };
 
 /**
@@ -102,8 +100,8 @@ class MainMessenger {
       allowEval: true,
       name: 'updater',
       width: 669,
-      height: 405,
-      transparent: false,
+      height: 455,
+      transparent: true,
       resizable: false,
       frame: false,
       show: false,
@@ -128,7 +126,6 @@ class MainMessenger {
       }
     });
     this.contents.updaterWindow = updaterWindow;
-    updaterWindow.webContents.openDevTools();
   };
 
   /**
@@ -233,6 +230,15 @@ class MainMessenger {
   };
 
   /**
+  @param {}
+  sets downlad status to renderer
+  */
+  setDownloadStatus = () => {
+    const { toolbarWindow } = this.contents;
+    toolbarWindow.downloadComplete = true;
+  };
+
+  /**
     @param {} -
     sets up listener on messages and hides or shows depending on the message structure
   */
@@ -303,6 +309,12 @@ class MainMessenger {
       }
       if (message === 'download.update') {
         autoUpdater.downloadUpdate();
+      }
+      if (message === 'download.complete') {
+        this.setDownloadStatus();
+      }
+      if (message === 'quit.andInstall') {
+        autoUpdater.quitAndInstall();
       }
     });
   };

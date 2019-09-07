@@ -374,9 +374,12 @@ class Gigantum extends Docker {
    * @param {Function} callback
     pulls Gigantum image
   */
-  pullImage = callback => {
+  pullImage = (callback, imageData) => {
+    const { tag, name, size } = imageData;
     const downloadObj = { null: 0 };
     const extractObj = { null: 0 };
+    const currentImageSize = size || this.imageSize;
+    const processPercent = obj => Object.values(obj).reduce((a, b) => a + b) / currentImageSize
     const handlePull = (data, enc, cb) => {
       if (data.error) return cb(new Error(data.error.trim()));
       if (!data.id || !data.progressDetail || !data.progressDetail.current) {
@@ -387,14 +390,11 @@ class Gigantum extends Docker {
       } else if (data.status === 'Extracting') {
         extractObj[data.id] = data.progressDetail.current;
       }
+      const downloadPercent = processPercent(downloadObj);
+      const extractPercent = processPercent(extractObj);
 
-      const downloadPercent =
-        Object.values(downloadObj).reduce((a, b) => a + b) / this.imageSize;
-      const extractPercent =
-        Object.values(extractObj).reduce((a, b) => a + b) / this.imageSize;
-
-      const weightedDownloadPercent = Math.round(downloadPercent * 75);
-      const weightedExtractPercent = Math.round(extractPercent * 25);
+      const weightedDownloadPercent = downloadPercent * 75;
+      const weightedExtractPercent = extractPercent * 25;
       callback({
         success: true,
         data: {
@@ -408,8 +408,8 @@ class Gigantum extends Docker {
       '/images/create',
       {
         qs: {
-          fromImage: config.imageName,
-          tag: config.imageTag
+          fromImage: name,
+          tag: tag
         },
         body: null
       },
@@ -457,7 +457,11 @@ class Gigantum extends Docker {
         response.error.message &&
         response.error.message.indexOf('no such image') > -1;
       if (isNotInstalled) {
-        this.pullImage(callback);
+        const imageData = {
+          name: config.imageName,
+          tag: config.imageTag,
+        }
+        this.pullImage(callback, imageData);
       } else if (response && response.error) {
         callback({ success: false, data: response.error });
       } else {
@@ -493,6 +497,35 @@ class Gigantum extends Docker {
     };
 
     this.runGigantum(runGigantumCallback, true);
+  };
+
+  /**
+   * @param {Function} callback
+    removes outdated gigantum image
+  */
+  removeGigantumImage = callback => {
+    const images = `/images/${config.imageName}`;
+    this.stopGigantum()
+      .then(() => this.stopProjects())
+      .then(() =>
+        this.dockerRequest.delete(
+          images,
+          {
+            qs: {
+              force: true
+            }
+          },
+          err => {
+            if (err) {
+              console.log(err);
+              callback({ success: false });
+            } else {
+              callback({ success: true });
+            }
+          }
+        )
+      )
+      .catch(() => callback({ success: false }));
   };
 
   handleAppQuit(updating = false) {
@@ -678,20 +711,6 @@ class Gigantum extends Docker {
           buttons: ['Close']
         });
       });
-  }
-
-  removeGigantumImage() {
-    const images = `/images/${config.imageName}`;
-
-    return this.stopGigantum()
-      .then(() => this.stopLabbooks())
-      .then(() =>
-        this.dockerRequest.delete(images, err => {
-          if (err) {
-            console.log(err);
-          }
-        })
-      );
   }
 }
 

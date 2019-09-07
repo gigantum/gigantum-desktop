@@ -1,4 +1,4 @@
-import { ipcRenderer } from 'electron';
+import { ipcRenderer, remote } from 'electron';
 
 class ToolbarMesseneger {
   /**
@@ -56,12 +56,18 @@ class ToolbarMesseneger {
   };
 
   /**
-    @param {} -
+    @param {Object} - toolbarInterface
     sends quit.app to ipcRenderer
     MainMessenger recieves message and hides installer window
   */
-  quitApp = () => {
-    ipcRenderer.send('asynchronous-message', 'quit.app');
+  quitApp = toolbarInterface => {
+    const { downloadComplete } = remote.getCurrentWindow();
+    const callback = () => ipcRenderer.send('asynchronous-message', 'quit.app');
+    if (downloadComplete) {
+      toolbarInterface.removePreviousImage(callback);
+    } else {
+      callback();
+    }
   };
 }
 

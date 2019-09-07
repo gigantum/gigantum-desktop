@@ -5,11 +5,14 @@ import download from 'download';
 import open from 'open';
 import fs from 'fs';
 import os from 'os';
+import fixPath from 'fix-path';
 // libs
 import Docker from './Docker';
 //
 const isMac = process.platform === 'darwin';
 const isWindows = process.platform === 'win32';
+
+fixPath();
 
 class Installer {
   docker = new Docker();

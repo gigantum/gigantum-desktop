@@ -66,7 +66,7 @@ class Confirm extends React.Component<Props> {
     const { props } = this;
     const callback = response => {
       if (props.quittingApp) {
-        props.messenger.quitApp();
+        props.messenger.quitApp(props.interface);
       } else if (response.success) {
         props.transition(SUCCESS, {
           message: 'Click to Start'
