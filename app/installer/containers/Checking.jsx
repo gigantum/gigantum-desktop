@@ -22,9 +22,10 @@ export default class Checking extends Component<Props> {
 
   componentDidMount() {
     const { props } = this;
+    const dockerConfigured = props.storage.get('dockerConfigured');
     const callback = response => {
       if (response.success) {
-        if (props.storage.get('dockerConfigured') || isLinux) {
+        if (dockerConfigured || isLinux) {
           props.transition(CONFIGURE_GIGANTUM, {
             message: 'Configure Gigantum'
           });

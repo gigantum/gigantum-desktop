@@ -175,7 +175,6 @@ class Docker {
     }
     dockerSpawn.on('exit', code => {
       if (code === 0) {
-        console.log('succesds callback given');
         callback({ success: true, data: {} });
       } else {
         callback({

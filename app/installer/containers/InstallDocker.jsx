@@ -59,7 +59,8 @@ export default class InstallDocker extends Component<Props> {
     const dndCallback = response => {
       if (response.success) {
         setTimeout(() => {
-          if (props.storage.get('dockerConfigured') || isLinux) {
+          const dockerConfigured = props.storage.get('dockerConfigured');
+          if (dockerConfigured || isLinux) {
             props.transition(SKIP_CONFIGURE, {
               message: 'Configure Gigantum'
             });

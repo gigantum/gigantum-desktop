@@ -92,7 +92,8 @@ export default class Updater extends Component<Props> {
     const downloadedBytes = response.success
       ? state.totalAppSize || 0
       : response.transferred;
-    this.setState({ progress: (downloadedBytes / totalDownload) * 100 });
+    const progress = (downloadedBytes / totalDownload) * 100;
+    this.setState({ progress });
     if (state.totalAppSize === null) {
       this.setState({ totalAppSize: response.total });
     }
