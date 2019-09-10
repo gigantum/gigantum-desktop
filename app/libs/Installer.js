@@ -10,6 +10,7 @@ import Shell from 'node-powershell';
 // libs
 import Docker from './Docker';
 //
+const isLinux = process.platform === 'linux';
 const isMac = process.platform === 'darwin';
 const isWindows = process.platform === 'win32';
 
@@ -35,56 +36,99 @@ class Installer {
     let downloadLink = '';
     let downloadDirectory = '';
     let downloadedFile = '';
-
-    if (isMac) {
-      downloadLink = 'https://download.docker.com/mac/stable/Docker.dmg';
-      downloadDirectory = `${os.homedir()}/Downloads`;
-      downloadedFile = `${downloadDirectory}/docker.dmg`;
-    } else if (isWindows) {
-      downloadLink =
-        'https://download.docker.com/win/stable/Docker for Windows Installer.exe';
-      downloadDirectory = `${os.homedir()}\\Downloads`;
-      downloadedFile = `${downloadDirectory}\\Docker%20for%20Windows%20Installer.exe`;
-    }
-
-    let downloadProgress = 0;
-
-    download(downloadLink, downloadDirectory, { extract: true, strip: 1 })
-      .on('response', response => {
-        const totalSize = response.headers['content-length'];
-        let count = 0;
-        response.on('data', data => {
-          count += 1;
-          downloadProgress += data.length;
-          // delay frequency of callback firing - causes UI to crash
-          if (count % 50 === 0) {
-            callback({
-              success: true,
-              finished: false,
-              data: {
-                progress: (downloadProgress / totalSize) * 100
-              }
-            });
-          }
-        });
-      })
-      .then(() => {
+    if (isLinux) {
+      let currentProgress = 0;
+      const step = 0.01;
+      const interval = setInterval(() => {
+        currentProgress += step;
+        const progress =
+          Math.round(
+            (Math.atan(currentProgress) / (Math.PI / 2)) * 100 * 1000
+          ) / 1000;
         callback({
           success: true,
-          finished: true,
-          data: { downloadedFile }
-        });
-
-        return null;
-      })
-      .catch(error => {
-        callback({
-          success: false,
           finished: false,
-          data: { downloadedFile }
+          data: {
+            progress
+          }
         });
-        console.log(error);
+        if (progress >= 100) {
+          clearInterval(interval);
+        }
+      }, 100);
+      const child = childProcess.spawn(
+        'curl -fsSL https://get.docker.com -o get-docker.sh & sudo sh get-docker.sh',
+        {
+          shell: true
+        }
+      );
+      child.on('exit', exitCode => {
+        if (exitCode === 0) {
+          clearInterval(interval);
+          callback({
+            success: true,
+            finished: true,
+            data: { downloadedFile, progress: 100 }
+          });
+        } else {
+          callback({
+            success: false,
+            finished: false,
+            data: { downloadedFile }
+          });
+        }
       });
+    } else {
+      if (isMac) {
+        downloadLink = 'https://download.docker.com/mac/stable/Docker.dmg';
+        downloadDirectory = `${os.homedir()}/Downloads`;
+        downloadedFile = `${downloadDirectory}/docker.dmg`;
+      } else if (isWindows) {
+        downloadLink =
+          'https://download.docker.com/win/stable/Docker for Windows Installer.exe';
+        downloadDirectory = `${os.homedir()}\\Downloads`;
+        downloadedFile = `${downloadDirectory}\\Docker%20for%20Windows%20Installer.exe`;
+      }
+
+      let downloadProgress = 0;
+
+      download(downloadLink, downloadDirectory, { extract: true, strip: 1 })
+        .on('response', response => {
+          const totalSize = response.headers['content-length'];
+          let count = 0;
+          response.on('data', data => {
+            count += 1;
+            downloadProgress += data.length;
+            // delay frequency of callback firing - causes UI to crash
+            if (count % 50 === 0) {
+              callback({
+                success: true,
+                finished: false,
+                data: {
+                  progress: (downloadProgress / totalSize) * 100
+                }
+              });
+            }
+          });
+        })
+        .then(() => {
+          callback({
+            success: true,
+            finished: true,
+            data: { downloadedFile }
+          });
+
+          return null;
+        })
+        .catch(error => {
+          callback({
+            success: false,
+            finished: false,
+            data: { downloadedFile }
+          });
+          console.log(error);
+        });
+    }
   };
 
   /**
@@ -160,6 +204,8 @@ class Installer {
           });
       };
       isInstalled();
+    } else {
+      callback({ success: true });
     }
   };
 

@@ -97,12 +97,12 @@ export default class Settings extends React.Component<Props> {
     };
     return (
       <div className="Settings">
+        {renderMap[renderValue]}
         <button
           className="Settings__close"
           type="button"
           onClick={() => this.messenger.closeSettings()}
         />
-        {renderMap[renderValue]}
       </div>
     );
   }

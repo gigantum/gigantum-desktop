@@ -40,8 +40,8 @@ const getProgress = (response, state) => {
   const totalDownload = appSize + imageSize;
   const totalDownloaded = imageSize * rawPercentage + appSize;
   const progress = (totalDownloaded / totalDownload) * 100;
-  return progress
-}
+  return progress;
+};
 
 export default class Updater extends Component<Props> {
   props: Props;
@@ -56,21 +56,6 @@ export default class Updater extends Component<Props> {
   };
 
   componentDidMount = () => {
-    // handles interface response
-    const interfaceCallback = response => {
-      const { state } = this;
-      if (response.success) {
-        const progress = getProgress(response, state);
-        this.setState({ progress });
-      }
-      if (response.data.finished) {
-        this.messenger.downloadComplete();
-        setTimeout(() => {
-          this.transition(SUCCESS, { message: 'Download Complete' });
-        }, 3000);
-      }
-    };
-
     // subscribes to progress information
     this.messenger.checkDownloadProgress(this.progressCallback);
   };
@@ -79,44 +64,42 @@ export default class Updater extends Component<Props> {
 
   interface = new UpdaterInterface({ messenger: this.messenger });
 
-
   /**
     @param {object} response
     handles response from updateGigantumImage
   */
   interfaceCallback = response => {
-      const { state } = this;
-      if (response.success) {
-        const progress = getProgress(response, state);
-        this.setState({ progress });
-      }
-      if (response.data.finished) {
-        this.messenger.downloadComplete();
-        setTimeout(() => {
-          this.transition(SUCCESS, { message: 'Download Complete' });
-        }, 3000);
-      }
-    };
-
+    const { state } = this;
+    if (response.success) {
+      const progress = getProgress(response, state);
+      this.setState({ progress });
+    }
+    if (response.data.finished) {
+      this.messenger.downloadComplete();
+      setTimeout(() => {
+        this.transition(SUCCESS, { message: 'Download Complete' });
+      }, 3000);
+    }
+  };
 
   /**
     @param {object} response
     handles response from checkDownloadProgress
   */
   progressCallback = response => {
-      const { state } = this;
-      const totalDownload = response.newImageSize + response.total;
-      const downloadedBytes = response.success
-        ? state.totalAppSize || 0
-        : response.transferred;
-      this.setState({ progress: (downloadedBytes / totalDownload) * 100 });
-      if (state.totalAppSize === null) {
-        this.setState({ totalAppSize: response.total });
-      }
-      if (response.success) {
-        this.interface.updateGigantumImage(this.interfaceCallback, response);
-      }
-    };
+    const { state } = this;
+    const totalDownload = response.newImageSize + response.total;
+    const downloadedBytes = response.success
+      ? state.totalAppSize || 0
+      : response.transferred;
+    this.setState({ progress: (downloadedBytes / totalDownload) * 100 });
+    if (state.totalAppSize === null) {
+      this.setState({ totalAppSize: response.total });
+    }
+    if (response.success) {
+      this.interface.updateGigantumImage(this.interfaceCallback, response);
+    }
+  };
 
   /**
     @param {string} eventType
@@ -169,12 +152,12 @@ export default class Updater extends Component<Props> {
 
     return (
       <div className="Updater">
+        {renderMap[state.machine.value]}
         <button
           className="Updater__close"
           type="button"
           onClick={() => this.messenger.closeUpdater()}
         />
-        {renderMap[state.machine.value]}
       </div>
     );
   }

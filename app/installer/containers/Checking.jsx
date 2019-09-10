@@ -15,6 +15,8 @@ import CheckDockerStatus from '../components/status/CheckDockerStatus';
 // assets
 import './Container.scss';
 
+const isLinux = process.platform === 'linux';
+
 export default class Checking extends Component<Props> {
   props: Props;
 
@@ -22,12 +24,13 @@ export default class Checking extends Component<Props> {
     const { props } = this;
     const callback = response => {
       if (response.success) {
-        if (props.storage.get('dockerConfigured')) {
+        if (props.storage.get('dockerConfigured') || isLinux) {
           props.transition(CONFIGURE_GIGANTUM, {
             message: 'Configure Gigantum'
           });
+        } else {
+          props.transition(CONFIGURE_DOCKER, { message: 'Configure Docker' });
         }
-        props.transition(CONFIGURE_DOCKER, { message: 'Configure Docker' });
       } else {
         const { message } = response.data.error;
         if (message.indexOf('Not Enough Disk Space') > -1) {

@@ -11,6 +11,8 @@ import {
 // assets
 import './Running.scss';
 
+const isLinux = process.platform === 'linux';
+
 type Props = {
   transition: () => void,
   message: string,
@@ -27,14 +29,19 @@ class Running extends React.Component<Props> {
 
   componentDidMount = () => {
     const { props } = this;
+    this.mounted = true;
     const callback = response => {
-      if (!response.success) {
+      if (!response.success && this.mounted) {
         props.transition(UNEXPECTED_STOP, {
           message: 'Click to Start'
         });
       }
     };
     props.interface.listenToDockerEvents(callback);
+  };
+
+  componentWillUnmount = () => {
+    this.mounted = false;
   };
 
   /**
@@ -62,7 +69,9 @@ class Running extends React.Component<Props> {
     const { props } = this;
     const { storage } = props;
     let validateGigantumClose = !storage.get('close.gigantumConfirm');
-    const shouldCloseDockerConfig = storage.get('close.dockerConfirm');
+    const shouldCloseDockerConfig = isLinux
+      ? false
+      : storage.get('close.dockerConfirm');
     const validateDockerClose = shouldCloseDockerConfig === undefined;
 
     const checkRunningProjectsCallback = response => {
@@ -82,7 +91,7 @@ class Running extends React.Component<Props> {
         });
       } else {
         props.transition(FORCE_STOP, {
-          message: 'Closing Gigantum'
+          message: 'Stopping Gigantum'
         });
         this.handleGigantumClose(shouldCloseDockerConfig);
       }

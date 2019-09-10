@@ -1,4 +1,4 @@
-import { ipcMain, BrowserWindow } from 'electron';
+import { ipcMain, BrowserWindow, screen } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import checkForUpdates from '../updater';
 import Storage from '../storage/Storage';
@@ -64,6 +64,10 @@ const showToolbar = (toolbarWindow, tray) => {
   } else {
     y = trayPos.y - 409;
     x = Math.round(trayPos.x + trayPos.width / 2 - windowPos.width / 2);
+  }
+  if (process.platform === 'linux') {
+    const display = screen.getPrimaryDisplay();
+    x = display.bounds.width - 352;
   }
 
   toolbarWindow.setVisibleOnAllWorkspaces(true);

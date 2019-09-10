@@ -13,6 +13,7 @@ import fixPath from 'fix-path';
 // config
 import config from './config';
 
+const isMac = process.platform === 'darwin';
 const isWindows = process.platform === 'win32';
 
 fixPath();
@@ -167,8 +168,10 @@ class Docker {
         '',
         'C:\\Program Files\\Docker\\Docker\\Docker Desktop'
       ]);
-    } else {
+    } else if (isMac) {
       dockerSpawn = childProcess.spawn('open', ['-a', 'docker']);
+    } else {
+      callback({ success: true, data: {} });
     }
     dockerSpawn.on('exit', code => {
       if (code === 0) {
