@@ -48,9 +48,7 @@ class Store {
     this.path = path.join(userDataPath, `GigantumDesktop/GigantumDesktop.json`);
 
     this.schema = {
-      install: {
-        complete: false
-      }
+      install: false
     };
     this.data = this.parseDataFile(this.path);
   }
