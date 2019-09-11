@@ -79,7 +79,6 @@ export default class Main extends Component<Props> {
 
   render() {
     const { state, props } = this;
-
     return (
       <div data-tid="container">
         <Header
