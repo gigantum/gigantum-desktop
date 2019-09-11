@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 // States
 import installDockerMachine from './machine/InstallDockerMachine';
 // constants
-import { ERROR, SUCCESS } from '../machine/InstallerConstants';
+import { ERROR, SUCCESS, SKIP_CONFIGURE } from '../machine/InstallerConstants';
 import { INSTALL } from './machine/InstallDockerConstants';
 // containers
 import Layout from './Layout';
@@ -12,6 +12,8 @@ import InstallDockerMain from '../components/main/InstallDockerMain';
 import InstallDockerStatus from '../components/status/InstallDockerStatus';
 // assets
 import './Container.scss';
+
+const isLinux = process.platform === 'linux';
 
 export default class InstallDocker extends Component<Props> {
   props: Props;
@@ -56,9 +58,18 @@ export default class InstallDocker extends Component<Props> {
 
     const dndCallback = response => {
       if (response.success) {
-        props.transition(SUCCESS, {
-          message: 'Configure Docker'
-        });
+        setTimeout(() => {
+          const dockerConfigured = props.storage.get('dockerConfigured');
+          if (dockerConfigured || isLinux) {
+            props.transition(SKIP_CONFIGURE, {
+              message: 'Configure Gigantum'
+            });
+          } else {
+            props.transition(SUCCESS, {
+              message: 'Configure Docker'
+            });
+          }
+        }, 2500);
       } else {
         installErrorHandler();
       }
@@ -67,6 +78,11 @@ export default class InstallDocker extends Component<Props> {
     const progressCallback = response => {
       if (response.success) {
         this.setState({ progress: response.progress });
+        if (response.finished) {
+          setTimeout(() => {
+            this.installDockerTransition(SUCCESS);
+          }, 3000);
+        }
       } else {
         installErrorHandler();
       }

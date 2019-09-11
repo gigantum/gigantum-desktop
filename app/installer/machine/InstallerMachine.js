@@ -29,6 +29,7 @@ const stateMachine = Machine({
       meta: { message: 'Starting Gigantum', additionalInfo: '' },
       on: {
         SUCCESS: CONFIGURE_DOCKER,
+        SKIP_CONFIGURE: CONFIGURE_GIGANTUM,
         ERROR
       }
     },

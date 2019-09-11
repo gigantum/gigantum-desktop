@@ -1,7 +1,5 @@
 // @ flow
 // vendor
-import { app, dialog } from 'electron';
-import { autoUpdater } from 'electron-updater';
 import fs from 'fs';
 import open from 'open';
 import pump from 'pump';
@@ -379,7 +377,8 @@ class Gigantum extends Docker {
     const downloadObj = { null: 0 };
     const extractObj = { null: 0 };
     const currentImageSize = size || this.imageSize;
-    const processPercent = obj => Object.values(obj).reduce((a, b) => a + b) / currentImageSize
+    const processPercent = obj =>
+      Object.values(obj).reduce((a, b) => a + b) / currentImageSize;
     const handlePull = (data, enc, cb) => {
       if (data.error) return cb(new Error(data.error.trim()));
       if (!data.id || !data.progressDetail || !data.progressDetail.current) {
@@ -409,7 +408,7 @@ class Gigantum extends Docker {
       {
         qs: {
           fromImage: name,
-          tag: tag
+          tag
         },
         body: null
       },
@@ -418,12 +417,6 @@ class Gigantum extends Docker {
           pump(response, throughJSON(), through.obj(handlePull), error => {
             if (error) {
               console.log(error);
-              callback({
-                success: false,
-                data: {
-                  finished: false
-                }
-              });
             } else {
               callback({
                 success: true,
@@ -434,6 +427,8 @@ class Gigantum extends Docker {
               });
             }
           });
+        } else {
+          setTimeout(() => this.pullImage(callback, imageData), 2000);
         }
         console.log(err, response);
       }
@@ -459,8 +454,8 @@ class Gigantum extends Docker {
       if (isNotInstalled) {
         const imageData = {
           name: config.imageName,
-          tag: config.imageTag,
-        }
+          tag: config.imageTag
+        };
         this.pullImage(callback, imageData);
       } else if (response && response.error) {
         callback({ success: false, data: response.error });
@@ -527,191 +522,6 @@ class Gigantum extends Docker {
       )
       .catch(() => callback({ success: false }));
   };
-
-  handleAppQuit(updating = false) {
-    if (this.removePreviousVersion && updating) {
-      this.removeGigantumImage()
-        .then(() => {
-          app.quitting = true;
-
-          if (process.platform === 'linux') {
-            this.uiManager.destroyTray();
-          }
-          autoUpdater.quitAndInstall();
-          return null;
-        })
-        .catch(error => {
-          console.log(error);
-          return error;
-        });
-    } else if (this.removePreviousVersion) {
-      this.removeGigantumImage()
-        .then(() => {
-          app.quitting = true;
-          app.quit();
-          return null;
-        })
-        .catch(error => {
-          console.log(error);
-
-          return null;
-        });
-    } else if (updating) {
-      app.quitting = true;
-      if (process.platform === 'linux') {
-        this.uiManager.destroyTray();
-      }
-      autoUpdater.quitAndInstall();
-    } else {
-      app.quitting = true;
-      app.quit();
-    }
-  }
-
-  pullGigantum(type = 'install', tag = config.imageTag) {
-    this.internetAvailable()
-      .then(() => {
-        if (type === 'install') {
-          // this.uiManager.handleAppEvent({
-          //   toolTip: 'Gigantum is installing...',
-          //   status: 'starting',
-          //   id: 'imageNotInstalled',
-          //   window: 'install',
-          // });
-          //
-          console.log('update');
-        } else {
-          // this.uiManager.handleAppEvent({
-          //   toolTip: 'Gigantum is updating...',
-          //   window: 'update',
-          // });
-
-          console.log('update');
-        }
-
-        const dataObj = {};
-        const extractObj = {};
-        let extractInARow = 0;
-
-        const handlePull = (data, enc, cb) => {
-          if (data.error) return cb(new Error(data.error.trim()));
-          if (
-            !data.id ||
-            !data.progressDetail ||
-            !data.progressDetail.current
-          ) {
-            return cb();
-          }
-          let downloadSize = 0;
-          let extractSize = 0;
-          if (data.status === 'Downloading' && extractInARow < 10) {
-            extractInARow = 0;
-            dataObj[data.id] = {
-              transferred: data.progressDetail.current,
-              total: data.progressDetail.total,
-              iterationsUnmodified: -1
-            };
-            Object.keys(dataObj).forEach(layer => {
-              if (dataObj[layer].transferred) {
-                if (dataObj[layer].iterationsUnmodified < 10) {
-                  downloadSize += dataObj[layer].transferred;
-                } else {
-                  downloadSize += dataObj[layer].total;
-                }
-                dataObj[layer].iterationsUnmodified += 1;
-              }
-            });
-            this.uiManager.updateInstallImageWindow({ downloadSize }, type);
-          } else if (data.status === 'Extracting') {
-            extractInARow += 1;
-            if (!extractObj[data.id]) {
-              extractObj[data.id] = {
-                transferred: data.progressDetail.current
-              };
-            } else {
-              extractObj[data.id] = {
-                transferred:
-                  data.progressDetail.current > extractObj[data.id].transferred
-                    ? data.progressDetail.current
-                    : extractObj[data.id].transferred
-              };
-            }
-            if (extractInARow > 10) {
-              Object.keys(extractObj).forEach(layer => {
-                if (extractObj[layer].transferred) {
-                  extractSize += extractObj[layer].transferred;
-                }
-              });
-              Object.keys(dataObj).forEach(layer => {
-                if (dataObj[layer].transferred) {
-                  downloadSize += dataObj[layer].total;
-                }
-              });
-              this.uiManager.updateInstallImageWindow(
-                { downloadSize, extractSize, doneDownloading: true },
-                type
-              );
-            }
-          }
-          cb();
-        };
-        this.dockerRequest.post(
-          '/images/create',
-          {
-            qs: {
-              fromImage: config.imageName,
-              tag
-            },
-            body: null
-          },
-          (err, response) => {
-            if (response) {
-              pump(response, throughJSON(), through.obj(handlePull), error => {
-                if (error) {
-                  console.log(error);
-                }
-                if (type === 'update' && this.electronAppDownloaded) {
-                  this.uiManager.updateInstallImageWindow(
-                    { isDownloaded: true },
-                    'update'
-                  );
-                  if (tag !== config.imageTag) {
-                    this.removePreviousVersion = true;
-                  }
-                  this.uiManager.updateReady();
-                } else if (type !== 'update') {
-                  this.uiManager.setupApp();
-                } else {
-                  this.updatedImageDownloaded = true;
-                }
-              });
-            } else {
-              this.uiManager.handleAppEvent({
-                toolTip: 'ERROR: Docker is not running',
-                status: 'notRunning',
-                id: 'dockerNotRunning',
-                window: 'docker'
-              });
-            }
-          }
-        );
-
-        return null;
-      })
-      .catch(() => {
-        if (type === 'install') {
-          this.uiManager.handleAppEvent({
-            toolTip: 'Gigantum is not running.',
-            status: 'notRunning'
-          });
-        }
-        dialog.showMessageBox({
-          title: `Unable to ${type} Gigantum Client.`,
-          message: `A valid internet connection must be established to ${type} the Gigantum Client.`,
-          buttons: ['Close']
-        });
-      });
-  }
 }
 
 export default Gigantum;

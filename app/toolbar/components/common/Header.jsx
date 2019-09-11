@@ -18,6 +18,8 @@ import './Header.scss';
 
 const { Menu } = remote;
 
+const isLinux = process.platform === 'linux';
+
 type Props = {
   machine: {
     value: ''
@@ -74,7 +76,9 @@ export default class Header extends PureComponent<Props> {
         };
         const checkRunningProjectsCallback = response => {
           let validateGigantumClose = !storage.get('close.gigantumConfirm');
-          const shouldCloseDockerConfig = storage.get('close.dockerConfirm');
+          const shouldCloseDockerConfig = isLinux
+            ? false
+            : storage.get('close.dockerConfirm');
           const validateDockerClose = shouldCloseDockerConfig === undefined;
           if (response.success) {
             validateGigantumClose = false;
@@ -93,7 +97,7 @@ export default class Header extends PureComponent<Props> {
             });
           } else {
             props.transition(FORCE_STOP, {
-              message: 'Closing Gigantum'
+              message: 'Stopping Gigantum'
             });
             props.interface.stop(stopCallback, shouldCloseDockerConfig);
           }

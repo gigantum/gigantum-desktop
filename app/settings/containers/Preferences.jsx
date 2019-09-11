@@ -7,6 +7,8 @@ import Setting from '../components/Setting';
 // assets
 import './Preferences.scss';
 
+const isLinux = process.platform === 'linux';
+
 /**
   @param {Object} props
   @param {Object} state
@@ -206,22 +208,24 @@ export default class Preferences extends Component<Props> {
                 this.setPreference('gigantumConfirmText', item)
               }
             />
-            <Setting
-              css={dockerConfirmCSS}
-              visible={state.dockerDropdownVisible}
-              settingsText="Shutdown Docker on Stop"
-              currentText={shutDownDockerText}
-              options={dockerOptions}
-              listAction={() =>
-                this.toggleDropdown(
-                  'dockerDropdownVisible',
-                  !state.dockerDropdownVisible
-                )
-              }
-              itemAction={item =>
-                this.setPreference('shutDownDockerText', item)
-              }
-            />
+            {!isLinux && (
+              <Setting
+                css={dockerConfirmCSS}
+                visible={state.dockerDropdownVisible}
+                settingsText="Shutdown Docker on Stop"
+                currentText={shutDownDockerText}
+                options={dockerOptions}
+                listAction={() =>
+                  this.toggleDropdown(
+                    'dockerDropdownVisible',
+                    !state.dockerDropdownVisible
+                  )
+                }
+                itemAction={item =>
+                  this.setPreference('shutDownDockerText', item)
+                }
+              />
+            )}
           </div>
           <div className="Preferences__buttons">
             <button

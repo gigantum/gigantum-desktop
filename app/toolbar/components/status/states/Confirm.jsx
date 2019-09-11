@@ -12,6 +12,8 @@ import {
 // assets
 import './Confirm.scss';
 
+const isLinux = process.platform === 'linux';
+
 type Props = {
   message: string,
   category: string,
@@ -69,7 +71,7 @@ class Confirm extends React.Component<Props> {
         props.messenger.quitApp(props.interface);
       } else if (response.success) {
         props.transition(SUCCESS, {
-          message: 'Click to Start'
+          message: 'Stopping Gigantum'
         });
       } else {
         props.transition(ERROR, {
@@ -111,7 +113,9 @@ class Confirm extends React.Component<Props> {
     const { props, state } = this;
     const { category, storage } = props;
     // TODO check config to see if setting is remembered
-    const shouldCloseDockerConfig = storage.get('close.dockerConfirm');
+    const shouldCloseDockerConfig = isLinux
+      ? false
+      : storage.get('close.dockerConfirm');
     const validateDockerClose = shouldCloseDockerConfig === undefined;
 
     if (category === 'close.docker') {

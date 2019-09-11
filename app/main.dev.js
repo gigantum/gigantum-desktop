@@ -10,7 +10,7 @@
  *
  * @flow
  */
-import { app, BrowserWindow, Tray, nativeImage } from 'electron';
+import { app, BrowserWindow, Menu, Tray, nativeImage } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import path from 'path';
 import isDev from 'electron-is-dev';
@@ -70,6 +70,19 @@ app.on('ready', async () => {
   const appPath = 'app.html';
   const icon = nativeImage.createFromDataURL(gigantumBase64);
   const tray = new Tray(icon);
+
+  if (process.platform === 'linux') {
+    const contextMenu = Menu.buildFromTemplate([
+      {
+        label: 'Open Gigantum',
+        click: () => {
+          showToolbar(toolbarWindow, tray);
+        }
+      }
+    ]);
+    tray.setContextMenu(contextMenu);
+  }
+
   const toolbarWindow = new BrowserWindow({
     name: 'toolbar',
     width: 352,
