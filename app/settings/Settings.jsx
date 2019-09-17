@@ -27,8 +27,7 @@ type Props = {
 };
 
 const gigantumAutoLauncher = new AutoLaunch({
-  name: 'Gigantum',
-  path: '/Applications/Gigantum.app'
+  name: 'Gigantum'
 });
 
 export default class Settings extends React.Component<Props> {

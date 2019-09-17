@@ -83,7 +83,7 @@ class ToolbarInterface {
    */
   checkForDockerInstall = callback => {
     const { installer } = this;
-    installer.checkForApplication(callback);
+    installer.checkDockerInstall(callback);
   };
 
   /**

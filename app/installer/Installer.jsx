@@ -63,7 +63,6 @@ export default class Installer extends Component<Props> {
   */
   transition = (eventType, nextState) => {
     const { state } = this;
-
     const newState = stateMachine.transition(state.machine.value, eventType, {
       state
     });

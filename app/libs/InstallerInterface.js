@@ -1,6 +1,6 @@
 // @flow
 import childProcess from 'child_process';
-import disk from 'diskusage';
+import disk from 'check-disk-space';
 import fixPath from 'fix-path';
 // libs
 import Docker from './Docker';
@@ -39,25 +39,18 @@ class InstallerInterface {
         callback({ success: true, data: {} });
       } else {
         const path = isWindows ? 'c:' : '/';
-        disk.check(path, (error, info) => {
-          if (error) {
-            callback({
-              success: false,
-              data: {
-                error: {
-                  message: 'Could not determine disk space'
-                }
-              }
-            });
-          } else {
-            const notEnoughSpace = info.available / 1000000000 < 8;
+        disk(path)
+          .then(diskSpace => {
+            const notEnoughSpace = diskSpace.available / 1000000000 < 8;
             if (notEnoughSpace) {
               callback({
                 success: false,
                 data: {
                   error: {
                     message: 'Not Enough Disk Space',
-                    spaceAvailable: (info.available / 1000000000).toFixed(1)
+                    spaceAvailable: (diskSpace.available / 1000000000).toFixed(
+                      1
+                    )
                   }
                 }
               });
@@ -71,8 +64,18 @@ class InstallerInterface {
                 }
               });
             }
-          }
-        });
+            return null;
+          })
+          .catch(() => {
+            callback({
+              success: false,
+              data: {
+                error: {
+                  message: 'Could not determine disk space'
+                }
+              }
+            });
+          });
       }
     });
   };
@@ -87,7 +90,7 @@ class InstallerInterface {
     const { installer } = this;
     const downloadDockerCallback = response => {
       if (response.success && response.finished) {
-        progressCallback({ success: true, progress: 100 });
+        progressCallback({ success: true, progress: 100, finished: true });
         this.handleDnD(response.data.downloadedFile, dndCallback);
       } else if (response.success) {
         progressCallback({ success: true, progress: response.data.progress });
@@ -110,9 +113,9 @@ class InstallerInterface {
     /**
      * @param {Object} response
      * handles response from dragAndDrop
-     * @calls {installer.checkForApplication}
+     * @calls {installer.checkDockerInstall}
      */
-    const checkForApplicationCallback = response => {
+    const checkDockerInstallCallback = response => {
       if (response.success) {
         callback(response);
       } else {
@@ -122,11 +125,11 @@ class InstallerInterface {
     /**
      * @param {Object} response
      * handles response from dragAndDrop
-     * @calls {installer.checkForApplication}
+     * @calls {installer.checkDockerInstall}
      */
     const dragAndDropCallback = response => {
       if (response.success) {
-        installer.checkForApplication(checkForApplicationCallback);
+        installer.checkDockerInstall(checkDockerInstallCallback);
       } else {
         callback({ success: false, data: {} });
       }
@@ -158,7 +161,7 @@ class InstallerInterface {
     /**
      * @param {Object} response
      * handles response from checkIfDockerIsReady
-     * @calls {installer.checkForApplication}
+     * @calls {installer.startDockerApplication}
      */
     const dockerisReadyCallback = response => {
       if (response.success) {

@@ -7,6 +7,7 @@ import fs from 'fs';
 import os from 'os';
 import fixPath from 'fix-path';
 import Shell from 'node-powershell';
+import sudo from 'sudo-prompt';
 // libs
 import Docker from './Docker';
 //
@@ -56,28 +57,38 @@ class Installer {
           clearInterval(interval);
         }
       }, 100);
-      const child = childProcess.spawn(
+      const options = { name: 'Gigantum' };
+      sudo.exec(
         'curl -fsSL https://get.docker.com -o get-docker.sh & sudo sh get-docker.sh',
-        {
-          shell: true
+        options,
+        (error, stdout, stderr) => {
+          console.log('error', error);
+          console.log('stdout', stdout);
+          console.log('stderr', stderr);
         }
       );
-      child.on('exit', exitCode => {
-        if (exitCode === 0) {
-          clearInterval(interval);
-          callback({
-            success: true,
-            finished: true,
-            data: { downloadedFile, progress: 100 }
-          });
-        } else {
-          callback({
-            success: false,
-            finished: false,
-            data: { downloadedFile }
-          });
-        }
-      });
+      // const child = childProcess.spawn(
+      //   'curl -fsSL https://get.docker.com -o get-docker.sh & sudo sh get-docker.sh',
+      //   {
+      //     shell: true
+      //   }
+      // );
+      // child.on('exit', exitCode => {
+      //   if (exitCode === 0) {
+      //     clearInterval(interval);
+      //     callback({
+      //       success: true,
+      //       finished: true,
+      //       data: { downloadedFile, progress: 100 }
+      //     });
+      //   } else {
+      //     callback({
+      //       success: false,
+      //       finished: false,
+      //       data: { downloadedFile }
+      //     });
+      //   }
+      // });
     } else {
       if (isMac) {
         downloadLink = 'https://download.docker.com/mac/stable/Docker.dmg';
@@ -206,39 +217,6 @@ class Installer {
       isInstalled();
     } else {
       callback({ success: true });
-    }
-  };
-
-  /**
-   * @param {Function} callback
-   * @param {Number} count
-   *
-   *
-   */
-  checkForApplication = callback => {
-    console.log('checking For Application');
-    try {
-      const dockerVersion = childProcess.spawn('docker', ['-v']);
-      dockerVersion.on('error', error => {
-        console.log(error);
-      });
-
-      dockerVersion.on('close', code => {
-        console.log(`${code}`);
-
-        if (code === 0) {
-          this.checkDockerInstall(callback);
-        } else {
-          setTimeout(() => {
-            this.checkForApplication(callback);
-          }, 1000);
-        }
-      });
-    } catch (error) {
-      console.log(`exception: ${error}`);
-      setTimeout(() => {
-        this.checkForApplication(callback);
-      }, 1000);
     }
   };
 
