@@ -22,19 +22,19 @@ export default class ErrorMain extends Component<Props> {
 
     const renderMap = {
       [CONFIGURE_DOCKER]: (
-        <p>
+        <p className="Layout__Main">
           There was an error configuring Docker. Please try again. If the issue
           persists restart the application.
         </p>
       ),
       [CONFIGURE_GIGANTUM]: (
-        <p>
+        <p className="Layout__Main">
           There was an error configuring Gigantum. Please try again. If the
           issue persists restart the application.
         </p>
       ),
       [INSTALL_DOCKER]: (
-        <p>
+        <p className="Layout__Main">
           There was an error installing docker. Please try again. If the issue
           persists restart the application.
         </p>
