@@ -1,5 +1,6 @@
 // @flow
 import React, { Component } from 'react';
+import classNames from 'classnames';
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 // assets
@@ -12,6 +13,10 @@ import {
   INSTALLING,
   INSTALLED
 } from '../../containers/machine/InstallDockerConstants';
+
+const isMac = process.platform === 'darwin';
+const isLinux = process.platform === 'linux';
+const isWindows = process.platform === 'win32';
 
 type Props = {
   startInstall: () => void,
@@ -36,8 +41,15 @@ export default class CheckDockerStatus extends Component<Props> {
   render() {
     const { props } = this;
     const { progress } = props;
-    const renderMap = {
-      [INSTALLING]: (
+    const progressKey = progress ? 'PROGRESS' : 'NO_PROGRESS';
+    const imageCSS = classNames({
+      InstallDockerStatus__image: true,
+      'InstallDockerStatus__image--linux': isLinux,
+      'InstallDockerStatus__image--windows': isWindows,
+      'InstallDockerStatus__image--mac': isMac
+    });
+    const progressMap = {
+      PROGRESS: (
         <div className="Layout__Status InstallDockerStatus">
           <div className="InstallDockerStatus__body">
             <CircularProgressbar
@@ -57,7 +69,21 @@ export default class CheckDockerStatus extends Component<Props> {
           </div>
         </div>
       ),
-      [INSTALLED]: <div className="Layout__Status">GIF HERE</div>,
+      NO_PROGRESS: (
+        <div className="Layout__Status InstallDockerStatus">
+          <div className="InstallDockerStatus__noProgress">
+            Installing Docker
+          </div>
+        </div>
+      )
+    };
+    const renderMap = {
+      [INSTALLING]: progressMap[progressKey],
+      [INSTALLED]: (
+        <div className="Layout__Status">
+          <div className={imageCSS} />
+        </div>
+      ),
       [PROMPT]: (
         <div className="Layout__Status InstallDockerStatus">
           <div className="InstallDockerStatus__body">

@@ -8,6 +8,7 @@ import os from 'os';
 import fixPath from 'fix-path';
 import Shell from 'node-powershell';
 import sudo from 'sudo-prompt';
+import si from 'systeminformation';
 // libs
 import Docker from './Docker';
 //
@@ -16,6 +17,23 @@ const isMac = process.platform === 'darwin';
 const isWindows = process.platform === 'win32';
 
 fixPath();
+
+const mb = 1000000;
+let cores;
+let ram;
+let diskSize;
+
+si.cpu(cpu => {
+  ({ cores } = cpu);
+});
+
+si.mem(mem => {
+  ram = mem.total / mb;
+});
+
+si.diskLayout(disk => {
+  diskSize = disk[0].size / mb;
+});
 
 class Installer {
   docker = new Docker();
@@ -38,57 +56,32 @@ class Installer {
     let downloadDirectory = '';
     let downloadedFile = '';
     if (isLinux) {
-      let currentProgress = 0;
-      const step = 0.01;
-      const interval = setInterval(() => {
-        currentProgress += step;
-        const progress =
-          Math.round(
-            (Math.atan(currentProgress) / (Math.PI / 2)) * 100 * 1000
-          ) / 1000;
-        callback({
-          success: true,
-          finished: false,
-          data: {
-            progress
-          }
-        });
-        if (progress >= 100) {
-          clearInterval(interval);
+      callback({
+        success: true,
+        finished: false,
+        data: {
+          progress: null
         }
-      }, 100);
-      const options = { name: 'Gigantum' };
+      });
+      const options = { name: 'Gigantum', shell: true };
       sudo.exec(
-        'curl -fsSL https://get.docker.com -o get-docker.sh & sudo sh get-docker.sh',
+        `groupadd docker && curl -fsSL https://get.docker.com -o get-docker.sh && sudo sh get-docker.sh && usermod -aG docker ${process.env.USER}`,
         options,
         (error, stdout, stderr) => {
-          console.log('error', error);
-          console.log('stdout', stdout);
-          console.log('stderr', stderr);
+          if (error) {
+            callback({
+              success: false,
+              finished: false
+            });
+          } else {
+            console.log(stdout, stderr);
+            callback({
+              success: true,
+              finished: true
+            });
+          }
         }
       );
-      // const child = childProcess.spawn(
-      //   'curl -fsSL https://get.docker.com -o get-docker.sh & sudo sh get-docker.sh',
-      //   {
-      //     shell: true
-      //   }
-      // );
-      // child.on('exit', exitCode => {
-      //   if (exitCode === 0) {
-      //     clearInterval(interval);
-      //     callback({
-      //       success: true,
-      //       finished: true,
-      //       data: { downloadedFile, progress: 100 }
-      //     });
-      //   } else {
-      //     callback({
-      //       success: false,
-      //       finished: false,
-      //       data: { downloadedFile }
-      //     });
-      //   }
-      // });
     } else {
       if (isMac) {
         downloadLink = 'https://download.docker.com/mac/stable/Docker.dmg';
@@ -215,8 +208,6 @@ class Installer {
           });
       };
       isInstalled();
-    } else {
-      callback({ success: true });
     }
   };
 
@@ -269,14 +260,17 @@ class Installer {
       const settings = JSON.parse(settingsRawData);
 
       const selectHigherValue = (current, lowerBound) =>
-        current >= lowerBound ? current : lowerBound;
+        current >= lowerBound ? current : Math.floor(lowerBound / 2);
 
       settings.autoStart = false;
       settings.analyticsEnabled = false;
-      settings.memoryMiB = selectHigherValue(settings.memoryMiB, 10240);
-      settings.cpus = selectHigherValue(settings.cpus, 2);
+      settings.memoryMiB = selectHigherValue(settings.memoryMiB, ram);
+      settings.cpus = selectHigherValue(settings.cpus, cores);
       if (isMac) {
-        settings.diskSizeMiB = selectHigherValue(settings.diskSizeMiB, 102400);
+        settings.diskSizeMiB = selectHigherValue(
+          settings.diskSizeMiB,
+          diskSize
+        );
       }
 
       const newSettings = JSON.stringify(settings);
