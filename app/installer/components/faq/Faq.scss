@@ -46,4 +46,9 @@
   top: 90px;
   overflow: auto;
   max-height: 175px;
+  span {
+    color: $primary;
+    text-decoration: underline;
+    cursor: pointer;
+  }
 }

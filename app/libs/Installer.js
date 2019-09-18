@@ -264,6 +264,7 @@ class Installer {
 
       settings.autoStart = false;
       settings.analyticsEnabled = false;
+      diskSize = diskSize > 100000 ? 100000 : diskSize;
       settings.memoryMiB = selectHigherValue(settings.memoryMiB, ram);
       settings.cpus = selectHigherValue(settings.cpus, cores);
       if (isMac) {

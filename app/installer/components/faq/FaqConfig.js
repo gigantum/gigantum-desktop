@@ -1,3 +1,5 @@
+import React from 'react';
+import open from 'open';
 import {
   CHECKING,
   INSTALL_DOCKER,
@@ -7,91 +9,157 @@ import {
   ERROR
 } from '../../machine/InstallerConstants';
 
+const checkingAndInstall = [
+  {
+    question: 'What is Docker?',
+    answer: (
+      <div>
+        Docker is a tool to run{' '}
+        <span
+          role="presentation"
+          onClick={() =>
+            open('https://www.docker.com/resources/what-container')
+          }
+        >
+          software containers
+        </span>
+        . Software containers are used to manage your compute environment and is
+        what lets your code run on different operating systems.
+      </div>
+    )
+  },
+  {
+    question: 'Why do I need to install Docker?',
+    answer:
+      'You must install Docker because the Gigantum Client runs in a container. Additionally all Projects run in their own container.'
+  },
+  {
+    question: 'Can I install Docker myself?',
+    answer: (
+      <div>
+        Gigantum Desktop will walk you through the installation process, but if
+        you’d like to do it yourself you can find instructions on{' '}
+        <span
+          role="presentation"
+          onClick={() => open('https://www.docker.com/products/docker-desktop')}
+        >
+          Docker’s website
+        </span>{' '}
+        and in our{' '}
+        <span
+          role="presentation"
+          onClick={() =>
+            open('https://docs.gigantum.com/docs/configuring-docker')
+          }
+        >
+          documentation
+        </span>
+        .
+      </div>
+    )
+  }
+];
+
 export default {
-  [CHECKING]: [
-    {
-      question: 'What is Docker?',
-      answer:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
-    },
-    {
-      question: 'Why do I need to install Docker?',
-      answer: 'asdassad'
-    },
-    {
-      question: 'Can I run Gigantum without Docker?',
-      answer: 'asdassad'
-    }
-  ],
-  [INSTALL_DOCKER]: [
-    {
-      question: 'What is Docker?',
-      answer: '1'
-    },
-    {
-      question: 'Why do I need to install Docker?',
-      answer:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
-    },
-    {
-      question: 'Can I run Gigantum without Docker?',
-      answer: '3'
-    }
-  ],
+  [CHECKING]: checkingAndInstall,
+  [INSTALL_DOCKER]: checkingAndInstall,
   [CONFIGURE_DOCKER]: [
     {
       question: 'Why is this needed?',
-      answer: 'asdassad'
+      answer:
+        'On Mac and Windows, Gigantum will allocate half the available CPU and RAM to Docker for you. Additionally on Mac, half the available hard drive space up to 100GB is allocated. This is a “soft” allocation and is only consumed as data is written during use.'
     },
     {
       question: 'How do I configure Docker myself?',
-      answer: 'asdassad'
+      answer: (
+        <div>
+          Follow the instructions in our{' '}
+          <span
+            role="presentation"
+            onClick={() =>
+              open('https://docs.gigantum.com/docs/configuring-docker')
+            }
+          >
+            documentation
+          </span>{' '}
+          to manually configure Docker.
+        </div>
+      )
     },
     {
       question: 'What is the default configuration?',
-      answer: 'asdassad'
+      answer:
+        'On Mac and Windows, Gigantum will allocate half the available CPU and RAM to Docker for you. Additionally on Mac, half the available hard drive space up to 100GB is allocated. This is a “soft” allocation and is only consumed as data is written during use.'
     }
   ],
   [CONFIGURE_GIGANTUM]: [
     {
       question: 'Why is this needed?',
-      answer: 'asdassad'
-    },
-    {
-      question: 'How do I configure Docker myself?',
-      answer: 'asdassad'
-    },
-    {
-      question: 'What is the default configuration?',
-      answer: 'asdassad'
+      answer:
+        'The Gigantum Client is delivered in a Docker container that must be downloaded to your computer.'
     }
   ],
   [INSTALL_COMPLETE]: [
     {
-      question: 'Why is this needed?',
-      answer: 'asdassad'
+      question: 'What do I do next?',
+      answer:
+        'Start Gigantum, sign in, and open the example “my-first-project” Project to explore, or create your own Project to get started.'
     },
     {
-      question: 'How do I configure Docker myself?',
-      answer: 'asdassad'
+      question: 'When do I need to run Docker?',
+      answer:
+        'Gigantum Desktop can manage starting and stopping Docker for you. Docker needs to be running while Gigantum is running.'
     },
     {
-      question: 'What is the default configuration?',
-      answer: 'asdassad'
+      question: 'Where can I find examples?',
+      answer: (
+        <div>
+          Check out{' '}
+          <span
+            role="presentation"
+            onClick={() => open('https://gigantum.com/explore')}
+          >
+            Gigantum Hub
+          </span>{' '}
+          to find examples and other public Projects and Datasets
+        </div>
+      )
     }
   ],
   [ERROR]: [
     {
       question: 'How is storage used?',
-      answer: 'asdassad'
+      answer:
+        'Projects, Datasets, and Docker Images consume disk space. Depending on the Project configuration, some images can be quite large (e.g. over 1GB)'
     },
     {
-      question: 'Why is so much storage required?',
-      answer: 'asdassad'
+      question: 'Why is there a minimum disk space?',
+      answer:
+        'This reserves enough disk space to ensure that Docker, the Gigantum Client Docker image, and the demo project image can be installed with some space remaining for your work.'
     },
     {
       question: 'What can I do if I don’t have enough space?',
-      answer: 'asdassad'
+      answer: (
+        <div>
+          You can try deleting large files and re-running the install process.
+          Additionally, you can{' '}
+          <span
+            role="presentation"
+            onClick={() =>
+              open('https://docs.gigantum.com/docs/working-remotely')
+            }
+          >
+            work remotely
+          </span>{' '}
+          or in{' '}
+          <span
+            role="presentation"
+            onClick={() => open('https://gigantum.com/explore')}
+          >
+            Gigantum Hub
+          </span>
+        </div>
+      )
     }
   ]
 };
