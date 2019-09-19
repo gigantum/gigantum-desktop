@@ -26,18 +26,23 @@
 }
 
 .InstallDockerStatus__image {
-  width: 130px;
-  height: 130px;
+  width: 200px;
+  height: 200px;
   &--windows {
-    background: url('~Images/icons/logout-linux.svg') no-repeat center center;
+    background: url('~Images/logos/windows-installer.gif') no-repeat center
+      center;
     background-size: cover;
+    width: 259px;
+    height: 180px;
   }
   &--linux {
     background: url('~Images/icons/logout-linux.svg') no-repeat center center;
     background-size: cover;
   }
   &--mac {
-    background: url('~Images/icons/logout-linux.svg') no-repeat center center;
+    background: url('~Images/logos/docker-drag.gif') no-repeat center center;
     background-size: cover;
+    width: 275px;
+    height: 137px;
   }
 }

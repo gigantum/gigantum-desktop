@@ -71,13 +71,15 @@ class Installer {
           if (error) {
             callback({
               success: false,
-              finished: false
+              finished: false,
+              data: {}
             });
           } else {
             console.log(stdout, stderr);
             callback({
               success: true,
-              finished: true
+              finished: true,
+              data: {}
             });
           }
         }
@@ -167,6 +169,7 @@ class Installer {
         ]);
         dockerSize.stdout.on('data', data => {
           const size = data.toString();
+          console.log(size);
           if (size === lastSize) {
             repeatCount += 1;
           } else {

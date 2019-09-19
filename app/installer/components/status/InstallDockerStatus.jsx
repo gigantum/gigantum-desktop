@@ -80,7 +80,7 @@ export default class CheckDockerStatus extends Component<Props> {
     const renderMap = {
       [INSTALLING]: progressMap[progressKey],
       [INSTALLED]: (
-        <div className="Layout__Status">
+        <div className="Layout__Status flex justify--center align-items--center">
           <div className={imageCSS} />
         </div>
       ),
