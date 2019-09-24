@@ -63,14 +63,19 @@
       "package.json"
     ],
     "dmg": {
+      "iconSize": 170,
+      "window": {
+        "width": 908,
+        "height": 504
+      },
       "contents": [
         {
-          "x": 130,
-          "y": 220
+          "x": 200,
+          "y": 300
         },
         {
-          "x": 410,
-          "y": 220,
+          "x": 710,
+          "y": 300,
           "type": "link",
           "path": "/Applications"
         }

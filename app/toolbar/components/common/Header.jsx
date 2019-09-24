@@ -19,6 +19,8 @@ import './Header.scss';
 const { Menu } = remote;
 
 const isLinux = process.platform === 'linux';
+const isWindows = process.platform === 'win32';
+const removeWarning = isLinux || isWindows;
 
 type Props = {
   machine: {
@@ -76,7 +78,7 @@ export default class Header extends PureComponent<Props> {
         };
         const checkRunningProjectsCallback = response => {
           let validateGigantumClose = !storage.get('close.gigantumConfirm');
-          const shouldCloseDockerConfig = isLinux
+          const shouldCloseDockerConfig = removeWarning
             ? false
             : storage.get('close.dockerConfirm');
           const validateDockerClose = shouldCloseDockerConfig === undefined;

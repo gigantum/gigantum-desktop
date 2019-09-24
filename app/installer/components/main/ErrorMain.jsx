@@ -1,5 +1,7 @@
 // @flow
 import React, { Component } from 'react';
+import open from 'open';
+
 // constants
 import {
   CONFIGURE_DOCKER,
@@ -23,8 +25,15 @@ export default class ErrorMain extends Component<Props> {
     const renderMap = {
       [CONFIGURE_DOCKER]: (
         <p className="Layout__Main">
-          There was an error configuring Docker. Please try again. If the issue
-          persists restart the application.
+          There was an error configuring Docker. Try restarting the application.
+          If the issue persists visit our{' '}
+          <span
+            role="presentation"
+            onClick={() => open('https://spectrum.chat/gigantum')}
+          >
+            Spectrum Chat
+          </span>{' '}
+          for support.
         </p>
       ),
       [CONFIGURE_GIGANTUM]: (

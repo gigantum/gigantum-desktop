@@ -128,9 +128,10 @@ export default class Preferences extends Component<Props> {
 
     if (launchOnStartText) {
       if (launchOnStartText === 'Yes') {
-        props.gigantumAutoLauncher.enable();
+        props.messenger.closeSettings();
+        props.messenger.setAutoLaunchOn();
       } else {
-        props.gigantumAutoLauncher.disable();
+        props.messenger.setAutoLaunchOff();
       }
     }
 

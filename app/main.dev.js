@@ -10,7 +10,7 @@
  *
  * @flow
  */
-import { app, BrowserWindow, Menu, Tray, nativeImage } from 'electron';
+import { app, BrowserWindow, Menu, Tray } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import path from 'path';
 import isDev from 'electron-is-dev';
@@ -21,6 +21,8 @@ import MainMessenger, {
   toolbarLaunch
 } from './messenger/MainMessenger';
 import checkForUpdates from './updater';
+
+const isWindows = process.platform === 'win32';
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');
@@ -68,7 +70,9 @@ app.on('ready', async () => {
   const storage = new Storage();
   const install = storage.get('install');
   const appPath = 'app.html';
-  const icon = nativeImage.createFromDataURL(gigantumBase64);
+  const icon = isWindows
+    ? `${__dirname}/assets/tray/iconWhite.png`
+    : `${__dirname}/assets/tray/iconTemplate.png`;
   const tray = new Tray(icon);
 
   if (process.platform === 'linux') {
@@ -140,6 +144,3 @@ app.on('ready', async () => {
   // Remove this if your app does not use auto updates
   // eslint-disable-next-line
 });
-
-let gigantumBase64 =
-  'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABCElEQVQ4jZXTTStFURTG8Z+XGBgxlDKhjHwAZWBqpgyVMlRERkz5FGbmjCRTfAYD5KWQpEgJI9G+d5869551XZ56Onvvtf6rdc5ZW6ABrOMEN/jO3kFfNb1RSyWg8Cc2MYHeClHSdgBf547aaiOAk6fbgR0YxRk6m2LnGMvrOUzhFK/owhEuuzEfwEkPpfVHLrDQlJPOHAetJ18FhfuxV8rZT4d3AVx4ttJXXWs5/px29wFY+BFDFbyuw5xTG5gILvyGVQyiB8NYybGXVGArgCJ/4T0/i/hBKjDSdPgfLxbv02qQfnOa0obRjkb5N09GX3b5D2C6oeMt/kxN5et8iydcYBczDZn4AcjljXDWYFm9AAAAAElFTkSuQmCC';

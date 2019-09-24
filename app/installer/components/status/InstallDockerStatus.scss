@@ -8,6 +8,11 @@
   img {
     margin-bottom: 40px;
   }
+  span {
+    color: $primary;
+    text-decoration: underline;
+    cursor: pointer;
+  }
 }
 
 .CircularProgressbar {
@@ -45,4 +50,10 @@
     width: 275px;
     height: 137px;
   }
+}
+
+.InstallDockerStatus__subtext {
+  font-size: 12px;
+  text-align: center;
+  padding: 26px;
 }

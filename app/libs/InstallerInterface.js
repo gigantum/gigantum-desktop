@@ -139,13 +139,18 @@ class InstallerInterface {
   };
 
   /**
-   * @param {Function} callback
+   * @param {Object} callbacks
    * @param {Object} downloadedFile
    * handles configure docker
    * @calls {docker.startDockerApplication}
    */
-  configureDocker = (callback, skipConfigure) => {
+  configureDocker = (callbacks, skipConfigure) => {
     const { installer, docker } = this;
+    const {
+      defaultCallback,
+      windowsDockerStartedCallback,
+      windowsDockerRestartingCallback
+    } = callbacks;
     /**
      * @param {Object} response
      * handles response from updateSettings
@@ -153,9 +158,9 @@ class InstallerInterface {
      */
     const updateSettingsCallback = response => {
       if (response.success) {
-        callback(response);
+        defaultCallback(response);
       } else {
-        callback({ success: false, data: {} });
+        defaultCallback({ success: false, data: {} });
       }
     };
     /**
@@ -166,12 +171,16 @@ class InstallerInterface {
     const dockerisReadyCallback = response => {
       if (response.success) {
         if (skipConfigure) {
-          callback(response);
+          defaultCallback(response);
         } else {
-          installer.updateSettings(updateSettingsCallback);
+          installer.updateSettings(
+            updateSettingsCallback,
+            windowsDockerStartedCallback,
+            windowsDockerRestartingCallback
+          );
         }
       } else {
-        callback({ success: false, data: {} });
+        defaultCallback({ success: false, data: {} });
       }
     };
     /**
@@ -183,7 +192,7 @@ class InstallerInterface {
       if (response.success) {
         installer.checkIfDockerIsReady(dockerisReadyCallback);
       } else {
-        callback({ success: false, data: {} });
+        defaultCallback({ success: false, data: {} });
       }
     };
     docker.startDockerApplication(startDockerCallback);

@@ -188,7 +188,8 @@ class MainMessenger {
       }
     });
     settingsWindow.loadURL(`${appPath}?settings&section=${section}`);
-
+    const { openAtLogin } = this.contents.app.getLoginItemSettings();
+    settingsWindow.openAtLogin = openAtLogin;
     settingsWindow.webContents.on('did-finish-load', () => {
       if (!settingsWindow) {
         throw new Error('"settingsWindow" is not defined');
@@ -303,6 +304,13 @@ class MainMessenger {
           settingsWindow.close();
           delete this.contents.settingsWindow;
         }
+      }
+
+      if (message === 'autolaunch.off') {
+        this.contents.app.setLoginItemSettings({ openAtLogin: false });
+      }
+      if (message === 'autolaunch.on') {
+        this.contents.app.setLoginItemSettings({ openAtLogin: true });
       }
 
       if (message === 'quit.app') {

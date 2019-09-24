@@ -216,39 +216,81 @@ class Installer {
 
   /**
    * @param {Function} callback
-   *
+     @param {Number} reconnectCount
+   * recursively checks docker ps untill it is ready
    *
    */
-  checkIfDockerIsReady = callback => {
+  checkIfDockerIsReady = (callback, reconnectCount = 0, checkNotReady) => {
     console.log('checking application is ready ...');
-    try {
-      const dockerPs = childProcess.spawn('docker', ['ps']);
+    if (reconnectCount < 601) {
+      try {
+        const dockerPs = childProcess.spawn('docker', ['ps']);
 
-      dockerPs.stdout.on('data', data => {
-        const message = data.toString();
-        callback({ success: true, data: { message } });
-      });
+        dockerPs.stdout.on('data', data => {
+          const message = data.toString();
+          if (!checkNotReady) {
+            callback({ success: true, data: { message } });
+          } else {
+            setTimeout(() => {
+              this.checkIfDockerIsReady(callback, reconnectCount + 1);
+            }, 1000);
+          }
+        });
 
-      dockerPs.stderr.on('data', () => {
-        setTimeout(() => {
-          this.checkIfDockerIsReady(callback);
-        }, 1000);
+        dockerPs.stderr.on('data', () => {
+          if (checkNotReady) {
+            callback({ success: true });
+          } else {
+            setTimeout(() => {
+              this.checkIfDockerIsReady(callback, reconnectCount + 1);
+            }, 1000);
+          }
+        });
+        dockerPs.on('error', () => {
+          if (checkNotReady) {
+            callback({ success: true });
+          } else {
+            setTimeout(() => {
+              this.checkIfDockerIsReady(callback, reconnectCount + 1);
+            }, 1000);
+          }
+        });
+      } catch (error) {
+        console.log(`exception: ${error}`);
+        if (checkNotReady) {
+          callback({ success: true });
+        } else {
+          setTimeout(() => {
+            this.checkIfDockerIsReady(callback, reconnectCount + 1);
+          }, 1000);
+        }
+      }
+    } else {
+      callback({
+        success: false,
+        data: {
+          error: {
+            message:
+              'Docker is having trouble starting. Timed out after 10 minutes.'
+          }
+        }
       });
-    } catch (error) {
-      console.log(`exception: ${error}`);
-      setTimeout(() => {
-        this.checkIfDockerIsReady(callback);
-      }, 1000);
     }
   };
 
   /**
    * @param {Function} callback
+   * @param {Function} windowsDockerStartedCallback
+   * @param {Function} windowsDockerRestartingCallback
    *
    *
    *
    */
-  updateSettings = callback => {
+  updateSettings = (
+    callback,
+    windowsDockerStartedCallback,
+    windowsDockerRestartingCallback
+  ) => {
     console.log('update app settings and restart ...');
     let settingsPath;
 
@@ -283,6 +325,9 @@ class Installer {
 
       const startDockerApplicationCallback = response => {
         if (response.success) {
+          if (windowsDockerRestartingCallback) {
+            windowsDockerRestartingCallback();
+          }
           this.checkIfDockerIsReady(callback);
         } else {
           callback({ success: false });
@@ -296,7 +341,13 @@ class Installer {
           callback({ success: false });
         }
       };
-      this.docker.stopDockerApplication(dockerStopCallback);
+
+      if (isWindows) {
+        windowsDockerStartedCallback();
+        this.checkIfDockerIsReady(startDockerApplicationCallback, 0, true);
+      } else {
+        this.docker.stopDockerApplication(dockerStopCallback);
+      }
     } else {
       callback({ success: true });
     }

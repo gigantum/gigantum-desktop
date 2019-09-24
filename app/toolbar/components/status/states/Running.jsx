@@ -6,12 +6,15 @@ import {
   FORCE_STOP,
   ERROR,
   SUCCESS,
-  UNEXPECTED_STOP
+  UNEXPECTED_STOP,
+  SHOW_WARNING
 } from '../../../machine/ToolbarConstants';
 // assets
 import './Running.scss';
 
 const isLinux = process.platform === 'linux';
+const isWindows = process.platform === 'win32';
+const removeWarning = isLinux || isWindows;
 
 type Props = {
   transition: () => void,
@@ -50,12 +53,20 @@ class Running extends React.Component<Props> {
   */
   handleGigantumClose = closeDocker => {
     const { props } = this;
-
+    const hideWarning = props.storage.get('hide.dockerWarning');
     const callback = response => {
       if (response.success) {
-        props.transition(SUCCESS, {
-          message: 'Click to Start'
-        });
+        if (isWindows && !hideWarning) {
+          props.transition(SHOW_WARNING, {
+            message:
+              'Remember, Docker is still running. It is now safe to quit Docker.',
+            category: 'warn.docker'
+          });
+        } else {
+          props.transition(SUCCESS, {
+            message: 'Click to Start'
+          });
+        }
       } else {
         props.transition(ERROR, {
           message: 'Gigantum Failed to Stop'
@@ -69,7 +80,7 @@ class Running extends React.Component<Props> {
     const { props } = this;
     const { storage } = props;
     let validateGigantumClose = !storage.get('close.gigantumConfirm');
-    const shouldCloseDockerConfig = isLinux
+    const shouldCloseDockerConfig = removeWarning
       ? false
       : storage.get('close.dockerConfirm');
     const validateDockerClose = shouldCloseDockerConfig === undefined;

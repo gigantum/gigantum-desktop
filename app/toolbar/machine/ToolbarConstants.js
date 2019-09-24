@@ -21,3 +21,5 @@ export const CANCEL = 'CANCEL';
 export const REPROMPT = 'REPROMPT';
 export const TRY_AGAIN = 'TRY_AGAIN';
 export const TRY_AGAIN_STOPPED = 'TRY_AGAIN_STOPPED';
+export const CONFIRM_WARNING = 'CONFIRM_WARNING';
+export const SHOW_WARNING = 'SHOW_WARNING';

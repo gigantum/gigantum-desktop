@@ -36,8 +36,8 @@ export default class UpdateAvailable extends Component<Props> {
               choose to restart
             </div>
             <p>
-              Note: Docker must be running to update Gigantum. The update
-              process will handle starting Docker for you.
+              Note: Docker must be running. The update process will handle
+              starting Docker if needed.
             </p>
           </div>
           <div className="UpdateAvailable__releaseNotes">

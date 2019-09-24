@@ -170,6 +170,13 @@ class Docker {
       ]);
     } else if (isMac) {
       dockerSpawn = childProcess.spawn('open', ['-a', 'docker']);
+      dockerSpawn.stdout.on('data', data => {
+        console.log(`stdout: ${data}`);
+      });
+
+      dockerSpawn.stderr.on('data', data => {
+        console.error(`stderr: ${data}`);
+      });
     } else {
       callback({ success: true, data: {} });
       return null;
@@ -189,7 +196,13 @@ class Docker {
       }
     });
 
+    dockerSpawn.on('error', error => {
+      console.log('error ran', error);
+    });
+
     dockerSpawn.on('close', code => {
+      console.log('close ran', code);
+
       if (code === 0) {
         callback({
           success: true,

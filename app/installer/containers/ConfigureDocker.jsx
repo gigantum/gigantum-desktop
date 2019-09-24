@@ -4,7 +4,12 @@ import React, { Component } from 'react';
 import configureDockerMachine from './machine/ConfigureDockerMachine';
 // constants
 import { ERROR, SUCCESS } from '../machine/InstallerConstants';
-import { CONFIGURE, LAUNCH } from './machine/ConfigureDockerConstants';
+import {
+  CONFIGURE,
+  LAUNCH,
+  RESTART_PROMPT,
+  RESTARTING
+} from './machine/ConfigureDockerConstants';
 // containers
 import Layout from './Layout';
 // componenets
@@ -86,7 +91,16 @@ export default class ConfigureDocker extends Component<Props> {
     const { props } = this;
     const action = skipConfigure ? LAUNCH : CONFIGURE;
     let configureRan = false;
-    const callback = response => {
+
+    const windowsDockerStartedCallback = () => {
+      this.configureDockerTransition(RESTARTING);
+    };
+
+    const windowsDockerRestartingCallback = () => {
+      this.configureDockerTransition(RESTART_PROMPT);
+    };
+
+    const defaultCallback = response => {
       if (response.success) {
         props.storage.set('dockerConfigured', true);
         this.setState({ configured: true });
@@ -105,9 +119,15 @@ export default class ConfigureDocker extends Component<Props> {
       }
     };
 
+    const callbacks = {
+      defaultCallback,
+      windowsDockerStartedCallback,
+      windowsDockerRestartingCallback
+    };
+
     this.setState({ skipConfigure });
     this.configureDockerTransition(action);
-    props.interface.configureDocker(callback, skipConfigure);
+    props.interface.configureDocker(callbacks, skipConfigure);
   };
 
   render() {

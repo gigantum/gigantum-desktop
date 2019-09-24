@@ -1,32 +1,19 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
-<!-- Generator: Adobe Illustrator 19.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 427.122 427.122" style="enable-background:new 0 0 427.122 427.122;" xml:space="preserve">
-  <g transform="matrix(1.25 0 0 -1.25 0 45)">
-    <g>
-      <g>
-        <path
-          style="fill:#FFFFFF;"
-          d="M219.25-134.712L331.696-22.266c13.335,13.323,13.335,34.941,0,48.265s-34.941,13.335-48.265,0
-				L170.985-86.448L58.539,25.999c-13.323,13.335-34.941,13.335-48.276,0C-3.061,12.676-3.061-8.942,10.274-22.277l112.447-112.435
-				l-112.72-112.72c-13.335-13.323-13.335-34.941,0-48.265c6.667-6.667,15.406-10.001,24.132-10.001
-				c8.738,0,17.476,3.334,24.144,10.001l112.708,112.708l112.447-112.435c6.667-6.656,15.394-9.99,24.132-9.99
-				c8.727,0,17.465,3.334,24.132,9.99c13.335,13.323,13.335,34.953,0,48.276L219.25-134.712z"/>
-      </g>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32px" height="32px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 49 (51002) - http://www.bohemiancoding.com/sketch -->
+    <title>icon/general/x-close</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <circle id="path-1" cx="14" cy="14" r="14"></circle>
+    </defs>
+    <g id="icon/general/x-close" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="icon/add-note-copy" transform="translate(1.798990, 1.798990)">
+            <g id="Oval-2" transform="translate(14.000000, 14.000000) rotate(-360.000000) translate(-14.000000, -14.000000) ">
+                <use fill-rule="evenodd" xlink:href="#path-1"></use>
+                <circle stroke="#FFFFFF" stroke-width="2" cx="14" cy="14" r="13"></circle>
+            </g>
+            <path d="M21,14 L7,14" id="Line" stroke="#FFFFFF" stroke-linecap="square" transform="translate(14.000000, 14.000000) rotate(-315.000000) translate(-14.000000, -14.000000) "></path>
+            <path d="M14,7 L14,21" id="Line" stroke="#FFFFFF" stroke-linecap="square" transform="translate(14.000000, 14.000000) rotate(-315.000000) translate(-14.000000, -14.000000) "></path>
+        </g>
     </g>
-  </g>
-  <g></g>
-  <g></g>
-  <g></g>
-  <g></g>
-  <g></g>
-  <g></g>
-  <g></g>
-  <g></g>
-  <g></g>
-  <g></g>
-  <g></g>
-  <g></g>
-  <g></g>
-  <g></g>
-  <g></g>
 </svg>

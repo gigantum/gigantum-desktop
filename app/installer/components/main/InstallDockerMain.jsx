@@ -33,6 +33,7 @@ export default class InstallDockerMain extends Component<Props> {
   render() {
     const { props } = this;
     const OS = getOS();
+    const desktopText = isLinux ? '' : 'Desktop';
     let requirementVersion = '';
     requirementVersion = isMac
       ? 'Requires Apple Mac OS Sierra 10.12 or above.'
@@ -42,16 +43,16 @@ export default class InstallDockerMain extends Component<Props> {
       : requirementVersion;
 
     const installingText = isLinux
-      ? 'Please wait while Docker is being installed into your computer.'
+      ? 'Please wait while Docker is being installed.\n\n This can take a few minutes'
       : 'Please wait while the Docker installer is downloaded to your computer.';
 
-    let installedText = `The Docker Desktop installer volume has been opened.\n Drag and drop Docker into your Application folder to install Docker.`;
+    let installedText = `The Docker Desktop installer volume has been opened.\n\n Drag and drop Docker into your Application folder to install Docker.`;
 
     installedText = isWindows
-      ? `The Docker Desktop installer has been opened.\n Follow the instructions in the installer to install Docker.`
+      ? `The Docker Desktop installer has been opened.\n\n Follow the instructions in the installer to install Docker.`
       : installedText;
     installedText = isLinux
-      ? `Docker has been succesfully installed. \n Docker requires a log out of the current user to become usable.\nPlease relog and launch Gigantum to finish the installation`
+      ? `To start using Docker you must log out and then log back in. \n\n Once logged in, open Gigantum to finish the installation process.`
       : installedText;
 
     const renderMap = {
@@ -60,7 +61,7 @@ export default class InstallDockerMain extends Component<Props> {
           To use Gigantum locally, please download & install Docker.
           <div className="InstallDockerMain__subtext">
             <p>
-              Docker Desktop for {OS} is available for free.
+              Docker {desktopText} for {OS} is available for free.
               {'\n'}
               {requirementVersion}
             </p>

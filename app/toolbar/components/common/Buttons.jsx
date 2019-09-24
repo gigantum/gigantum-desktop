@@ -95,6 +95,10 @@ export default class Buttons extends PureComponent<Props> {
     if (state.updateAvailable === null) {
       this.setState({ checkingUpdate: true });
     }
+    this.setState({ disableUpdateButton: true });
+    setTimeout(() => {
+      this.setState({ disableUpdateButton: false });
+    }, 10000);
   };
 
   /**
@@ -124,6 +128,8 @@ export default class Buttons extends PureComponent<Props> {
     const updateText = this.getUpdateText();
     // TODO get this from a config
     const defaultUrl = 'http://localhost:10000/';
+    const disableUpdatebutton =
+      state.updateAvailable === false || state.disableUpdateButton;
 
     const updateButtonCSS = classNames({
       Btn__Toolbar: true,
@@ -154,7 +160,7 @@ export default class Buttons extends PureComponent<Props> {
             className={updateButtonCSS}
             type="button"
             onClick={() => this.checkForUpdate()}
-            disabled={state.updateAvailable === false}
+            disabled={disableUpdatebutton}
           >
             {updateText}
           </button>

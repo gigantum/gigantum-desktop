@@ -10,6 +10,8 @@ import DockerSrc from 'Images/logos/docker.png';
 import {
   PROMPT,
   LAUNCHING,
+  RESTARTING,
+  RESTART_PROMPT,
   CONFIGURING
 } from '../../containers/machine/ConfigureDockerConstants';
 
@@ -53,6 +55,8 @@ export default class ConfigureDockerStatus extends Component<Props> {
     const renderMap = {
       [LAUNCHING]: <ProgressBar />,
       [CONFIGURING]: <ProgressBar />,
+      [RESTARTING]: <ProgressBar />,
+      [RESTART_PROMPT]: <div>IMAGE HERE</div>,
       [PROMPT]: (
         <div className="Layout__Status ConfigureDockerStatus">
           <div className="ConfigureDockerStatus__body">
