@@ -20,6 +20,9 @@ type Props = {
   transition: () => void,
   message: string,
   storage: object,
+  messenger: {
+    showToolbar: () => void
+  },
   interface: {
     stop: () => void,
     listenToDockerEvents: () => void,
@@ -57,6 +60,7 @@ class Running extends React.Component<Props> {
     const callback = response => {
       if (response.success) {
         if (isWindows && !hideWarning) {
+          props.messenger.showToolbar();
           props.transition(SHOW_WARNING, {
             message:
               'Remember, Docker is still running. It is now safe to quit Docker.',

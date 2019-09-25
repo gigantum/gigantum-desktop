@@ -221,8 +221,8 @@ class Installer {
    *
    */
   checkIfDockerIsReady = (callback, reconnectCount = 0, checkNotReady) => {
-    console.log('checking application is ready ...');
-    if (reconnectCount < 601) {
+    console.log('checking application is ready ...', checkNotReady);
+    if (reconnectCount < 601 || checkNotReady) {
       try {
         const dockerPs = childProcess.spawn('docker', ['ps']);
 
@@ -232,36 +232,60 @@ class Installer {
             callback({ success: true, data: { message } });
           } else {
             setTimeout(() => {
-              this.checkIfDockerIsReady(callback, reconnectCount + 1);
+              this.checkIfDockerIsReady(
+                callback,
+                reconnectCount + 1,
+                checkNotReady
+              );
             }, 1000);
           }
         });
 
-        dockerPs.stderr.on('data', () => {
+        dockerPs.stderr.on('data', data => {
           if (checkNotReady) {
+            console.log('ran in std error');
+            const message = data.toString();
+
+            console.log(message);
             callback({ success: true });
           } else {
             setTimeout(() => {
-              this.checkIfDockerIsReady(callback, reconnectCount + 1);
+              this.checkIfDockerIsReady(
+                callback,
+                reconnectCount + 1,
+                checkNotReady
+              );
             }, 1000);
           }
         });
-        dockerPs.on('error', () => {
+        dockerPs.on('error', error => {
           if (checkNotReady) {
+            console.log('ran in error');
+            console.log(error);
             callback({ success: true });
           } else {
             setTimeout(() => {
-              this.checkIfDockerIsReady(callback, reconnectCount + 1);
+              this.checkIfDockerIsReady(
+                callback,
+                reconnectCount + 1,
+                checkNotReady
+              );
             }, 1000);
           }
         });
       } catch (error) {
         console.log(`exception: ${error}`);
         if (checkNotReady) {
+          console.log('ran in catch');
+          console.log(error);
           callback({ success: true });
         } else {
           setTimeout(() => {
-            this.checkIfDockerIsReady(callback, reconnectCount + 1);
+            this.checkIfDockerIsReady(
+              callback,
+              reconnectCount + 1,
+              checkNotReady
+            );
           }, 1000);
         }
       }
@@ -292,6 +316,7 @@ class Installer {
     windowsDockerRestartingCallback
   ) => {
     console.log('update app settings and restart ...');
+
     let settingsPath;
 
     if (isMac) {
@@ -308,6 +333,7 @@ class Installer {
         current >= lowerBound ? current : Math.floor(lowerBound / 2);
 
       settings.autoStart = false;
+      settings.displayedWelcomeWhale = false;
       settings.analyticsEnabled = false;
       diskSize = diskSize > 100000 ? 100000 : diskSize;
       settings.memoryMiB = selectHigherValue(settings.memoryMiB, ram);
@@ -317,6 +343,11 @@ class Installer {
           settings.diskSizeMiB,
           diskSize
         );
+      }
+      if (isWindows) {
+        settings.sharedDrives = {
+          C: true
+        };
       }
 
       const newSettings = JSON.stringify(settings);
@@ -343,12 +374,14 @@ class Installer {
       };
 
       if (isWindows) {
+        console.log('ran check for windows');
         windowsDockerStartedCallback();
         this.checkIfDockerIsReady(startDockerApplicationCallback, 0, true);
       } else {
         this.docker.stopDockerApplication(dockerStopCallback);
       }
     } else {
+      console.log('default callback');
       callback({ success: true });
     }
   };

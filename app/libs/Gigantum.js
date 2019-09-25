@@ -458,6 +458,7 @@ class Gigantum extends Docker {
         };
         this.pullImage(callback, imageData);
       } else if (response && response.error) {
+        console.log(response);
         callback({ success: false, data: response.error });
       } else {
         callback({ success: true, data: { finished: true } });

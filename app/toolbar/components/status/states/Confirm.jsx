@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import open from 'open';
 // States
 import {
   CANCEL,
@@ -167,12 +168,18 @@ class Confirm extends React.Component<Props> {
         this.handleGigantumRestart();
       }
     } else if (category === 'warn.docker') {
+      console.log('confirm', confirm);
+      console.log(state.isChecked, 'isChecked');
+      if (state.isChecked) {
+        console.log('ran storage set');
+        storage.set('hide.dockerWarning', true);
+      }
       if (!confirm) {
+        open('https://docs.gigantum.com/');
+      } else {
         props.transition(CONFIRM_WARNING, {
           message: 'Click to Start'
         });
-      } else {
-        storage.set('warn.docker', true);
       }
     }
   };

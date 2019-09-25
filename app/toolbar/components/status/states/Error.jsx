@@ -11,6 +11,8 @@ import {
 // assets
 import './Error.scss';
 
+const isWindows = process.platform === 'win32';
+
 type Props = {
   transition: () => void,
   interface: {
@@ -65,7 +67,7 @@ const getSubText = message => {
             </a>
           </div>
         ),
-        buttonText: 'Restart Docker'
+        buttonText: isWindows ? 'Try Again' : 'Restart Docker'
       };
     case 'Gigantum could not start':
       return {

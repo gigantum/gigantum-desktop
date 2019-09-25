@@ -254,6 +254,7 @@ class MainMessenger {
         installerWindow,
         updaterWindow,
         settingsWindow,
+        toolbarWindow,
         app
       } = this.contents;
 
@@ -262,6 +263,12 @@ class MainMessenger {
           showWindow(installerWindow);
         } else {
           this.initializeInstalledWindow();
+        }
+      }
+
+      if (message === 'open.toolbar') {
+        if (toolbarWindow) {
+          showWindow(toolbarWindow);
         }
       }
 

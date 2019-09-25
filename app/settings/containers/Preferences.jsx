@@ -7,7 +7,7 @@ import Setting from '../components/Setting';
 // assets
 import './Preferences.scss';
 
-const isLinux = process.platform === 'linux';
+const isMac = process.platform === 'darwin';
 
 /**
   @param {Object} props
@@ -209,7 +209,7 @@ export default class Preferences extends Component<Props> {
                 this.setPreference('gigantumConfirmText', item)
               }
             />
-            {!isLinux && (
+            {isMac && (
               <Setting
                 css={dockerConfirmCSS}
                 visible={state.dockerDropdownVisible}

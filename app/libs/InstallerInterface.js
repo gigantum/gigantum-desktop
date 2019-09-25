@@ -151,6 +151,7 @@ class InstallerInterface {
       windowsDockerStartedCallback,
       windowsDockerRestartingCallback
     } = callbacks;
+
     /**
      * @param {Object} response
      * handles response from updateSettings
@@ -205,8 +206,10 @@ class InstallerInterface {
    */
   configureGigantum = callback => {
     const { gigantum } = this;
-
-    gigantum.configureGigantum(callback);
+    const configureDockerCallback = () => {
+      gigantum.configureGigantum(callback);
+    };
+    this.configureDocker({ defaultCallback: configureDockerCallback }, true);
   };
 }
 

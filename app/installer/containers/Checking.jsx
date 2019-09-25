@@ -23,6 +23,7 @@ export default class Checking extends Component<Props> {
   componentDidMount() {
     const { props } = this;
     const dockerConfigured = props.storage.get('dockerConfigured');
+    console.log(dockerConfigured);
     const callback = response => {
       if (response.success) {
         if (dockerConfigured || isLinux) {

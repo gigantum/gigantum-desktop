@@ -62,7 +62,7 @@ export default class ConfigureDocker extends Component<Props> {
   */
   handleTimer = () => {
     const { state } = this;
-    setTimeout(() => {
+    this.timeout = setTimeout(() => {
       if (state.configured) {
         this.setState({
           progress: 100,
@@ -93,11 +93,14 @@ export default class ConfigureDocker extends Component<Props> {
     let configureRan = false;
 
     const windowsDockerStartedCallback = () => {
-      this.configureDockerTransition(RESTARTING);
+      clearInterval(this.timeout);
+      this.configureDockerTransition(RESTART_PROMPT);
     };
 
     const windowsDockerRestartingCallback = () => {
-      this.configureDockerTransition(RESTART_PROMPT);
+      this.setState({ progress: 0, currentProgress: 0 });
+      this.handleTimer();
+      this.configureDockerTransition(RESTARTING);
     };
 
     const defaultCallback = response => {
@@ -124,7 +127,7 @@ export default class ConfigureDocker extends Component<Props> {
       windowsDockerStartedCallback,
       windowsDockerRestartingCallback
     };
-
+    console.log('----', callbacks);
     this.setState({ skipConfigure });
     this.configureDockerTransition(action);
     props.interface.configureDocker(callbacks, skipConfigure);

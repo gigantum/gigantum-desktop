@@ -6,6 +6,7 @@ import 'react-circular-progressbar/dist/styles.css';
 import './Status.scss';
 import './ConfigureDockerStatus.scss';
 import DockerSrc from 'Images/logos/docker.png';
+import InstallCompleteWindows from 'Images/logos/restart-docker-windows.gif';
 // constants
 import {
   PROMPT,
@@ -56,7 +57,16 @@ export default class ConfigureDockerStatus extends Component<Props> {
       [LAUNCHING]: <ProgressBar />,
       [CONFIGURING]: <ProgressBar />,
       [RESTARTING]: <ProgressBar />,
-      [RESTART_PROMPT]: <div>IMAGE HERE</div>,
+      [RESTART_PROMPT]: (
+        <div className="Layout__Status flex flex--column justify--center align-items--center">
+          <img
+            src={InstallCompleteWindows}
+            width="250"
+            height="250"
+            alt="restart"
+          />
+        </div>
+      ),
       [PROMPT]: (
         <div className="Layout__Status ConfigureDockerStatus">
           <div className="ConfigureDockerStatus__body">
