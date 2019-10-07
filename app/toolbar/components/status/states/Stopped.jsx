@@ -34,6 +34,8 @@ class Stopped extends React.Component<Props> {
         handleErrorTransition('Gigantum is not configured');
       } else if (errorMessage.indexOf('port is already allocated') > -1) {
         handleErrorTransition('Gigantum could not start');
+      } else if (errorMessage.indexOf('Docker is not installed') > -1) {
+        handleErrorTransition('Docker is not installed');
       } else {
         handleErrorTransition('Gigantum failed to start');
       }

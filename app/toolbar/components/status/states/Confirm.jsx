@@ -30,7 +30,8 @@ type Props = {
   },
   quittingApp: boolean,
   messenger: {
-    quitApp: () => void
+    quitApp: () => void,
+    showToolbar: () => void
   }
 };
 
@@ -39,6 +40,13 @@ class Confirm extends React.Component<Props> {
 
   state = {
     isChecked: false
+  };
+
+  componentDidMount = () => {
+    const { props } = this;
+    if (props.quittingApp) {
+      props.messenger.showToolbar();
+    }
   };
 
   /**
@@ -125,7 +133,7 @@ class Confirm extends React.Component<Props> {
   */
   confirmAction = confirm => {
     const { props, state } = this;
-    const { category, storage } = props;
+    const { category, storage, quittingApp } = props;
     // TODO check config to see if setting is remembered
     const shouldCloseDockerConfig = removeWarning
       ? false
@@ -151,7 +159,8 @@ class Confirm extends React.Component<Props> {
           () => {
             props.transition(REPROMPT, {
               message: 'Would you like to close Docker?',
-              category: 'close.docker'
+              category: 'close.docker',
+              quittingApp
             });
           }
         );

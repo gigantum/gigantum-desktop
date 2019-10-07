@@ -65,6 +65,15 @@ class ToolbarMesseneger {
   };
 
   /**
+    @param {Function} - callback
+    sends quit.app to ipcRenderer
+    ToolbarMessenger recieves message and updates UI
+  */
+  checkQuitApp = callback => {
+    ipcRenderer.on('quit.app', () => callback());
+  };
+
+  /**
     @param {Object} - toolbarInterface
     sends quit.app to ipcRenderer
     MainMessenger recieves message and hides installer window

@@ -46,7 +46,7 @@ class ToolbarInterface {
   check = (dockerExistsCallback, gigantumRunningCallback) => {
     const { gigantum } = this;
     const checkGigantumCallback = response => {
-      if (response.success) {
+      if (response.success && gigantumRunningCallback) {
         gigantumRunningCallback(response);
       } else {
         dockerExistsCallback({ success: true });
@@ -67,10 +67,9 @@ class ToolbarInterface {
       } else {
         dockerExistsCallback({
           success: false,
-          data: {
-            error: {
-              message: 'Docker is not installed'
-            }
+          data: {},
+          error: {
+            message: 'Docker is not installed'
           }
         });
       }
@@ -179,8 +178,16 @@ class ToolbarInterface {
       }
     };
 
+    const dockerExistsCallback = response => {
+      if (response.success) {
+        pingDocker(dockerConnectionTest, dockerRunningCallback);
+      } else {
+        callback(response);
+      }
+    };
+
     /* STEP 1 */
-    pingDocker(dockerConnectionTest, dockerRunningCallback);
+    this.check(dockerExistsCallback);
   };
 
   /**
