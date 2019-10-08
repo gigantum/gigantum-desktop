@@ -177,10 +177,7 @@ class Confirm extends React.Component<Props> {
         this.handleGigantumRestart();
       }
     } else if (category === 'warn.docker') {
-      console.log('confirm', confirm);
-      console.log(state.isChecked, 'isChecked');
       if (state.isChecked) {
-        console.log('ran storage set');
         storage.set('hide.dockerWarning', true);
       }
       if (!confirm) {

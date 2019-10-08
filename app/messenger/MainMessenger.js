@@ -249,20 +249,22 @@ class MainMessenger {
     sets up listener on messages and hides or shows depending on the message structure
   */
   listeners = () => {
-    const {
-      installerWindow,
-      updaterWindow,
-      settingsWindow,
-      toolbarWindow,
-      app
-    } = this.contents;
+    const { app } = this.contents;
     app.on('before-quit', evt => {
       if (!this.allowQuit) {
-        toolbarWindow.webContents.send('quit.app');
+        this.contents.toolbarWindow.webContents.send('quit.app');
         evt.preventDefault();
       }
     });
+
     ipcMain.on('asynchronous-message', (evt, message) => {
+      const {
+        installerWindow,
+        updaterWindow,
+        settingsWindow,
+        toolbarWindow
+      } = this.contents;
+
       if (message === 'open.installer') {
         if (installerWindow) {
           showWindow(installerWindow);

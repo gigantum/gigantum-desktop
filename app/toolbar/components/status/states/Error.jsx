@@ -116,7 +116,6 @@ class Error extends React.Component<Props> {
     };
     const callback = response => {
       const errorMessage = response.error && response.error.message;
-      console.log(response);
       if (response.success) {
         props.transition(SUCCESS, { message: 'Click to Quit' });
       } else if (errorMessage.indexOf('no such image') > -1) {

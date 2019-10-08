@@ -14,6 +14,7 @@ import { app, BrowserWindow, Menu, Tray } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import path from 'path';
 import isDev from 'electron-is-dev';
+import { init } from '@sentry/electron';
 import MenuBuilder from './menu';
 import Storage from './storage/Storage';
 import MainMessenger, {
@@ -21,6 +22,11 @@ import MainMessenger, {
   toolbarLaunch
 } from './messenger/MainMessenger';
 import checkForUpdates from './updater';
+
+init({
+  dsn: 'https://165a5c668fe141a7a25e84b5eb05c02b@sentry.io/1243058',
+  enableNative: false
+});
 
 const isWindows = process.platform === 'win32';
 

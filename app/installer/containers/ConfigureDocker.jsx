@@ -127,7 +127,7 @@ export default class ConfigureDocker extends Component<Props> {
       windowsDockerStartedCallback,
       windowsDockerRestartingCallback
     };
-    console.log('----', callbacks);
+
     this.setState({ skipConfigure });
     this.configureDockerTransition(action);
     props.interface.configureDocker(callbacks, skipConfigure);

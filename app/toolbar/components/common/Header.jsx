@@ -37,7 +37,8 @@ type Props = {
   },
   interface: {
     stop: () => void,
-    checkRunningProjects: () => void
+    checkRunningProjects: () => void,
+    check: () => void
   },
   transition: () => void
 };
@@ -58,10 +59,12 @@ export default class Header extends PureComponent<Props> {
   */
   handleQuit = () => {
     const { props } = this;
-    const { machine, storage, messenger } = props;
-    const currentState = machine.value;
+    const { storage, messenger } = props;
     const stopCallback = () => {
       messenger.quitApp(props.interface);
+    };
+    const gigantumRunningCallback = () => {
+      props.interface.checkRunningProjects(checkRunningProjectsCallback);
     };
     const checkRunningProjectsCallback = response => {
       let validateGigantumClose = !storage.get('close.gigantumConfirm');
@@ -92,11 +95,7 @@ export default class Header extends PureComponent<Props> {
       }
     };
 
-    if (currentState === RUNNING) {
-      props.interface.checkRunningProjects(checkRunningProjectsCallback);
-    } else {
-      stopCallback();
-    }
+    props.interface.check(stopCallback, gigantumRunningCallback);
   };
 
   menu = Menu.buildFromTemplate([
