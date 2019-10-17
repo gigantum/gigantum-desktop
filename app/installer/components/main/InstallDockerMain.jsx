@@ -1,5 +1,5 @@
 // @flow
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import open from 'open';
 // constants
 import {
@@ -51,9 +51,6 @@ export default class InstallDockerMain extends Component<Props> {
     installedText = isWindows
       ? `The Docker Desktop installer has been opened.\n\n Follow the instructions in the installer to install Docker.`
       : installedText;
-    installedText = isLinux
-      ? `To start using Docker you must log out and then log back in. \n\n Once logged in, open Gigantum to finish the installation process.`
-      : installedText;
 
     const renderMap = {
       [PROMPT]: (
@@ -95,7 +92,23 @@ export default class InstallDockerMain extends Component<Props> {
         </div>
       ),
       [INSTALLING]: <div className="Layout__Main">{installingText}</div>,
-      [INSTALLED]: <div className="Layout__Main">{installedText}</div>
+      [INSTALLED]: (
+        <div className="Layout__Main">
+          {!isLinux && installedText}
+          {isLinux && (
+            <Fragment>
+              <p>
+                To start using Docker you must <b>log out of your computer</b>{' '}
+                and then log back in.
+              </p>
+              <p>
+                Once logged in, open Gigantum to finish the installation
+                process.
+              </p>
+            </Fragment>
+          )}
+        </div>
+      )
     };
 
     return renderMap[props.machine.value];

@@ -9,8 +9,10 @@ import fixPath from 'fix-path';
 import Shell from 'node-powershell';
 import sudo from 'sudo-prompt';
 import si from 'systeminformation';
+import log from 'electron-log';
 // libs
 import Docker from './Docker';
+import spawnWrapper from './spawnWrapper';
 //
 const isLinux = process.platform === 'linux';
 const isMac = process.platform === 'darwin';
@@ -67,7 +69,7 @@ class Installer {
       sudo.exec(
         `groupadd docker && curl -fsSL https://get.docker.com -o get-docker.sh && sudo sh get-docker.sh && usermod -aG docker ${process.env.USER}`,
         options,
-        (error, stdout, stderr) => {
+        error => {
           if (error) {
             callback({
               success: false,
@@ -75,7 +77,6 @@ class Installer {
               data: {}
             });
           } else {
-            console.log(stdout, stderr);
             callback({
               success: true,
               finished: true,
@@ -200,7 +201,6 @@ class Installer {
             if (formattedResponse !== 'True') {
               setTimeout(isInstalled, 1000);
             } else {
-              console.log('done');
               callback({ success: true });
             }
             return null;
@@ -222,16 +222,24 @@ class Installer {
    */
   checkIfDockerIsReady = (callback, reconnectCount = 0, checkNotReady) => {
     console.log('checking application is ready ...', checkNotReady);
+    log.warn('checking application is ready ...', checkNotReady);
     if (reconnectCount < 601 || checkNotReady) {
+      log.warn('before', process.env.PATH);
+      if (isWindows && process.env.PATH.indexOf('Docker') === -1) {
+        process.env.PATH = `C:\\ProgramData\\DockerDesktop\\version-bin;C:\\Program Files\\Docker\\Docker\\Resources\\bin;${process.env.PATH}`;
+      }
+      log.warn('after', process.env.PATH);
       try {
-        const dockerPs = childProcess.spawn('docker', ['ps']);
-
+        const dockerPs = spawnWrapper.getSpawn('docker', ['ps']);
         dockerPs.stdout.on('data', data => {
           const message = data.toString();
+          log.warn(`stdout: ${data + message}`);
+
           if (!checkNotReady) {
             callback({ success: true, data: { message } });
-          } else {
-            setTimeout(() => {
+          } else if (!this.timeout) {
+            this.timeout = setTimeout(() => {
+              this.timeout = null;
               this.checkIfDockerIsReady(
                 callback,
                 reconnectCount + 1,
@@ -242,11 +250,9 @@ class Installer {
         });
 
         dockerPs.stderr.on('data', data => {
-          if (checkNotReady) {
-            console.log('ran in std error');
-            const message = data.toString();
+          log.warn(`stderr: ${data + data.toString()}`);
 
-            console.log(message);
+          if (checkNotReady) {
             callback({ success: true });
           } else {
             setTimeout(() => {
@@ -259,9 +265,9 @@ class Installer {
           }
         });
         dockerPs.on('error', error => {
+          log.warn(`error: ${error}`);
+
           if (checkNotReady) {
-            console.log('ran in error');
-            console.log(error);
             callback({ success: true });
           } else {
             setTimeout(() => {
@@ -275,9 +281,9 @@ class Installer {
         });
       } catch (error) {
         console.log(`exception: ${error}`);
+        log.warn(`error: ${error}`);
+
         if (checkNotReady) {
-          console.log('ran in catch');
-          console.log(error);
           callback({ success: true });
         } else {
           setTimeout(() => {
@@ -374,14 +380,12 @@ class Installer {
       };
 
       if (isWindows) {
-        console.log('ran check for windows');
         windowsDockerStartedCallback();
         this.checkIfDockerIsReady(startDockerApplicationCallback, 0, true);
       } else {
         this.docker.stopDockerApplication(dockerStopCallback);
       }
     } else {
-      console.log('default callback');
       callback({ success: true });
     }
   };

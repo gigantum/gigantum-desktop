@@ -1,11 +1,12 @@
 // @flow
-import childProcess from 'child_process';
 import disk from 'check-disk-space';
 import fixPath from 'fix-path';
+import log from 'electron-log';
 // libs
 import Docker from './Docker';
 import Gigantum from './Gigantum';
 import Installer from './Installer';
+import spawnWrapper from './spawnWrapper';
 
 const isWindows = process.platform === 'win32';
 
@@ -30,7 +31,7 @@ class InstallerInterface {
    * checks if docker is installed
    */
   check = callback => {
-    const dockerVersion = childProcess.spawn('docker', ['-v']);
+    const dockerVersion = spawnWrapper.getSpawn('docker', ['-v']);
     dockerVersion.on('error', error => {
       console.log(error);
     });
@@ -170,10 +171,16 @@ class InstallerInterface {
      * @calls {installer.startDockerApplication}
      */
     const dockerisReadyCallback = response => {
+      log.warn('dockerisReadyCallback', response);
+
       if (response.success) {
         if (skipConfigure) {
+          log.warn('calling default callback');
+
           defaultCallback(response);
         } else {
+          log.warn('update settings');
+
           installer.updateSettings(
             updateSettingsCallback,
             windowsDockerStartedCallback,
@@ -190,12 +197,15 @@ class InstallerInterface {
      * @calls {installer.checkIfDockerIsReady}
      */
     const startDockerCallback = response => {
+      log.warn('startDockerCallback', response);
+
       if (response.success) {
         installer.checkIfDockerIsReady(dockerisReadyCallback);
       } else {
         defaultCallback({ success: false, data: {} });
       }
     };
+    log.warn('configure docker ran...');
     docker.startDockerApplication(startDockerCallback);
   };
 

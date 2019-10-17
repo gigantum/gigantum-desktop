@@ -9,6 +9,7 @@ import pump from 'pump';
 import throughJSON from 'through-json';
 import through from 'through2';
 import fixPath from 'fix-path';
+import log from 'electron-log';
 
 // config
 import config from './config';
@@ -159,6 +160,7 @@ class Docker {
     starts the docker application
   */
   startDockerApplication = callback => {
+    log.warn('startDockerApplication ran');
     let dockerSpawn;
     if (isWindows) {
       dockerSpawn = childProcess.spawn('cmd', [
@@ -172,17 +174,22 @@ class Docker {
       dockerSpawn = childProcess.spawn('open', ['-a', 'docker']);
       dockerSpawn.stdout.on('data', data => {
         console.log(`stdout: ${data}`);
+        log.warn(`stdout: ${data + data.toString()}`);
       });
 
       dockerSpawn.stderr.on('data', data => {
         console.error(`stderr: ${data}`);
+        log.warn(`stderr: ${data + data.toString()}`);
       });
     } else {
       callback({ success: true, data: {} });
       return null;
     }
     dockerSpawn.on('exit', code => {
+      log.warn(`exit: ${code}`);
+
       if (code === 0) {
+        log.warn('success ran');
         callback({ success: true, data: {} });
       } else {
         callback({

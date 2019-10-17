@@ -1,10 +1,10 @@
 // @flow
-import childProcess from 'child_process';
 import fixPath from 'fix-path';
 // libs
 import Docker from './Docker';
 import Installer from './Installer';
 import Gigantum from './Gigantum';
+import spawnWrapper from './spawnWrapper';
 
 fixPath();
 
@@ -52,11 +52,7 @@ class ToolbarInterface {
         dockerExistsCallback({ success: true });
       }
     };
-    const dockerVersion = childProcess.spawn('docker', ['-v'], {
-      env: {
-        PATH: process.env.PATH
-      }
-    });
+    const dockerVersion = spawnWrapper.getSpawn('docker', ['-v']);
     dockerVersion.on('error', error => {
       console.log(error);
     });
