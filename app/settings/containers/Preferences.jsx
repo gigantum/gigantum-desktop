@@ -175,7 +175,7 @@ export default class Preferences extends Component<Props> {
       <div className="Preferences">
         <Header message={message} />
         <div className="Preferences__body">
-          {isLinux && (
+          {!isLinux && (
             <div className="Preferences__category">
               <div className="Preferences__category-title">Startup</div>
               <Setting
