@@ -138,9 +138,6 @@ class ToolbarInterface {
     const checkIsDockerReadyCallback = response => {
       if (response.success) {
         gigantum.start(gigantumStartCallback);
-      } else {
-        // TODO handle error state
-        console.log(response);
       }
     };
 
@@ -153,9 +150,6 @@ class ToolbarInterface {
       if (response.success) {
         /* STEP 3 */
         checkIsDockerReady(checkIsDockerReadyCallback);
-      } else {
-        // TODO handle error message
-        console.log(response);
       }
     };
 

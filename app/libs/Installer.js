@@ -52,7 +52,6 @@ class Installer {
    *
    */
   downloadDocker = callback => {
-    console.log('downloading docker...');
     let downloadLink = '';
     let downloadDirectory = '';
     let downloadedFile = '';
@@ -144,7 +143,6 @@ class Installer {
    *
    */
   openDragAndDrop = (downloadedFile, callback) => {
-    console.log('showing drag and drop');
     if (isMac) {
       open(downloadedFile, ['-a', 'finder']);
     } else if (isWindows) {
@@ -169,7 +167,6 @@ class Installer {
         ]);
         dockerSize.stdout.on('data', data => {
           const size = data.toString();
-          console.log(size);
           if (size === lastSize) {
             repeatCount += 1;
           } else {
@@ -308,8 +305,6 @@ class Installer {
     windowsDockerStartedCallback,
     windowsDockerRestartingCallback
   ) => {
-    console.log('update app settings and restart ...');
-
     let settingsPath;
 
     if (isMac) {

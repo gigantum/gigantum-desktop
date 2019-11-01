@@ -80,8 +80,6 @@ class Gigantum extends Docker {
     @calls {dockerode.getContainer}
   */
   start = callback => {
-    console.log(callback);
-
     const getContainerCallback = response => {
       if (!response.running && response.success) {
         response.gigantumContainer
@@ -451,7 +449,6 @@ class Gigantum extends Docker {
         } else {
           setTimeout(() => this.pullImage(callback, imageData), 2000);
         }
-        console.log(err, response);
       }
     );
   };
@@ -479,7 +476,6 @@ class Gigantum extends Docker {
         };
         this.pullImage(callback, imageData);
       } else if (response && response.error) {
-        console.log(response);
         callback({ success: false, data: response.error });
       } else {
         callback({ success: true, data: { finished: true } });

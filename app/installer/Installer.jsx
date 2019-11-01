@@ -66,7 +66,7 @@ export default class Installer extends Component<Props> {
     const newState = stateMachine.transition(state.machine.value, eventType, {
       state
     });
-    console.log(newState);
+
     this.runActions(newState);
     // TODO use category / installNeeded
 

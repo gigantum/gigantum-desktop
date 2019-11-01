@@ -193,12 +193,10 @@ class Docker {
     });
 
     dockerSpawn.on('error', error => {
-      console.log('error ran', error);
+      console.log(error);
     });
 
     dockerSpawn.on('close', code => {
-      console.log('close ran', code);
-
       if (code === 0) {
         callback({
           success: true,

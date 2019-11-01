@@ -14,13 +14,13 @@ import { app, BrowserWindow, Menu, Tray, nativeImage } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import path from 'path';
 import isDev from 'electron-is-dev';
-import { init } from '@sentry/electron';
 import MenuBuilder from './menu';
 import Storage from './storage/Storage';
 import MainMessenger, {
   showToolbar,
   toolbarLaunch
 } from './messenger/MainMessenger';
+import sentry from './sentry';
 import checkForUpdates from './updater';
 
 const icon = nativeImage.createFromPath(`${__dirname}/assets/tray/icon.png`);
@@ -38,10 +38,7 @@ if (isSecondInstance) {
   app.quit();
 }
 
-init({
-  dsn: 'https://165a5c668fe141a7a25e84b5eb05c02b@sentry.io/1243058',
-  enableNative: false
-});
+sentry();
 
 const isWindows = process.platform === 'win32';
 
