@@ -12,7 +12,7 @@ autoUpdater.autoDownload = false;
 let checkUpToDate;
 
 autoUpdater.on('error', error => {
-  if (error) {
+  if (error && checkUpToDate) {
     dialog.showMessageBox({
       title: 'Error checking for updates',
       message: 'Gigantum failed to check for updates. Please try again later.',

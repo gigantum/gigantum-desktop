@@ -1,7 +1,13 @@
 // @flow
 import { Machine } from 'xstate';
 // container states
-import { PROMPT, CONFIGURING, LAUNCHING } from './ConfigureDockerConstants';
+import {
+  PROMPT,
+  CONFIGURING,
+  RESTARTING,
+  LAUNCHING,
+  RESTART_PROMPT
+} from './ConfigureDockerConstants';
 
 const stateMachine = Machine({
   initial: PROMPT,
@@ -14,6 +20,18 @@ const stateMachine = Machine({
       }
     },
     [CONFIGURING]: {
+      meta: { message: 'Configure Docker' },
+      on: {
+        RESTART_PROMPT
+      }
+    },
+    [RESTART_PROMPT]: {
+      meta: { message: 'Configure Docker' },
+      on: {
+        RESTARTING
+      }
+    },
+    [RESTARTING]: {
       meta: { message: 'Configure Docker' },
       on: {}
     },

@@ -50,3 +50,77 @@
   right: 20px;
   -webkit-app-region: no-drag;
 }
+
+.Updater__confirmation {
+  width: 140px;
+  position: absolute;
+  text-align: center;
+  top: 60px;
+  right: 2px;
+  background: $primary;
+  color: $white;
+  z-index: index($elements, popup);
+  padding: 5px;
+  @include animation('slide-down-fade-in forwards .25s');
+  &::before {
+    content: '';
+    position: absolute;
+    z-index: index($elements, popup) + 1;
+
+    @include triangle('up', 11px, $primary);
+    right: 22px;
+    top: -11px;
+  }
+  p {
+    margin-top: 0;
+  }
+}
+
+.Updater__btn {
+  &--round {
+    height: 30px;
+    width: 34px !important;
+    padding: 0;
+
+    border: 0 !important;
+
+    border-radius: 15px;
+  }
+
+  &--add {
+    background: url(~Images/icons/check-selected.svg) no-repeat center center;
+    background-size: 30px;
+    flex: 0 1 30px;
+
+    &:hover {
+      background: url(~Images/icons/check-selected.svg) no-repeat center center;
+      background-size: 34px;
+    }
+
+    &:focus {
+      background: url(~Images/icons/check-selected.svg) no-repeat center center;
+      background-size: 30px;
+    }
+    &:disabled {
+      background: url(~Images/icons/check-selected-disabled.svg) no-repeat
+        center center !important;
+      background-size: 30px !important;
+    }
+  }
+
+  &--cancel {
+    background: url(~Images/icons/close-white.svg) no-repeat center center;
+    background-size: 26px;
+    flex: 0 1 30px;
+
+    &:hover {
+      background: url(~Images/icons/close-white.svg) no-repeat center center;
+      background-size: 30px;
+    }
+
+    &:focus {
+      background: url(~Images/icons/close-white.svg) no-repeat center center;
+      background-size: 26px;
+    }
+  }
+}

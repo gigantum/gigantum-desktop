@@ -170,8 +170,12 @@ class Docker {
       ]);
     } else if (isMac) {
       dockerSpawn = childProcess.spawn('open', ['-a', 'docker']);
+      dockerSpawn.stdout.on('data', () => {});
+
+      dockerSpawn.stderr.on('data', () => {});
     } else {
       callback({ success: true, data: {} });
+      return null;
     }
     dockerSpawn.on('exit', code => {
       if (code === 0) {
@@ -188,9 +192,18 @@ class Docker {
       }
     });
 
+    dockerSpawn.on('error', error => {
+      // TODO handle this error
+      console.log(error);
+    });
+
     dockerSpawn.on('close', code => {
       if (code === 0) {
-        callback({ success: true, data: {} });
+        callback({
+          success: true,
+          data: {},
+          error: { message: 'Docker failed to start' }
+        });
       } else {
         callback({
           success: false,

@@ -1,11 +1,11 @@
 // @flow
-import childProcess from 'child_process';
-import disk from 'diskusage';
+import disk from 'check-disk-space';
 import fixPath from 'fix-path';
 // libs
 import Docker from './Docker';
 import Gigantum from './Gigantum';
 import Installer from './Installer';
+import spawnWrapper from './spawnWrapper';
 
 const isWindows = process.platform === 'win32';
 
@@ -30,7 +30,7 @@ class InstallerInterface {
    * checks if docker is installed
    */
   check = callback => {
-    const dockerVersion = childProcess.spawn('docker', ['-v']);
+    const dockerVersion = spawnWrapper.getSpawn('docker', ['-v']);
     dockerVersion.on('error', error => {
       console.log(error);
     });
@@ -39,25 +39,18 @@ class InstallerInterface {
         callback({ success: true, data: {} });
       } else {
         const path = isWindows ? 'c:' : '/';
-        disk.check(path, (error, info) => {
-          if (error) {
-            callback({
-              success: false,
-              data: {
-                error: {
-                  message: 'Could not determine disk space'
-                }
-              }
-            });
-          } else {
-            const notEnoughSpace = info.available / 1000000000 < 8;
+        disk(path)
+          .then(diskSpace => {
+            const notEnoughSpace = diskSpace.available / 1000000000 < 8;
             if (notEnoughSpace) {
               callback({
                 success: false,
                 data: {
                   error: {
                     message: 'Not Enough Disk Space',
-                    spaceAvailable: (info.available / 1000000000).toFixed(1)
+                    spaceAvailable: (diskSpace.available / 1000000000).toFixed(
+                      1
+                    )
                   }
                 }
               });
@@ -71,8 +64,18 @@ class InstallerInterface {
                 }
               });
             }
-          }
-        });
+            return null;
+          })
+          .catch(() => {
+            callback({
+              success: false,
+              data: {
+                error: {
+                  message: 'Could not determine disk space'
+                }
+              }
+            });
+          });
       }
     });
   };
@@ -87,7 +90,7 @@ class InstallerInterface {
     const { installer } = this;
     const downloadDockerCallback = response => {
       if (response.success && response.finished) {
-        progressCallback({ success: true, progress: 100 });
+        progressCallback({ success: true, progress: 100, finished: true });
         this.handleDnD(response.data.downloadedFile, dndCallback);
       } else if (response.success) {
         progressCallback({ success: true, progress: response.data.progress });
@@ -110,9 +113,9 @@ class InstallerInterface {
     /**
      * @param {Object} response
      * handles response from dragAndDrop
-     * @calls {installer.checkForApplication}
+     * @calls {installer.checkDockerInstall}
      */
-    const checkForApplicationCallback = response => {
+    const checkDockerInstallCallback = response => {
       if (response.success) {
         callback(response);
       } else {
@@ -122,11 +125,11 @@ class InstallerInterface {
     /**
      * @param {Object} response
      * handles response from dragAndDrop
-     * @calls {installer.checkForApplication}
+     * @calls {installer.checkDockerInstall}
      */
     const dragAndDropCallback = response => {
       if (response.success) {
-        installer.checkForApplication(checkForApplicationCallback);
+        installer.checkDockerInstall(checkDockerInstallCallback);
       } else {
         callback({ success: false, data: {} });
       }
@@ -136,13 +139,19 @@ class InstallerInterface {
   };
 
   /**
-   * @param {Function} callback
+   * @param {Object} callbacks
    * @param {Object} downloadedFile
    * handles configure docker
    * @calls {docker.startDockerApplication}
    */
-  configureDocker = (callback, skipConfigure) => {
+  configureDocker = (callbacks, skipConfigure) => {
     const { installer, docker } = this;
+    const {
+      defaultCallback,
+      windowsDockerStartedCallback,
+      windowsDockerRestartingCallback
+    } = callbacks;
+
     /**
      * @param {Object} response
      * handles response from updateSettings
@@ -150,25 +159,29 @@ class InstallerInterface {
      */
     const updateSettingsCallback = response => {
       if (response.success) {
-        callback(response);
+        defaultCallback(response);
       } else {
-        callback({ success: false, data: {} });
+        defaultCallback({ success: false, data: {} });
       }
     };
     /**
      * @param {Object} response
      * handles response from checkIfDockerIsReady
-     * @calls {installer.checkForApplication}
+     * @calls {installer.startDockerApplication}
      */
     const dockerisReadyCallback = response => {
       if (response.success) {
         if (skipConfigure) {
-          callback(response);
+          defaultCallback(response);
         } else {
-          installer.updateSettings(updateSettingsCallback);
+          installer.updateSettings(
+            updateSettingsCallback,
+            windowsDockerStartedCallback,
+            windowsDockerRestartingCallback
+          );
         }
       } else {
-        callback({ success: false, data: {} });
+        defaultCallback({ success: false, data: {} });
       }
     };
     /**
@@ -180,7 +193,7 @@ class InstallerInterface {
       if (response.success) {
         installer.checkIfDockerIsReady(dockerisReadyCallback);
       } else {
-        callback({ success: false, data: {} });
+        defaultCallback({ success: false, data: {} });
       }
     };
     docker.startDockerApplication(startDockerCallback);
@@ -193,8 +206,10 @@ class InstallerInterface {
    */
   configureGigantum = callback => {
     const { gigantum } = this;
-
-    gigantum.configureGigantum(callback);
+    const configureDockerCallback = () => {
+      gigantum.configureGigantum(callback);
+    };
+    this.configureDocker({ defaultCallback: configureDockerCallback }, true);
   };
 }
 

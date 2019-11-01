@@ -19,6 +19,8 @@ import './Header.scss';
 const { Menu } = remote;
 
 const isLinux = process.platform === 'linux';
+const isWindows = process.platform === 'win32';
+const removeWarning = isLinux || isWindows;
 
 type Props = {
   machine: {
@@ -30,17 +32,71 @@ type Props = {
   messenger: {
     quitApp: () => void,
     showAbout: () => void,
-    showPreferences: () => void
+    showPreferences: () => void,
+    checkQuitApp: () => void
   },
   interface: {
     stop: () => void,
-    checkRunningProjects: () => void
+    checkRunningProjects: () => void,
+    check: () => void
   },
   transition: () => void
 };
 
 export default class Header extends PureComponent<Props> {
   props: Props;
+
+  componentDidMount = () => {
+    const { props } = this;
+    const callback = () => this.handleQuit();
+    // sets event listener
+    props.messenger.checkQuitApp(callback);
+  };
+
+  /**
+    @param {} -
+    handles app quit
+  */
+  handleQuit = () => {
+    const { props } = this;
+    const { storage, messenger } = props;
+    const stopCallback = () => {
+      messenger.quitApp(props.interface);
+    };
+    const gigantumRunningCallback = () => {
+      props.interface.checkRunningProjects(checkRunningProjectsCallback);
+    };
+    const checkRunningProjectsCallback = response => {
+      let validateGigantumClose = !storage.get('close.gigantumConfirm');
+      const shouldCloseDockerConfig = removeWarning
+        ? false
+        : storage.get('close.dockerConfirm');
+      const validateDockerClose = shouldCloseDockerConfig === undefined;
+      if (response.success) {
+        validateGigantumClose = false;
+      }
+      if (validateGigantumClose) {
+        props.transition(STOP, {
+          message: 'Are you sure?',
+          category: 'close.gigantum',
+          quittingApp: true
+        });
+      } else if (validateDockerClose) {
+        props.transition(STOP, {
+          message: 'Would you like to close Docker?',
+          category: 'close.docker',
+          quittingApp: true
+        });
+      } else {
+        props.transition(FORCE_STOP, {
+          message: 'Stopping Gigantum'
+        });
+        props.interface.stop(stopCallback, shouldCloseDockerConfig);
+      }
+    };
+
+    props.interface.check(stopCallback, gigantumRunningCallback);
+  };
 
   menu = Menu.buildFromTemplate([
     {
@@ -67,48 +123,7 @@ export default class Header extends PureComponent<Props> {
     { type: 'separator' },
     {
       label: 'Quit',
-      click: () => {
-        const { props } = this;
-        const { machine, storage, messenger } = props;
-        const currentState = machine.value;
-        const stopCallback = () => {
-          messenger.quitApp(props.interface);
-        };
-        const checkRunningProjectsCallback = response => {
-          let validateGigantumClose = !storage.get('close.gigantumConfirm');
-          const shouldCloseDockerConfig = isLinux
-            ? false
-            : storage.get('close.dockerConfirm');
-          const validateDockerClose = shouldCloseDockerConfig === undefined;
-          if (response.success) {
-            validateGigantumClose = false;
-          }
-          if (validateGigantumClose) {
-            props.transition(STOP, {
-              message: 'Are you sure?',
-              category: 'close.gigantum',
-              quittingApp: true
-            });
-          } else if (validateDockerClose) {
-            props.transition(STOP, {
-              message: 'Would you like to close Docker?',
-              category: 'close.docker',
-              quittingApp: true
-            });
-          } else {
-            props.transition(FORCE_STOP, {
-              message: 'Stopping Gigantum'
-            });
-            props.interface.stop(stopCallback, shouldCloseDockerConfig);
-          }
-        };
-
-        if (currentState === RUNNING) {
-          props.interface.checkRunningProjects(checkRunningProjectsCallback);
-        } else {
-          stopCallback();
-        }
-      }
+      click: () => this.handleQuit()
     }
   ]);
 
