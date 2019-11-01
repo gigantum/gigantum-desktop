@@ -66,6 +66,15 @@ class ToolbarMesseneger {
 
   /**
     @param {Function} - callback
+    sends update.response to ipcRenderer
+    ToolbarMessenger recieves message and updates UI
+  */
+  checkLaunch = callback => {
+    ipcRenderer.on('start-gigantum', () => callback());
+  };
+
+  /**
+    @param {Function} - callback
     sends quit.app to ipcRenderer
     ToolbarMessenger recieves message and updates UI
   */

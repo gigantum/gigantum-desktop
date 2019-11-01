@@ -10,7 +10,7 @@
  *
  * @flow
  */
-import { app, BrowserWindow, Menu, Tray } from 'electron';
+import { app, BrowserWindow, Menu, Tray, nativeImage } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import path from 'path';
 import isDev from 'electron-is-dev';
@@ -22,6 +22,21 @@ import MainMessenger, {
   toolbarLaunch
 } from './messenger/MainMessenger';
 import checkForUpdates from './updater';
+
+const icon = nativeImage.createFromPath(`${__dirname}/assets/tray/icon.png`);
+icon.setTemplateImage(true);
+
+const mainWindow = null;
+const isSecondInstance = app.makeSingleInstance(() => {
+  if (mainWindow) {
+    if (mainWindow.isMinimized()) mainWindow.restore();
+    mainWindow.focus();
+  }
+});
+
+if (isSecondInstance) {
+  app.quit();
+}
 
 init({
   dsn: 'https://165a5c668fe141a7a25e84b5eb05c02b@sentry.io/1243058',
@@ -54,18 +69,6 @@ const installExtensions = async () => {
   });
 };
 
-/**
- * Add event listeners...
- */
-
-app.on('window-all-closed', () => {
-  // Respect the OSX convention of having the application in memory even
-  // after all windows have been closed
-  if (process.platform !== 'darwin') {
-    app.quit();
-  }
-});
-
 app.on('ready', async () => {
   if (
     process.env.NODE_ENV === 'development' ||
@@ -76,10 +79,10 @@ app.on('ready', async () => {
   const storage = new Storage();
   const install = storage.get('install');
   const appPath = 'app.html';
-  const icon = isWindows
+  const trayIcon = isWindows
     ? `${__dirname}/assets/tray/iconWhite.png`
     : `${__dirname}/assets/tray/iconTemplate.png`;
-  const tray = new Tray(icon);
+  const tray = new Tray(trayIcon);
 
   if (process.platform === 'linux') {
     const contextMenu = Menu.buildFromTemplate([
@@ -101,6 +104,7 @@ app.on('ready', async () => {
     resizable: false,
     frame: false,
     show: false,
+    icon,
     alwaysOnTop: true,
     fullscreenable: false,
     webPreferences: {

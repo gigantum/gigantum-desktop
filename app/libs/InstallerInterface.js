@@ -1,7 +1,6 @@
 // @flow
 import disk from 'check-disk-space';
 import fixPath from 'fix-path';
-import log from 'electron-log';
 // libs
 import Docker from './Docker';
 import Gigantum from './Gigantum';
@@ -171,16 +170,10 @@ class InstallerInterface {
      * @calls {installer.startDockerApplication}
      */
     const dockerisReadyCallback = response => {
-      log.warn('dockerisReadyCallback', response);
-
       if (response.success) {
         if (skipConfigure) {
-          log.warn('calling default callback');
-
           defaultCallback(response);
         } else {
-          log.warn('update settings');
-
           installer.updateSettings(
             updateSettingsCallback,
             windowsDockerStartedCallback,
@@ -197,15 +190,12 @@ class InstallerInterface {
      * @calls {installer.checkIfDockerIsReady}
      */
     const startDockerCallback = response => {
-      log.warn('startDockerCallback', response);
-
       if (response.success) {
         installer.checkIfDockerIsReady(dockerisReadyCallback);
       } else {
         defaultCallback({ success: false, data: {} });
       }
     };
-    log.warn('configure docker ran...');
     docker.startDockerApplication(startDockerCallback);
   };
 

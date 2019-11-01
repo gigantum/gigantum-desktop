@@ -220,7 +220,9 @@ class Gigantum extends Docker {
     prunes running gigantum projects
   */
   stopProjects = (callback, skipDelete) => {
+    let timedOut = true;
     const handleContainerList = data => {
+      timedOut = false;
       let success = true;
       if (data) {
         data.forEach(container => {
@@ -264,6 +266,11 @@ class Gigantum extends Docker {
             if (error) {
               console.log(error);
             }
+            setTimeout(() => {
+              if (timedOut && callback) {
+                callback({ success: true });
+              }
+            }, 2000);
           });
         }
       }
@@ -379,6 +386,7 @@ class Gigantum extends Docker {
     const currentImageSize = size || this.imageSize;
     const processPercent = obj =>
       Object.values(obj).reduce((a, b) => a + b) / currentImageSize;
+    let highestPercentage = 0;
     const handlePull = (data, enc, cb) => {
       if (data.error) return cb(new Error(data.error.trim()));
       if (!data.id || !data.progressDetail || !data.progressDetail.current) {
@@ -394,10 +402,17 @@ class Gigantum extends Docker {
 
       const weightedDownloadPercent = downloadPercent * 75;
       const weightedExtractPercent = extractPercent * 25;
+
+      const currentPercentage =
+        weightedDownloadPercent + weightedExtractPercent;
+      highestPercentage =
+        highestPercentage > currentPercentage
+          ? highestPercentage
+          : currentPercentage;
       callback({
         success: true,
         data: {
-          percentage: weightedDownloadPercent + weightedExtractPercent,
+          percentage: highestPercentage,
           finished: false
         }
       });
@@ -416,7 +431,13 @@ class Gigantum extends Docker {
         if (response) {
           pump(response, throughJSON(), through.obj(handlePull), error => {
             if (error) {
-              console.log(error);
+              callback({
+                success: false,
+                data: {
+                  percentage: 0,
+                  finished: false
+                }
+              });
             } else {
               callback({
                 success: true,

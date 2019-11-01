@@ -49,7 +49,7 @@ export default class InstallDockerMain extends Component<Props> {
     let installedText = `The Docker Desktop installer volume has been opened.\n\n Drag and drop Docker into your Application folder to install Docker.`;
 
     installedText = isWindows
-      ? `The Docker Desktop installer has been opened.\n\n Follow the instructions in the installer to install Docker.`
+      ? `The Docker Desktop installer has been opened.\n\n Follow the instructions in the installer to install Docker. \n\n Do NOT check 'Use Windows containers instead of Linux containers' during the install process.`
       : installedText;
 
     const renderMap = {

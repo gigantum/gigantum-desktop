@@ -90,6 +90,9 @@ export default class ConfigureDocker extends Component<Props> {
     this.handleTimer();
     const { props } = this;
     const action = skipConfigure ? LAUNCH : CONFIGURE;
+    if (action === LAUNCH) {
+      props.overwriteMessage('Launching Docker');
+    }
     let configureRan = false;
 
     const windowsDockerStartedCallback = () => {

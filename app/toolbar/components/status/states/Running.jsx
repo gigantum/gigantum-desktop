@@ -88,7 +88,6 @@ class Running extends React.Component<Props> {
       ? false
       : storage.get('close.dockerConfirm');
     const validateDockerClose = shouldCloseDockerConfig === undefined;
-
     const checkRunningProjectsCallback = response => {
       if (response.success) {
         validateGigantumClose = false;

@@ -16,11 +16,17 @@ type Props = {
   currentState: string
 };
 
+const isWindows = process.platform === 'win32';
+
 export default class ErrorMain extends Component<Props> {
   props: Props;
 
   render() {
     const { props } = this;
+
+    const confifgureDockerText = isWindows
+      ? ' ensure Docker is configured to use Linux containers instead of Windows containers and restart the application'
+      : ' restart the application.';
 
     const renderMap = {
       [CONFIGURE_DOCKER]: (
@@ -39,7 +45,8 @@ export default class ErrorMain extends Component<Props> {
       [CONFIGURE_GIGANTUM]: (
         <p className="Layout__Main">
           There was an error configuring Gigantum. Please try again. If the
-          issue persists restart the application.
+          issue persists
+          {confifgureDockerText}
         </p>
       ),
       [INSTALL_DOCKER]: (

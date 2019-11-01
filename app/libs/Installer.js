@@ -9,7 +9,6 @@ import fixPath from 'fix-path';
 import Shell from 'node-powershell';
 import sudo from 'sudo-prompt';
 import si from 'systeminformation';
-import log from 'electron-log';
 // libs
 import Docker from './Docker';
 import spawnWrapper from './spawnWrapper';
@@ -20,7 +19,7 @@ const isWindows = process.platform === 'win32';
 
 fixPath();
 
-const mb = 1000000;
+const mb = 1048576;
 let cores;
 let ram;
 let diskSize;
@@ -30,7 +29,7 @@ si.cpu(cpu => {
 });
 
 si.mem(mem => {
-  ram = mem.total / mb;
+  ram = mem.available / mb;
 });
 
 si.diskLayout(disk => {
@@ -199,14 +198,15 @@ class Installer {
           .then(response => {
             const formattedResponse = response.replace(/^\s+|\s+$/g, '');
             if (formattedResponse !== 'True') {
+              ps.dispose();
               setTimeout(isInstalled, 1000);
             } else {
               callback({ success: true });
             }
             return null;
           })
-          .catch(err => {
-            console.log(err);
+          .catch(() => {
+            setTimeout(isInstalled, 1000);
             ps.dispose();
           });
       };
@@ -221,20 +221,14 @@ class Installer {
    *
    */
   checkIfDockerIsReady = (callback, reconnectCount = 0, checkNotReady) => {
-    console.log('checking application is ready ...', checkNotReady);
-    log.warn('checking application is ready ...', checkNotReady);
     if (reconnectCount < 601 || checkNotReady) {
-      log.warn('before', process.env.PATH);
       if (isWindows && process.env.PATH.indexOf('Docker') === -1) {
         process.env.PATH = `C:\\ProgramData\\DockerDesktop\\version-bin;C:\\Program Files\\Docker\\Docker\\Resources\\bin;${process.env.PATH}`;
       }
-      log.warn('after', process.env.PATH);
       try {
         const dockerPs = spawnWrapper.getSpawn('docker', ['ps']);
         dockerPs.stdout.on('data', data => {
           const message = data.toString();
-          log.warn(`stdout: ${data + message}`);
-
           if (!checkNotReady) {
             callback({ success: true, data: { message } });
           } else if (!this.timeout) {
@@ -249,9 +243,7 @@ class Installer {
           }
         });
 
-        dockerPs.stderr.on('data', data => {
-          log.warn(`stderr: ${data + data.toString()}`);
-
+        dockerPs.stderr.on('data', () => {
           if (checkNotReady) {
             callback({ success: true });
           } else {
@@ -264,9 +256,7 @@ class Installer {
             }, 1000);
           }
         });
-        dockerPs.on('error', error => {
-          log.warn(`error: ${error}`);
-
+        dockerPs.on('error', () => {
           if (checkNotReady) {
             callback({ success: true });
           } else {
@@ -280,9 +270,6 @@ class Installer {
           }
         });
       } catch (error) {
-        console.log(`exception: ${error}`);
-        log.warn(`error: ${error}`);
-
         if (checkNotReady) {
           callback({ success: true });
         } else {
@@ -338,11 +325,15 @@ class Installer {
       const selectHigherValue = (current, lowerBound) =>
         current >= lowerBound ? current : Math.floor(lowerBound / 2);
 
+      const alignMemory = memory => memory - (memory % 8);
+
       settings.autoStart = false;
       settings.displayedWelcomeWhale = false;
       settings.analyticsEnabled = false;
       diskSize = diskSize > 100000 ? 100000 : diskSize;
-      settings.memoryMiB = selectHigherValue(settings.memoryMiB, ram);
+      settings.memoryMiB = alignMemory(
+        selectHigherValue(settings.memoryMiB, ram)
+      );
       settings.cpus = selectHigherValue(settings.cpus, cores);
       if (isMac) {
         settings.diskSizeMiB = selectHigherValue(
@@ -362,7 +353,7 @@ class Installer {
 
       const startDockerApplicationCallback = response => {
         if (response.success) {
-          if (windowsDockerRestartingCallback) {
+          if (isWindows && windowsDockerRestartingCallback) {
             windowsDockerRestartingCallback();
           }
           this.checkIfDockerIsReady(callback);

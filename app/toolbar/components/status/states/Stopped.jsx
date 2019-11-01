@@ -10,11 +10,30 @@ type Props = {
   message: string,
   interface: {
     start: () => void
+  },
+  messenger: {
+    checkLaunch: () => void
   }
 };
 
 class Stopped extends React.Component<Props> {
   props: Props;
+
+  componentDidMount = () => {
+    const { props } = this;
+    this.mounted = true;
+    const callback = () => {
+      if (this.mounted) {
+        this.startGigantum();
+      }
+    };
+    // sets event listener
+    props.messenger.checkLaunch(callback);
+  };
+
+  componentWillUnmount = () => {
+    this.mounted = false;
+  };
 
   startGigantum = () => {
     const { props } = this;
