@@ -8,6 +8,7 @@ import Setting from '../components/Setting';
 import './Preferences.scss';
 
 const isMac = process.platform === 'darwin';
+const isLinux = process.platform === 'linux';
 
 /**
   @param {Object} props
@@ -174,23 +175,27 @@ export default class Preferences extends Component<Props> {
       <div className="Preferences">
         <Header message={message} />
         <div className="Preferences__body">
-          <div className="Preferences__category">
-            <div className="Preferences__category-title">Startup</div>
-            <Setting
-              css={launchConfirmCSS}
-              visible={state.launchDropdownVisible}
-              settingsText="Start Gigantum Desktop at system start"
-              currentText={launchOnStartText}
-              options={launchOptions}
-              listAction={() =>
-                this.toggleDropdown(
-                  'launchDropdownVisible',
-                  !state.launchDropdownVisible
-                )
-              }
-              itemAction={item => this.setPreference('launchOnStartText', item)}
-            />
-          </div>
+          {isLinux && (
+            <div className="Preferences__category">
+              <div className="Preferences__category-title">Startup</div>
+              <Setting
+                css={launchConfirmCSS}
+                visible={state.launchDropdownVisible}
+                settingsText="Start Gigantum Desktop at system start"
+                currentText={launchOnStartText}
+                options={launchOptions}
+                listAction={() =>
+                  this.toggleDropdown(
+                    'launchDropdownVisible',
+                    !state.launchDropdownVisible
+                  )
+                }
+                itemAction={item =>
+                  this.setPreference('launchOnStartText', item)
+                }
+              />
+            </div>
+          )}
           <div className="Preferences__category">
             <div className="Preferences__category-title">Shutdown</div>
             <Setting
