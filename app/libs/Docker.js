@@ -193,6 +193,7 @@ class Docker {
     });
 
     dockerSpawn.on('error', error => {
+      // TODO handle this error
       console.log(error);
     });
 

@@ -31,8 +31,8 @@ const envHost = isWindows
 
 // gigantum image name
 const imageLabel = 'gigantum/labmanager';
-const imageTag = '1c097767';
-const clientVersion = '0.13.1';
+const imageTag = process.env.IMAGE_TAG;
+const clientVersion = process.env.CLIENT_VERSION;
 
 // env constants
 const condaDir = 'CONDA_DIR=/opt/conda';

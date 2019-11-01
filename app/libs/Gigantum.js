@@ -262,6 +262,7 @@ class Gigantum extends Docker {
         } else {
           pump(res, throughJSON(), through.obj(handleContainerList), error => {
             if (error) {
+              // TODO handle this error
               console.log(error);
             }
             setTimeout(() => {
