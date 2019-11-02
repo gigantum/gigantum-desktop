@@ -69,7 +69,7 @@
         "babel-preset-env": "^1.6.1",
         "electron-builder": "^20.13.4",
         "electron-prebuilt-compile": "2.0.3",
-        "eslint": "3",
+        "eslint": "4",
         "eslint-config-airbnb": "15",
         "eslint-plugin-import": "^2.10.0",
         "eslint-plugin-jsx-a11y": "5"
