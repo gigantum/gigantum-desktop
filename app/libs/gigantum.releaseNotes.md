@@ -1,3 +1,28 @@
+## 2019-10-05
+
+### Gigantum Client (1.0.0)
+
+Image Tag: f871d6d8 (379318952)
+
+Image ID: 79f6894341
+
+**This is a required update for all users! You must update to enable syncing with the new gigantum.com**
+
+- New
+
+  - Added support for new Gigantum Hub API (#1100,#1066).
+  - Added button to trigger a no-cache rebuild of a Docker image on the build modal, if a build fails. This is useful for forcing apt package repositories to update during the build process.
+
+- Changed
+
+  - Improved login experience that uses gigantum.com (#1091).
+  - Minor cleanup to make secret file directories owned by giguser (#1076)
+
+- Fixed
+  - Update pillow to 6.2.0 for CVE-2019-16865 (#1094)
+  - Fixed issues related to deleting files in the untracked folder
+  - Updated color palette, logo, UI polish and CSS bug fixes
+
 ## 2019-07-20
 
 ### Gigantum Client (0.13.1)
