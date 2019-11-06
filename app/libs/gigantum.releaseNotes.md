@@ -2,9 +2,9 @@
 
 ### Gigantum Client (1.0.0)
 
-Image Tag: f871d6d8 (379318952)
+Image Tag: 642c8200 (379141407)
 
-Image ID: 79f6894341
+Image ID: bc87293744
 
 **This is a required update for all users! You must update to enable syncing with the new gigantum.com**
 
