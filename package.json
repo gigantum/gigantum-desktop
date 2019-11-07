@@ -1,7 +1,7 @@
 {
   "name": "gigantum",
   "productName": "Gigantum",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "The Gigantum Desktop app is used to run the Gigantum Client on your computer. Gigantum is an open platform for developing, executing, and sharing analysis via integrated repositories that bundle data, code, and environment configuration together.",
   "scripts": {
     "build": "concurrently \"yarn build-main\" \"yarn build-renderer\"",
@@ -17,7 +17,8 @@
     "lint-styles": "stylelint --ignore-path .eslintignore '**/*.*(css|scss)' --syntax scss",
     "lint-styles-fix": "yarn --silent lint-styles --fix; exit 0",
     "package": "yarn build && electron-builder build --publish never",
-    "publish-default": "yarn build && electron-builder build -m -l appimage --publish always",
+    "publish-mac": "yarn build && electron-builder build -m --publish always",
+    "publish-linux": "yarn build && electron-builder build -l appimage --publish always",
     "publish-windows": "yarn build && electron-builder build -w --publish always",
     "package-all": "yarn build && electron-builder build -mwl",
     "package-ci": "yarn postinstall && yarn build && electron-builder --publish always",
@@ -65,6 +66,11 @@
       "resources/",
       "package.json"
     ],
+    "afterSign": "scripts/notarize.js",
+    "mac": {
+      "hardenedRuntime": true,
+      "entitlements": "./resources/entitlements.mac.inherit.plist"
+    },
     "dmg": {
       "iconSize": 170,
       "window": {
