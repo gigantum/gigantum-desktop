@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-/* eslint-disable */
+
 let SentryCli;
 let download;
 
@@ -11,15 +11,14 @@ try {
   console.error('npm install --save-dev @sentry/cli electron-download');
   process.exit(1);
 }
-/* eslint-enable */
+
 const VERSION = /\bv?(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)(?:-[\da-z-]+(?:\.[\da-z-]+)*)?(?:\+[\da-z-]+(?:\.[\da-z-]+)*)?\b/i;
 const SYMBOL_CACHE_FOLDER = '.electron-symbols';
-const packageJSON = require('./package.json');
-
+const package = require('./package.json');
 const sentryCli = new SentryCli('./sentry.properties');
 
 async function main() {
-  const version = getElectronVersion();
+  let version = getElectronVersion();
   if (!version) {
     console.error('Cannot detect electron version, check package.json');
     return;
@@ -28,7 +27,7 @@ async function main() {
   console.log('We are starting to download all possible electron symbols');
   console.log('We need it in order to symbolicate native crashes');
   console.log(
-    'This step is only needed once whenever you update your electron version'
+    'This step is only needed once whenever you update your electron version',
   );
   console.log('Just call this script again it should do everything for you.');
 
@@ -36,7 +35,7 @@ async function main() {
     version,
     platform: 'darwin',
     arch: 'x64',
-    dsym: true
+    dsym: true,
   });
   await sentryCli.execute(['upload-dif', '-t', 'dsym', zipPath], true);
 
@@ -44,7 +43,7 @@ async function main() {
     version,
     platform: 'win32',
     arch: 'ia32',
-    symbols: true
+    symbols: true,
   });
   await sentryCli.execute(['upload-dif', '-t', 'breakpad', zipPath], true);
 
@@ -52,7 +51,7 @@ async function main() {
     version,
     platform: 'win32',
     arch: 'x64',
-    symbols: true
+    symbols: true,
   });
   await sentryCli.execute(['upload-dif', '-t', 'breakpad', zipPath], true);
 
@@ -60,7 +59,7 @@ async function main() {
     version,
     platform: 'linux',
     arch: 'x64',
-    symbols: true
+    symbols: true,
   });
   await sentryCli.execute(['upload-dif', '-t', 'breakpad', zipPath], true);
 
@@ -69,13 +68,13 @@ async function main() {
 }
 
 function getElectronVersion() {
-  if (!packageJSON) {
+  if (!package) {
     return false;
   }
 
-  const electronVersion =
-    (packageJSON.dependencies && packageJSON.dependencies.electron) ||
-    (packageJSON.devDependencies && packageJSON.devDependencies.electron);
+  let electronVersion =
+    (package.dependencies && package.dependencies.electron) ||
+    (package.devDependencies && package.devDependencies.electron);
 
   if (!electronVersion) {
     return false;
@@ -90,7 +89,7 @@ async function downloadSymbols(options) {
     download(
       {
         ...options,
-        cache: SYMBOL_CACHE_FOLDER
+        cache: SYMBOL_CACHE_FOLDER,
       },
       (err, zipPath) => {
         if (err) {
@@ -98,7 +97,7 @@ async function downloadSymbols(options) {
         } else {
           resolve(zipPath);
         }
-      }
+      },
     );
   });
 }
