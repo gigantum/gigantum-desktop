@@ -1,0 +1,82 @@
+@import '~Styles/_imports.scss';
+
+.Preferences {
+  height: 100%;
+}
+
+.Preferences__body {
+  padding: 15px 30px;
+  @include flex(flex-start, column);
+  height: 325px;
+}
+
+.Preferences__category-title {
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 24px;
+}
+
+.Preferences__setting {
+  @include flex(space-between, row);
+}
+
+.Preferences__text {
+  font-weight: 14px;
+  line-height: 19px;
+  padding-left: 18px;
+  margin: 9px 0;
+}
+
+.Preferences__buttons {
+  @include flex(flex-end, row);
+  margin-top: auto;
+
+  .Btn__Settings {
+    font-weight: normal !important;
+  }
+}
+
+.Btn {
+  &--flat {
+    /* BOX SIZE */
+    width: auto;
+    padding: 7px 20px;
+
+    /* EFFECTS */
+    cursor: pointer;
+    text-decoration: underline;
+
+    /* text */
+    color: $primary;
+
+    /* BORDER */
+    border: 0;
+    border-radius: 0;
+    box-shadow: none !important;
+
+    /* BACKGROUND */
+    background: none;
+
+    &:hover {
+      /* BOX SIZE */
+      padding: 7px 18px 7px 20px;
+
+      /* text */
+      font-size: 17px;
+    }
+    outline: none;
+
+    &:disabled {
+      /* text */
+      text-decoration: none;
+      color: $romanSilver;
+      text-shadow: none;
+
+      /* border  */
+      border: 0 solid $grey;
+
+      /* BACKGROUND */
+      background: transparent !important;
+    }
+  }
+}

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="15px" height="14px" viewBox="0 0 15 14" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->
+    <title>icon/help/offsite</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="icon/help/offsite" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round">
+        <g id="Group-7" transform="translate(1.000000, -1.000000)" stroke="#386e80" stroke-width="2">
+            <polyline id="Rectangle-2" transform="translate(5.157895, 8.842105) rotate(-270.000000) translate(-5.157895, -8.842105) " points="5.44284539 3.68421053 10.3157895 3.68421053 10.3157895 8.45281661 10.3157895 14 0 14 0 8.87952303"></polyline>
+            <g id="Group-6" transform="translate(8.648732, 5.656854) rotate(-315.000000) translate(-8.648732, -5.656854) translate(5.648732, 0.656854)">
+                <path d="M2.94736842,9.20723187 L2.94736842,0.736842105" id="Shape"></path>
+                <polyline id="Shape" points="0 2.94736842 2.94736842 0 5.89473684 2.94736842"></polyline>
+            </g>
+        </g>
+    </g>
+</svg>
