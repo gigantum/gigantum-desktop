@@ -11,6 +11,8 @@ import {
 // assets
 import './Error.scss';
 
+const isWindows = process.platform === 'win32';
+
 type Props = {
   transition: () => void,
   interface: {
@@ -65,7 +67,7 @@ const getSubText = message => {
             </a>
           </div>
         ),
-        buttonText: 'Restart Docker'
+        buttonText: isWindows ? 'Try Again' : 'Restart Docker'
       };
     case 'Gigantum could not start':
       return {
@@ -114,7 +116,6 @@ class Error extends React.Component<Props> {
     };
     const callback = response => {
       const errorMessage = response.error && response.error.message;
-      console.log(response);
       if (response.success) {
         props.transition(SUCCESS, { message: 'Click to Quit' });
       } else if (errorMessage.indexOf('no such image') > -1) {

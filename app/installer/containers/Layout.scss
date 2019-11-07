@@ -7,15 +7,19 @@
 }
 
 .Layout__Faq {
-  margin: 77px 0 0 43px;
+  margin: 37px 0 0 43px;
   width: 226px;
   position: relative;
 }
 .Layout__Main {
-  width: 316px;
-  font-size: 24px;
-  margin: 77px 44px 0 91px;
+  width: 366px;
+  font-size: 22px;
+  margin: 37px 51px 0 47px;
   color: $slateBlue;
+  white-space: pre-line;
+  p {
+    font-size: 22px;
+  }
 }
 .Layout__Status {
   position: relative;

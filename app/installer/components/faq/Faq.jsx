@@ -47,10 +47,9 @@ export default class Faq extends Component<Props> {
               state.selectedQuestion !== null && !isSelected
           });
           return (
-            <div>
+            <div key={question}>
               <div
                 className={questionCSS}
-                key={question}
                 onClick={() => this.handleSelectQuestion(index)}
                 onKeyDown={() => this.handleSelectQuestion(index)}
                 tabIndex={index}

@@ -7,6 +7,7 @@ import Setting from '../components/Setting';
 // assets
 import './Preferences.scss';
 
+const isMac = process.platform === 'darwin';
 const isLinux = process.platform === 'linux';
 
 /**
@@ -128,9 +129,10 @@ export default class Preferences extends Component<Props> {
 
     if (launchOnStartText) {
       if (launchOnStartText === 'Yes') {
-        props.gigantumAutoLauncher.enable();
+        props.messenger.closeSettings();
+        props.messenger.setAutoLaunchOn();
       } else {
-        props.gigantumAutoLauncher.disable();
+        props.messenger.setAutoLaunchOff();
       }
     }
 
@@ -173,23 +175,27 @@ export default class Preferences extends Component<Props> {
       <div className="Preferences">
         <Header message={message} />
         <div className="Preferences__body">
-          <div className="Preferences__category">
-            <div className="Preferences__category-title">Startup</div>
-            <Setting
-              css={launchConfirmCSS}
-              visible={state.launchDropdownVisible}
-              settingsText="Start Gigantum Desktop at system start"
-              currentText={launchOnStartText}
-              options={launchOptions}
-              listAction={() =>
-                this.toggleDropdown(
-                  'launchDropdownVisible',
-                  !state.launchDropdownVisible
-                )
-              }
-              itemAction={item => this.setPreference('launchOnStartText', item)}
-            />
-          </div>
+          {!isLinux && (
+            <div className="Preferences__category">
+              <div className="Preferences__category-title">Startup</div>
+              <Setting
+                css={launchConfirmCSS}
+                visible={state.launchDropdownVisible}
+                settingsText="Start Gigantum Desktop at system start"
+                currentText={launchOnStartText}
+                options={launchOptions}
+                listAction={() =>
+                  this.toggleDropdown(
+                    'launchDropdownVisible',
+                    !state.launchDropdownVisible
+                  )
+                }
+                itemAction={item =>
+                  this.setPreference('launchOnStartText', item)
+                }
+              />
+            </div>
+          )}
           <div className="Preferences__category">
             <div className="Preferences__category-title">Shutdown</div>
             <Setting
@@ -208,7 +214,7 @@ export default class Preferences extends Component<Props> {
                 this.setPreference('gigantumConfirmText', item)
               }
             />
-            {!isLinux && (
+            {isMac && (
               <Setting
                 css={dockerConfirmCSS}
                 visible={state.dockerDropdownVisible}

@@ -1,5 +1,7 @@
 // @flow
 import React, { Component } from 'react';
+import classNames from 'classnames';
+import open from 'open';
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 // assets
@@ -12,6 +14,10 @@ import {
   INSTALLING,
   INSTALLED
 } from '../../containers/machine/InstallDockerConstants';
+
+const isMac = process.platform === 'darwin';
+const isLinux = process.platform === 'linux';
+const isWindows = process.platform === 'win32';
 
 type Props = {
   startInstall: () => void,
@@ -36,8 +42,18 @@ export default class CheckDockerStatus extends Component<Props> {
   render() {
     const { props } = this;
     const { progress } = props;
-    const renderMap = {
-      [INSTALLING]: (
+    const progressKey = progress ? 'PROGRESS' : 'NO_PROGRESS';
+    const imageCSS = classNames({
+      InstallDockerStatus__image: true,
+      'InstallDockerStatus__image--linux': isLinux,
+      'InstallDockerStatus__image--windows': isWindows,
+      'InstallDockerStatus__image--mac': isMac
+    });
+    const spinnerMessage = isLinux
+      ? 'Docker Install Complete'
+      : 'Downloading Docker Installer';
+    const progressMap = {
+      PROGRESS: (
         <div className="Layout__Status InstallDockerStatus">
           <div className="InstallDockerStatus__body">
             <CircularProgressbar
@@ -51,13 +67,23 @@ export default class CheckDockerStatus extends Component<Props> {
                 pathColor: '#386e80'
               })}
             />
-            <div className="CheckDockerStatus__message">
-              Downloading Docker Installer
-            </div>
+            <div className="CheckDockerStatus__message">{spinnerMessage}</div>
           </div>
         </div>
       ),
-      [INSTALLED]: <div className="Layout__Status">GIF HERE</div>,
+      NO_PROGRESS: (
+        <div className="Layout__Status InstallDockerStatus">
+          <div className="InstallDockerStatus__noProgress" />
+        </div>
+      )
+    };
+    const renderMap = {
+      [INSTALLING]: progressMap[progressKey],
+      [INSTALLED]: (
+        <div className="Layout__Status flex justify--center align-items--center">
+          <div className={imageCSS} />
+        </div>
+      ),
       [PROMPT]: (
         <div className="Layout__Status InstallDockerStatus">
           <div className="InstallDockerStatus__body">
@@ -69,6 +95,22 @@ export default class CheckDockerStatus extends Component<Props> {
             >
               Download & Install
             </button>
+            {isLinux && (
+              <div className="InstallDockerStatus__subtext">
+                This requires admin privileges. You will be asked for your
+                password.{' '}
+                <span
+                  role="presentation"
+                  onClick={() =>
+                    open(
+                      'https://docs.docker.com/install/linux/docker-ce/debian/#install-using-the-convenience-script'
+                    )
+                  }
+                >
+                  Learn More.
+                </span>
+              </div>
+            )}
           </div>
         </div>
       )

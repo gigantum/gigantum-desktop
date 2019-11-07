@@ -52,7 +52,8 @@ export default class Updater extends Component<Props> {
     message: 'Update Available',
     progress: 0,
     appDownloaded: false,
-    totalAppSize: null
+    totalAppSize: null,
+    closeWarning: false
   };
 
   componentDidMount = () => {
@@ -120,6 +121,19 @@ export default class Updater extends Component<Props> {
     });
   };
 
+  /**
+    @param {}
+    handles close
+  */
+  handleClose = () => {
+    const { machine } = this.state;
+    if (machine.value !== UPDATE_IN_PROGRESS) {
+      this.messenger.closeUpdater();
+    } else {
+      this.setState({ closeWarning: true });
+    }
+  };
+
   render() {
     const { props, state, transition, messenger } = this;
     const renderMap = {
@@ -157,8 +171,26 @@ export default class Updater extends Component<Props> {
         <button
           className="Updater__close"
           type="button"
-          onClick={() => this.messenger.closeUpdater()}
+          onClick={() => this.handleClose()}
         />
+        {state.closeWarning && state.machine.value === UPDATE_IN_PROGRESS && (
+          <div className="Updater__confirmation">
+            Are you sure?
+            <p>The update will be canceled.</p>
+            <div className="flex justify--space-around">
+              <button
+                className="Updater__btn--cancel Updater__btn--round"
+                type="button"
+                onClick={() => this.setState({ closeWarning: false })}
+              />
+              <button
+                type="button"
+                className="Updater__btn--add Updater__btn--round"
+                onClick={() => this.messenger.closeUpdater()}
+              />
+            </div>
+          </div>
+        )}
       </div>
     );
   }

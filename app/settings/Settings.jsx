@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import AutoLaunch from 'auto-launch';
+import { remote } from 'electron';
 // States
 import {
   AKNOWLEDGEMENTS,
@@ -26,11 +26,6 @@ type Props = {
   }
 };
 
-const gigantumAutoLauncher = new AutoLaunch({
-  name: 'Gigantum',
-  path: '/Applications/Gigantum.app'
-});
-
 export default class Settings extends React.Component<Props> {
   props: Props;
 
@@ -45,11 +40,8 @@ export default class Settings extends React.Component<Props> {
     const subString = props.location.search.substr(1).split('&')[1];
     const section = subString.split('=')[1];
     const message = section === 'about' ? 'About' : 'Preferences';
-    gigantumAutoLauncher
-      .isEnabled()
-      .then(response => this.setState({ autoLaunch: response }))
-      .catch(error => console.log(error));
-    this.setState({ message });
+    const autoLaunch = remote.getCurrentWindow().openAtLogin;
+    this.setState({ message, autoLaunch });
   };
 
   messenger = new SettingsMessenger();
@@ -91,7 +83,6 @@ export default class Settings extends React.Component<Props> {
           {...state}
           transition={transition}
           messenger={messenger}
-          gigantumAutoLauncher={gigantumAutoLauncher}
         />
       )
     };

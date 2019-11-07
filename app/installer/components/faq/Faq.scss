@@ -15,7 +15,7 @@
   outline: none;
   transition: top 0.25s;
   position: absolute;
-  width: 162px;
+  width: 100%;
   &--first {
     top: 0;
   }
@@ -46,4 +46,9 @@
   top: 90px;
   overflow: auto;
   max-height: 175px;
+  span {
+    color: $primary;
+    text-decoration: underline;
+    cursor: pointer;
+  }
 }

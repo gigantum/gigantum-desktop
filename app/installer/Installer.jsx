@@ -63,7 +63,6 @@ export default class Installer extends Component<Props> {
   */
   transition = (eventType, nextState) => {
     const { state } = this;
-
     const newState = stateMachine.transition(state.machine.value, eventType, {
       state
     });
@@ -76,6 +75,14 @@ export default class Installer extends Component<Props> {
       message: nextState && nextState.message ? nextState.message : '',
       metaData: nextState && nextState.metaData ? nextState.metaData : ''
     });
+  };
+
+  /**
+    @param {string} message
+    overwrite header message
+  */
+  overwriteMessage = message => {
+    this.setState({ message });
   };
 
   render() {
@@ -101,6 +108,7 @@ export default class Installer extends Component<Props> {
         <ConfigureDocker
           {...props}
           {...state}
+          overwriteMessage={this.overwriteMessage}
           transition={transition}
           interface={this.interface}
         />

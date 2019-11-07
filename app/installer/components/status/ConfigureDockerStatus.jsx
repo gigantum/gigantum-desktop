@@ -6,70 +6,30 @@ import 'react-circular-progressbar/dist/styles.css';
 import './Status.scss';
 import './ConfigureDockerStatus.scss';
 import DockerSrc from 'Images/logos/docker.png';
+import InstallCompleteWindows from 'Images/logos/restart-docker-windows.gif';
 // constants
 import {
   PROMPT,
   LAUNCHING,
+  RESTARTING,
+  RESTART_PROMPT,
   CONFIGURING
 } from '../../containers/machine/ConfigureDockerConstants';
 
 type Props = {
-  configured: boolean,
   configureDocker: () => void,
   skipConfigure: boolean,
   machine: {
     value: string
-  }
+  },
+  progress: number
 };
 
 export default class ConfigureDockerStatus extends Component<Props> {
   props: Props;
 
-  state = {
-    progress: 0,
-    currentProgress: 0,
-    step: 0.001
-  };
-
-  /**
-    @param {}
-    handles progress bar
-  */
-  handleTimer = () => {
-    const { state, props } = this;
-    setTimeout(() => {
-      if (props.configured) {
-        this.setState({
-          progress: 100,
-          currentProgress: 0
-        });
-      } else {
-        const newCurrentProgress = state.currentProgress + state.step;
-        const progress = (
-          Math.round(
-            (Math.atan(newCurrentProgress) / (Math.PI / 2)) * 100 * 1000
-          ) / 1000
-        ).toFixed(2);
-        this.setState({ progress, currentProgress: newCurrentProgress }, () => {
-          this.handleTimer();
-        });
-      }
-    }, 100);
-  };
-
-  /**
-    @param {Boolean} skipConfigure
-    handles install button
-  */
-  handleConfigureButton = skipConfigure => {
-    const { props } = this;
-    props.configureDocker(skipConfigure);
-    this.handleTimer();
-  };
-
   render() {
-    const { props, state } = this;
-    const { progress } = state;
+    const { props } = this;
     const spinnerText = props.skipConfigure
       ? 'Starting Docker'
       : 'Configuring Docker';
@@ -78,8 +38,8 @@ export default class ConfigureDockerStatus extends Component<Props> {
       <div className="Layout__Status InstallDockerStatus">
         <div className="InstallDockerStatus__body">
           <CircularProgressbar
-            value={progress}
-            text={`${Math.floor(progress)}%`}
+            value={props.progress}
+            text={`${Math.floor(props.progress)}%`}
             styles={buildStyles({
               strokeLinecap: 'butt',
               textSize: '24px',
@@ -96,6 +56,17 @@ export default class ConfigureDockerStatus extends Component<Props> {
     const renderMap = {
       [LAUNCHING]: <ProgressBar />,
       [CONFIGURING]: <ProgressBar />,
+      [RESTARTING]: <ProgressBar />,
+      [RESTART_PROMPT]: (
+        <div className="Layout__Status flex flex--column justify--center align-items--center">
+          <img
+            src={InstallCompleteWindows}
+            width="250"
+            height="250"
+            alt="restart"
+          />
+        </div>
+      ),
       [PROMPT]: (
         <div className="Layout__Status ConfigureDockerStatus">
           <div className="ConfigureDockerStatus__body">
@@ -103,14 +74,14 @@ export default class ConfigureDockerStatus extends Component<Props> {
             <button
               type="button"
               className="Btn__Status Btn--primary"
-              onClick={() => this.handleConfigureButton(false)}
+              onClick={() => props.configureDocker(false)}
             >
               Configure
             </button>
             <button
               type="button"
               className="Btn__Status"
-              onClick={() => this.handleConfigureButton(true)}
+              onClick={() => props.configureDocker(true)}
             >
               {"I'll do it myself"}
             </button>

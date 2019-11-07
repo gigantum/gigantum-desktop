@@ -1,9 +1,15 @@
-import { ipcMain, BrowserWindow, screen } from 'electron';
+import { ipcMain, BrowserWindow, screen, nativeImage } from 'electron';
 import { autoUpdater } from 'electron-updater';
+import path from 'path';
 import checkForUpdates from '../updater';
 import Storage from '../storage/Storage';
 
+const isWindows = process.platform === 'win32';
+
 const TRAY_ARROW_HEIGHT = 5;
+
+const icon = nativeImage.createFromPath(`${__dirname}/../assets/tray/icon.png`);
+icon.setTemplateImage(true);
 
 const appPath = process.env.HOT
   ? `file:///${__dirname}/../app.html`
@@ -111,6 +117,7 @@ class MainMessenger {
       frame: false,
       show: false,
       alwaysOnTop: false,
+      icon,
       fullscreenable: false,
       webPreferences: {
         backgroundThrottling: false
@@ -146,6 +153,7 @@ class MainMessenger {
       resizable: false,
       frame: false,
       show: false,
+      icon,
       alwaysOnTop: false,
       fullscreenable: false,
       webPreferences: {
@@ -180,6 +188,7 @@ class MainMessenger {
       transparent: false,
       resizable: false,
       frame: false,
+      icon,
       show: false,
       alwaysOnTop: false,
       fullscreenable: false,
@@ -188,7 +197,19 @@ class MainMessenger {
       }
     });
     settingsWindow.loadURL(`${appPath}?settings&section=${section}`);
-
+    const options = {};
+    if (isWindows) {
+      const exeName = path.basename(process.execPath);
+      options.path = process.exectPath;
+      options.args = [
+        '--processStart',
+        `"${exeName}"`,
+        '--process-start-args',
+        `"--hidden"`
+      ];
+    }
+    const { openAtLogin } = this.contents.app.getLoginItemSettings(options);
+    settingsWindow.openAtLogin = openAtLogin;
     settingsWindow.webContents.on('did-finish-load', () => {
       if (!settingsWindow) {
         throw new Error('"settingsWindow" is not defined');
@@ -207,12 +228,12 @@ class MainMessenger {
   @param {String} section
   creates settings window
   */
-  sendChangeLog = log => {
+  sendChangeLog = changeLog => {
     const { updaterWindow } = this.contents;
     if (updaterWindow) {
       showWindow(updaterWindow);
     } else {
-      this.initializeUpdaterWindow(log);
+      this.initializeUpdaterWindow(changeLog);
     }
   };
 
@@ -248,12 +269,30 @@ class MainMessenger {
     sets up listener on messages and hides or shows depending on the message structure
   */
   listeners = () => {
+    const { app, tray } = this.contents;
+    app.on('before-quit', evt => {
+      if (!this.allowQuit) {
+        this.contents.toolbarWindow.webContents.send('quit.app');
+        evt.preventDefault();
+      }
+    });
+
+    app.on('window-all-closed', () => {
+      // Respect the OSX convention of having the application in memory even
+      // after all windows have been closed
+      if (process.platform !== 'darwin') {
+        this.allowQuit = true;
+        tray.destroy();
+        app.quit();
+      }
+    });
+
     ipcMain.on('asynchronous-message', (evt, message) => {
       const {
         installerWindow,
         updaterWindow,
         settingsWindow,
-        app
+        toolbarWindow
       } = this.contents;
 
       if (message === 'open.installer') {
@@ -264,10 +303,20 @@ class MainMessenger {
         }
       }
 
+      if (message === 'open.toolbar') {
+        if (toolbarWindow) {
+          showWindow(toolbarWindow);
+        }
+      }
+
       if (message === 'close.installer') {
         if (installerWindow) {
           installerWindow.close();
           delete this.contents.installerWindow;
+        }
+        if (toolbarWindow) {
+          showToolbar(toolbarWindow, tray);
+          toolbarWindow.webContents.send('start-gigantum');
         }
       }
 
@@ -305,7 +354,44 @@ class MainMessenger {
         }
       }
 
+      if (message === 'autolaunch.off') {
+        if (isWindows) {
+          const exeName = path.basename(process.execPath);
+          this.contents.app.setLoginItemSettings({
+            openAtLogin: false,
+            path: process.execPath,
+            args: [
+              '--processStart',
+              `"${exeName}"`,
+              '--process-start-args',
+              `"--hidden"`
+            ]
+          });
+        } else {
+          this.contents.app.setLoginItemSettings({ openAtLogin: false });
+        }
+      }
+      if (message === 'autolaunch.on') {
+        if (isWindows) {
+          const exeName = path.basename(process.execPath);
+          this.contents.app.setLoginItemSettings({
+            openAtLogin: true,
+            path: process.execPath,
+            args: [
+              '--processStart',
+              `"${exeName}"`,
+              '--process-start-args',
+              `"--hidden"`
+            ]
+          });
+        } else {
+          this.contents.app.setLoginItemSettings({ openAtLogin: true });
+        }
+      }
+
       if (message === 'quit.app') {
+        this.allowQuit = true;
+        tray.destroy();
         app.quit();
       }
 

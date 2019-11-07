@@ -45,7 +45,9 @@ export default {
 
   plugins: [
     new webpack.EnvironmentPlugin({
-      NODE_ENV: 'production'
+      NODE_ENV: 'production',
+      IMAGE_TAG: 'f9bf31ee',
+      CLIENT_VERSION: '1.0.1'
     }),
 
     new webpack.NamedModulesPlugin()

@@ -8,10 +8,52 @@
   img {
     margin-bottom: 40px;
   }
+  span {
+    color: $primary;
+    text-decoration: underline;
+    cursor: pointer;
+  }
 }
 
 .CircularProgressbar {
   width: 130px;
   height: 130px;
   margin: 0 0 40px 0;
+}
+
+.InstallDockerStatus__noProgress {
+  display: block;
+  background: url('~Images/loaders/spinner.svg') no-repeat center top
+    calc(50% + 20px);
+  width: 100%;
+  height: 100%;
+  background-size: 130px;
+}
+
+.InstallDockerStatus__image {
+  width: 200px;
+  height: 200px;
+  &--windows {
+    background: url('~Images/logos/windows-installer.gif') no-repeat center
+      center;
+    background-size: cover;
+    width: 259px;
+    height: 180px;
+  }
+  &--linux {
+    background: url('~Images/icons/logout-linux.svg') no-repeat center center;
+    background-size: cover;
+  }
+  &--mac {
+    background: url('~Images/logos/docker-drag.gif') no-repeat center center;
+    background-size: cover;
+    width: 275px;
+    height: 137px;
+  }
+}
+
+.InstallDockerStatus__subtext {
+  font-size: 12px;
+  text-align: center;
+  padding: 26px;
 }

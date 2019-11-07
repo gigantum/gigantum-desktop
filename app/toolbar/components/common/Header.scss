@@ -1,5 +1,7 @@
+@import '~Styles/_imports.scss';
+
 .Header {
-  background: linear-gradient(to left, #4d7c8d, #344e5e);
+  background: linear-gradient(263deg, $primaryDark, $primary);
   height: 42px;
   color: white;
   display: flex;

@@ -53,3 +53,7 @@ main.js.map
 
 .idea
 npm-debug.log.*
+
+secrets
+
+app/sentry.js

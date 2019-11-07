@@ -1,10 +1,10 @@
 // @flow
-import childProcess from 'child_process';
 import fixPath from 'fix-path';
 // libs
 import Docker from './Docker';
 import Installer from './Installer';
 import Gigantum from './Gigantum';
+import spawnWrapper from './spawnWrapper';
 
 fixPath();
 
@@ -46,17 +46,13 @@ class ToolbarInterface {
   check = (dockerExistsCallback, gigantumRunningCallback) => {
     const { gigantum } = this;
     const checkGigantumCallback = response => {
-      if (response.success) {
+      if (response.success && gigantumRunningCallback) {
         gigantumRunningCallback(response);
       } else {
         dockerExistsCallback({ success: true });
       }
     };
-    const dockerVersion = childProcess.spawn('docker', ['-v'], {
-      env: {
-        PATH: process.env.PATH
-      }
-    });
+    const dockerVersion = spawnWrapper.getSpawn('docker', ['-v']);
     dockerVersion.on('error', error => {
       console.log(error);
     });
@@ -67,10 +63,9 @@ class ToolbarInterface {
       } else {
         dockerExistsCallback({
           success: false,
-          data: {
-            error: {
-              message: 'Docker is not installed'
-            }
+          data: {},
+          error: {
+            message: 'Docker is not installed'
           }
         });
       }
@@ -83,7 +78,7 @@ class ToolbarInterface {
    */
   checkForDockerInstall = callback => {
     const { installer } = this;
-    installer.checkForApplication(callback);
+    installer.checkDockerInstall(callback);
   };
 
   /**
@@ -143,9 +138,6 @@ class ToolbarInterface {
     const checkIsDockerReadyCallback = response => {
       if (response.success) {
         gigantum.start(gigantumStartCallback);
-      } else {
-        // TODO handle error state
-        console.log(response);
       }
     };
 
@@ -158,9 +150,6 @@ class ToolbarInterface {
       if (response.success) {
         /* STEP 3 */
         checkIsDockerReady(checkIsDockerReadyCallback);
-      } else {
-        // TODO handle error message
-        console.log(response);
       }
     };
 
@@ -179,8 +168,16 @@ class ToolbarInterface {
       }
     };
 
+    const dockerExistsCallback = response => {
+      if (response.success) {
+        pingDocker(dockerConnectionTest, dockerRunningCallback);
+      } else {
+        callback(response);
+      }
+    };
+
     /* STEP 1 */
-    pingDocker(dockerConnectionTest, dockerRunningCallback);
+    this.check(dockerExistsCallback);
   };
 
   /**

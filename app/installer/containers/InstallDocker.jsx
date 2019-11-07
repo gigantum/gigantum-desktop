@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 // States
 import installDockerMachine from './machine/InstallDockerMachine';
 // constants
-import { ERROR, SUCCESS, SKIP_CONFIGURE } from '../machine/InstallerConstants';
+import { ERROR, SUCCESS } from '../machine/InstallerConstants';
 import { INSTALL } from './machine/InstallDockerConstants';
 // containers
 import Layout from './Layout';
@@ -60,15 +60,13 @@ export default class InstallDocker extends Component<Props> {
       if (response.success) {
         setTimeout(() => {
           const dockerConfigured = props.storage.get('dockerConfigured');
-          if (dockerConfigured || isLinux) {
-            props.transition(SKIP_CONFIGURE, {
-              message: 'Configure Gigantum'
-            });
-          } else {
-            props.transition(SUCCESS, {
-              message: 'Configure Docker'
-            });
-          }
+          const message =
+            dockerConfigured || isLinux
+              ? 'Configure Gigantum'
+              : 'Configure Docker';
+          props.transition(SUCCESS, {
+            message
+          });
         }, 2500);
       } else {
         installErrorHandler();

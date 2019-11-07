@@ -4,6 +4,15 @@ class ToolbarMesseneger {
   /**
     @param {} -
     sends open.installer to ipcRenderer
+    MainMessenger recieves message and opens toolbar window
+  */
+  showToolbar = () => {
+    ipcRenderer.send('asynchronous-message', 'open.toolbar');
+  };
+
+  /**
+    @param {} -
+    sends open.installer to ipcRenderer
     MainMessenger recieves message and opens installer window
   */
   showInstaller = () => {
@@ -53,6 +62,24 @@ class ToolbarMesseneger {
   */
   checkUpdatesResponse = callback => {
     ipcRenderer.on('asynchronous-message', (evt, message) => callback(message));
+  };
+
+  /**
+    @param {Function} - callback
+    sends update.response to ipcRenderer
+    ToolbarMessenger recieves message and updates UI
+  */
+  checkLaunch = callback => {
+    ipcRenderer.on('start-gigantum', () => callback());
+  };
+
+  /**
+    @param {Function} - callback
+    sends quit.app to ipcRenderer
+    ToolbarMessenger recieves message and updates UI
+  */
+  checkQuitApp = callback => {
+    ipcRenderer.on('quit.app', () => callback());
   };
 
   /**

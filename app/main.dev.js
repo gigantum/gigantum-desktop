@@ -20,7 +20,27 @@ import MainMessenger, {
   showToolbar,
   toolbarLaunch
 } from './messenger/MainMessenger';
+import sentry from './sentry';
 import checkForUpdates from './updater';
+
+const icon = nativeImage.createFromPath(`${__dirname}/assets/tray/icon.png`);
+icon.setTemplateImage(true);
+
+const mainWindow = null;
+const isSecondInstance = app.makeSingleInstance(() => {
+  if (mainWindow) {
+    if (mainWindow.isMinimized()) mainWindow.restore();
+    mainWindow.focus();
+  }
+});
+
+if (isSecondInstance) {
+  app.quit();
+}
+
+sentry();
+
+const isWindows = process.platform === 'win32';
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');
@@ -46,18 +66,6 @@ const installExtensions = async () => {
   });
 };
 
-/**
- * Add event listeners...
- */
-
-app.on('window-all-closed', () => {
-  // Respect the OSX convention of having the application in memory even
-  // after all windows have been closed
-  if (process.platform !== 'darwin') {
-    app.quit();
-  }
-});
-
 app.on('ready', async () => {
   if (
     process.env.NODE_ENV === 'development' ||
@@ -68,8 +76,10 @@ app.on('ready', async () => {
   const storage = new Storage();
   const install = storage.get('install');
   const appPath = 'app.html';
-  const icon = nativeImage.createFromDataURL(gigantumBase64);
-  const tray = new Tray(icon);
+  const trayIcon = isWindows
+    ? `${__dirname}/assets/tray/iconWhite.png`
+    : `${__dirname}/assets/tray/iconTemplate.png`;
+  const tray = new Tray(trayIcon);
 
   if (process.platform === 'linux') {
     const contextMenu = Menu.buildFromTemplate([
@@ -91,6 +101,7 @@ app.on('ready', async () => {
     resizable: false,
     frame: false,
     show: false,
+    icon,
     alwaysOnTop: true,
     fullscreenable: false,
     webPreferences: {
@@ -140,6 +151,3 @@ app.on('ready', async () => {
   // Remove this if your app does not use auto updates
   // eslint-disable-next-line
 });
-
-let gigantumBase64 =
-  'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABCElEQVQ4jZXTTStFURTG8Z+XGBgxlDKhjHwAZWBqpgyVMlRERkz5FGbmjCRTfAYD5KWQpEgJI9G+d5869551XZ56Onvvtf6rdc5ZW6ABrOMEN/jO3kFfNb1RSyWg8Cc2MYHeClHSdgBf547aaiOAk6fbgR0YxRk6m2LnGMvrOUzhFK/owhEuuzEfwEkPpfVHLrDQlJPOHAetJ18FhfuxV8rZT4d3AVx4ttJXXWs5/px29wFY+BFDFbyuw5xTG5gILvyGVQyiB8NYybGXVGArgCJ/4T0/i/hBKjDSdPgfLxbv02qQfnOa0obRjkb5N09GX3b5D2C6oeMt/kxN5et8iydcYBczDZn4AcjljXDWYFm9AAAAAElFTkSuQmCC';

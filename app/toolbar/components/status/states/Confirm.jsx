@@ -1,11 +1,14 @@
 // @flow
 import * as React from 'react';
+import open from 'open';
 // States
 import {
   CANCEL,
   CONFIRM,
   REPROMPT,
   SUCCESS,
+  SHOW_WARNING,
+  CONFIRM_WARNING,
   ERROR,
   CONFIRM_RESTART
 } from '../../../machine/ToolbarConstants';
@@ -13,6 +16,8 @@ import {
 import './Confirm.scss';
 
 const isLinux = process.platform === 'linux';
+const isWindows = process.platform === 'win32';
+const removeWarning = isLinux || isWindows;
 
 type Props = {
   message: string,
@@ -25,7 +30,8 @@ type Props = {
   },
   quittingApp: boolean,
   messenger: {
-    quitApp: () => void
+    quitApp: () => void,
+    showToolbar: () => void
   }
 };
 
@@ -34,6 +40,13 @@ class Confirm extends React.Component<Props> {
 
   state = {
     isChecked: false
+  };
+
+  componentDidMount = () => {
+    const { props } = this;
+    if (props.quittingApp) {
+      props.messenger.showToolbar();
+    }
   };
 
   /**
@@ -66,13 +79,22 @@ class Confirm extends React.Component<Props> {
   */
   handleGigantumClose = closeDocker => {
     const { props } = this;
+    const hideWarning = props.storage.get('hide.dockerWarning');
     const callback = response => {
       if (props.quittingApp) {
         props.messenger.quitApp(props.interface);
       } else if (response.success) {
-        props.transition(SUCCESS, {
-          message: 'Stopping Gigantum'
-        });
+        if (isWindows && !hideWarning) {
+          props.transition(SHOW_WARNING, {
+            message:
+              'Remember, Docker is still running. It is now safe to quit Docker.',
+            category: 'warn.docker'
+          });
+        } else {
+          props.transition(SUCCESS, {
+            message: 'Click to Start'
+          });
+        }
       } else {
         props.transition(ERROR, {
           message: 'response.error'
@@ -111,9 +133,9 @@ class Confirm extends React.Component<Props> {
   */
   confirmAction = confirm => {
     const { props, state } = this;
-    const { category, storage } = props;
+    const { category, storage, quittingApp } = props;
     // TODO check config to see if setting is remembered
-    const shouldCloseDockerConfig = isLinux
+    const shouldCloseDockerConfig = removeWarning
       ? false
       : storage.get('close.dockerConfirm');
     const validateDockerClose = shouldCloseDockerConfig === undefined;
@@ -137,7 +159,8 @@ class Confirm extends React.Component<Props> {
           () => {
             props.transition(REPROMPT, {
               message: 'Would you like to close Docker?',
-              category: 'close.docker'
+              category: 'close.docker',
+              quittingApp
             });
           }
         );
@@ -153,16 +176,32 @@ class Confirm extends React.Component<Props> {
       } else {
         this.handleGigantumRestart();
       }
+    } else if (category === 'warn.docker') {
+      if (state.isChecked) {
+        storage.set('hide.dockerWarning', true);
+      }
+      if (!confirm) {
+        open('https://docs.gigantum.com/');
+      } else {
+        props.transition(CONFIRM_WARNING, {
+          message: 'Click to Start'
+        });
+      }
     }
   };
 
   render() {
     const { props, state } = this;
     const { category } = props;
-    const checkboxText =
+    let checkboxText =
       category === 'close.docker'
         ? 'Remember my selection next time'
         : "Don't ask me this again";
+    checkboxText =
+      category === 'warn.docker' ? "Don't remind me again" : checkboxText;
+
+    const primaryText = category === 'warn.docker' ? 'Got it' : 'Yes';
+    const secondaryText = category === 'warn.docker' ? 'Show me how' : 'No';
     return (
       <div className="Confirm">
         <div className="Confirm__message">{props.message}</div>
@@ -172,14 +211,14 @@ class Confirm extends React.Component<Props> {
             className="Btn__Confirm Btn--primary"
             onClick={() => this.confirmAction(true)}
           >
-            Yes
+            {primaryText}
           </button>
           <button
             type="button"
             className="Btn__Confirm"
             onClick={() => this.confirmAction(false)}
           >
-            No
+            {secondaryText}
           </button>
         </div>
         <div className="Confirm__checkbox-Container">
