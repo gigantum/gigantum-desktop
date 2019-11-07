@@ -1,0 +1,19 @@
+table {
+  thead {
+    tr {
+      /* border */
+      border-bottom: 2px solid $jet;
+    }
+  }
+
+  tbody {
+    tr {
+      /* border */
+      border-bottom: 1px solid $jet;
+    }
+    td {
+      /* box size */
+      padding: 3px 0;
+    }
+  }
+}

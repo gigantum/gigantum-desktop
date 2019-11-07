@@ -1,0 +1,80 @@
+@import '~Styles/_imports.scss';
+
+.Buttons__Actions {
+  display: block;
+  @include flex(flex-start, column);
+  border-top: 1px solid $grey-border;
+  border-bottom: 1px solid $grey-border;
+}
+.Buttons__Links {
+  display: block;
+  @include flex(flex-start, row);
+}
+.Btn {
+  &__Toolbar {
+    cursor: pointer;
+    color: $primary;
+    height: 35px;
+    background: white;
+    border: 1px solid $grey-border;
+    font-size: 15px;
+    outline: 0;
+    &:hover {
+      background-color: $primary;
+      color: white;
+    }
+    &:disabled {
+      color: $romanSilver !important;
+      background: $lightGrey !important;
+      cursor: auto;
+    }
+    &--available {
+      position: relative;
+      &::before {
+        content: '';
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        left: 90px;
+        top: 8px;
+        position: absolute;
+        background: $orange
+          url(~Images/icons/notifications/info-exclamation.svg) no-repeat center
+          center;
+        background-size: 16px;
+      }
+    }
+    &--checking {
+      background: url('~Images/loaders/spinner.svg') no-repeat left 70px center;
+    }
+  }
+  &--noBorder {
+    border: 0;
+  }
+  &--external {
+    background: white url('~Images/icons/offsite-primary.svg') no-repeat center
+      right 90px;
+    &:hover {
+      background: $primary url('~Images/icons/offsite.svg') no-repeat center
+        right 90px;
+    }
+  }
+  &__Link {
+    flex: 1;
+    background: #f8f8f8 url('~Images/icons/offsite-primary.svg') no-repeat top
+      11px right 50px;
+    background-size: 12px;
+    height: 35px;
+    font-size: 15px;
+    color: $primary;
+    border: 0.5px solid $grey-border;
+    outline: 0;
+    cursor: pointer;
+    &:hover {
+      background: $primary url('~Images/icons/offsite.svg') no-repeat top 11px
+        right 50px;
+      background-size: 12px;
+      color: white;
+    }
+  }
+}

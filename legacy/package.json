@@ -1,0 +1,68 @@
+{
+    "name": "gigantum",
+    "productName": "Gigantum",
+    "version": "0.5.15",
+    "description": "The Gigantum Desktop app is used to run the Gigantum Client on your computer. Gigantum is an open platform for developing, executing, and sharing analysis via integrated repositories that bundle data, code, and environment configuration together. Visit https://gigantum.com for more information",
+    "main": "src/main.js",
+    "scripts": {
+        "start": "electron ./src/main",
+        "build-mac": "electron-builder -m",
+        "build-win": "electron-builder -w",
+        "build-lin": "electron-builder -l",
+        "build-all": "electron-builder -m -l -w",
+        "lint": "eslint src",
+        "deploy": "GITHUB_TOKEN=`cat secrets/config.json | json select '.github_token'` WIN_CSC_LINK=`cat secrets/config.json | json select '.cert_directory'` WIN_CSC_KEY_PASSWORD=`cat secrets/config.json | json select '.cert_keyphrase'` electron-builder -m -w -l appimage -p always"
+    },
+    "keywords": [],
+    "author": "Gigantum <hello@gigantum.com>",
+    "license": "MIT",
+    "publish": {
+        "provider": "github",
+        "owner": "gigantum",
+        "repo": "gigantum-desktop"
+    },
+    "win": {
+        "verifyUpdateCodeSignature": false
+    },
+    "build": {
+        "dmg": {
+            "iconSize": 276,
+            "iconTextSize": 1,
+            "window": {
+                "width": 1000,
+                "height": 600
+            },
+            "contents": [
+                {
+                    "x": 250,
+                    "y": 350
+                },
+                {
+                    "x": 750,
+                    "y": 350,
+                    "type": "link",
+                    "path": "/Applications"
+                }
+            ]
+        }
+    },
+    "dependencies": {
+        "json": "^9.0.6",
+        "marked": "^0.3.19",
+        "node-fetch": "^2.1.2",
+        "npm": "^5.7.1",
+        "pump": "^3.0.0",
+        "through-json": "^1.1.0",
+        "through2": "^2.0.3"
+    },
+    "devDependencies": {
+        "babel-plugin-transform-async-to-generator": "^6.24.1",
+        "babel-preset-env": "^1.6.1",
+        "electron-builder": "^20.13.4",
+        "electron-prebuilt-compile": "2.0.3",
+        "eslint": "3",
+        "eslint-config-airbnb": "15",
+        "eslint-plugin-import": "^2.10.0",
+        "eslint-plugin-jsx-a11y": "5"
+    }
+}

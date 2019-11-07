@@ -1,0 +1,54 @@
+@import '~Styles/_imports.scss';
+
+.Faq__Question {
+  height: 78px;
+  border-bottom: 1px solid $grey-border;
+  color: $romanSilver;
+  background: url('~Images/icons/down-arrow-primary.svg') no-repeat center right;
+  background-size: 15px;
+  padding: 0 18px 0 1px;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+  outline: none;
+  transition: top 0.25s;
+  position: absolute;
+  width: 100%;
+  &--first {
+    top: 0;
+  }
+  &--middle {
+    top: 78px;
+  }
+  &--last {
+    top: 156px;
+  }
+  &--selected {
+    top: 0;
+    background: url('~Images/icons/up-arrow-primary.svg') no-repeat center right;
+    background-size: 15px;
+
+    color: $jet;
+  }
+  &--notSelected {
+    display: none;
+  }
+  &:hover {
+    color: $jet;
+  }
+}
+
+.Faq__Answer {
+  animation: fade-in forwards 0.5s;
+  position: absolute;
+  top: 90px;
+  overflow: auto;
+  max-height: 175px;
+  span {
+    color: $primary;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+}
