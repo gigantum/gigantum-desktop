@@ -56,6 +56,7 @@ const stateMachine = Machine({
       },
       on: {
         ERROR,
+        PROMPT: CONFIRM_ACTION,
         SUCCESS: STOPPED,
         SHOW_WARNING: CONFIRM_ACTION
       }
