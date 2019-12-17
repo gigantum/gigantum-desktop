@@ -107,9 +107,6 @@ class Running extends React.Component<Props> {
           category: 'close.docker'
         });
       } else {
-        // props.transition(FORCE_STOP, {
-        //   message: 'Stopping Gigantum'
-        // });
         this.handleGigantumClose(shouldCloseDockerConfig);
       }
     };
