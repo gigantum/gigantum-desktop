@@ -312,7 +312,6 @@ class Installer {
     } else if (isWindows) {
       settingsPath = `${os.homedir()}\\AppData\\Roaming\\Docker\\settings.json`;
     }
-
     if (fs.existsSync(settingsPath)) {
       const settingsRawData = fs.readFileSync(settingsPath);
       const settings = JSON.parse(settingsRawData);
@@ -372,6 +371,13 @@ class Installer {
         this.docker.stopDockerApplication(dockerStopCallback);
       }
     } else {
+      this.setTimeout(() => {
+        this.updateSettings(
+          callback,
+          windowsDockerStartedCallback,
+          windowsDockerRestartingCallback
+        );
+      }, 5000);
       callback({ success: true });
     }
   };

@@ -14,6 +14,7 @@ export const FORCE_RESTART = 'FORCE_RESTART';
 export const CONFIRM_RESTART = 'CONFIRM_RESTART';
 export const SUCCESS = 'SUCCESS';
 export const STOP = 'STOP';
+export const PROMPT = 'PROMPT';
 export const FORCE_STOP = 'FORCE_STOP';
 export const UNEXPECTED_STOP = 'UNEXPECTED_STOP';
 export const CONFIRM = 'CONFIRM';
