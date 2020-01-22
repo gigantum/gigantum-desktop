@@ -1,0 +1,151 @@
+.Tooltip-data {
+  &:disabled {
+    overflow: initial !important;
+  }
+
+  /* Position */
+  position: relative;
+
+  cursor: pointer;
+
+  &--visible::before,
+  &:hover::before {
+    /* Position */
+    position: absolute;
+    top: calc(100% - 0);
+    left: calc(50% - 5px);
+
+    /* Box */
+    content: '';
+    border-width: 10px;
+
+    /* includes */
+    @include triangle('up', 7px, $slateBlue);
+  }
+
+  &--small {
+    &:hover::after {
+      /* Position */
+      left: 50% !important;
+
+      /* Box size */
+      width: auto !important;
+      min-width: 0 !important;
+      padding: 5px !important;
+
+      /* other */
+      transform: translate(-50%, 0);
+      white-space: nowrap;
+    }
+  }
+
+  &--visible::after,
+  &:hover::after {
+    /* Position */
+    position: absolute;
+    z-index: index($elements, popup);
+    top: calc(100% + 7px);
+    left: calc(50% - 70px);
+
+    /* Box size */
+    width: 140px;
+    min-width: 100px;
+    margin: 0;
+    padding: 10px;
+
+    /* text */
+    content: attr(data-tooltip);
+    white-space: normal;
+    word-wrap: normal;
+    word-break: normal;
+
+    /* color */
+    color: $white;
+    background: $slateBlue;
+
+    /* font */
+    font-family: 'NunitoSans', Arial, sans-serif;
+    font-size: 14px !important;
+    font-weight: 100 !important;
+    line-height: 18px;
+
+    /* extensions */
+    @extend .box-shadow;
+  }
+
+  &--right:hover::before {
+    /* Position */
+    top: calc(50% - 7px);
+    left: calc(100% + 2px);
+
+    /* includes */
+    @include triangle('left', 7px, $slateBlue);
+  }
+
+  &--right:hover::after {
+    /* Position */
+    top: calc(50% - 10px);
+    left: calc(100% + 16px);
+  }
+
+  &--left:hover::before {
+    /* Position */
+    top: calc(50% - 7px);
+    left: -8px;
+
+    /* includes */
+    @include triangle('right', 7px, $slateBlue);
+  }
+
+  &--left:hover::after {
+    /* Position */
+    top: calc(50% - 10px);
+    left: -168px;
+  }
+
+  &--top-offset:hover::before {
+    /* Position */
+    top: calc(100% + 7px);
+    left: calc(50% - 70px);
+
+    /* includes */
+    @include triangle('top', 7px, $slateBlue);
+  }
+
+  &--top-offset:hover::after {
+    /* Position */
+    top: calc(100% + 7px);
+    left: calc(50% - 110px);
+  }
+
+  &--info {
+    /* Position */
+    position: absolute;
+    top: calc(50% - 7px);
+    right: 10px;
+
+    /* box size */
+    width: 15px;
+    height: 15px;
+
+    /* other */
+    cursor: pointer;
+
+    /* background */
+    background: url('~Images/icons/info-icon.svg') no-repeat center center;
+    background-size: 15px;
+  }
+
+  &--visible::after,
+  &--visible:hover::after {
+    /* Position */
+    left: 50% !important;
+
+    /* box size */
+    width: 140px !important;
+    padding: 5px !important;
+
+    /* other */
+    transform: translate(-50%, 0);
+  }
+}

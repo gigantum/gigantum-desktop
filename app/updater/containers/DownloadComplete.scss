@@ -1,0 +1,26 @@
+@import '~Styles/_imports.scss';
+
+.DownloadComplete {
+  height: 100%;
+}
+
+.DownloadComplete__subText {
+  color: $slateBlue;
+  margin-bottom: 6px;
+  white-space: pre-line;
+  text-align: center;
+  padding: 0 100px;
+  font-size: 22px;
+  margin-top: 80px;
+}
+
+.DownloadComplete__body {
+  padding: 11px 12px;
+  @include flex(flex-start, column);
+  height: 385px;
+}
+
+.DownloadComplete__buttons {
+  @include flex(flex-end, row);
+  margin-top: auto;
+}

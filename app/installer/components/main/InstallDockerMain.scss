@@ -1,0 +1,15 @@
+@import '~Styles/_imports.scss';
+
+.InstallDockerMain__subtext {
+  margin-top: 20px;
+  font-size: 14px !important;
+  color: $slateBlue;
+  p {
+    font-size: 14px;
+  }
+  span {
+    color: $primary;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+}

@@ -1,0 +1,47 @@
+@import '~Styles/_imports.scss';
+
+.About__body {
+  @include flex(flex-start, row);
+  height: 329px;
+}
+
+.About__info {
+  width: 427px;
+  @include flex(flex-start, column);
+  align-items: center;
+  text-align: center;
+  padding-top: 20px;
+}
+
+.About__buttons {
+  position: relative;
+  width: 240px;
+  border-left: 2px solid $grey-border;
+  text-align: center;
+  &::before {
+    @include triangle('right', 15px, $grey-border);
+    top: calc(50% - 15px);
+    content: '';
+    position: absolute;
+    left: 0;
+  }
+}
+.About__sectionHeader {
+  color: $slateBlue;
+  font-size: 18px;
+  margin: 9px;
+  line-height: 24px;
+  font-weight: 600;
+  &--buttons {
+    margin: 45px 0;
+  }
+}
+
+.About__sectionText {
+  line-height: 19px;
+  font-size: 14px;
+  margin: 3px;
+}
+.About__versionSections {
+  margin: 20px 0;
+}
