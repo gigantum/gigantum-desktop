@@ -1,3 +1,48 @@
+## 2020-01-14
+
+### Gigantum Client (1.2.0)
+
+Image Tag: 2e28613d (386059543)
+
+Image ID: 0ec7bf07d7
+
+* New
+  * Completed changes needed for running the Client directly in Gigantum Hub
+
+* Changed
+  * Updated container build messaging to include escape characters, better handling output from some tools such as conda. Note, Docker pull output is still merged and will be fixed in a future release.
+
+* Fixed
+  * Completed large refactor to reduce errors induced by redux managing project and dataset namespace (#1152)
+  * Fixed bug when dragging and dropping nested folders in the file browser widget (#1179)
+  * Fixed issue that occasionally prevented the collaborator modal from opening (#1189)
+  * Fixed issue with package manager cancel button (#1188)
+  * Various minor UI/UX and CSS fixes
+
+
+## 2019-12-18
+
+### Gigantum Client (1.1.0)
+
+Image Tag: 889a4463 (384834751)
+
+Image ID: 83a9e7ed8e
+
+* New
+  * Added support for user defined CA certificates. Place your `.crt` files in the `~/gigantum/certificates` directory and the Client and Projects will be automatically configured.
+  * Added preparations for updating authentication to use only 1st party cookies
+
+* Changed
+  * Completed refactor that enables launching the Client in Gigantum Hub
+  * Updated logos and colors
+  * Updated to Node 11 when building the UI
+
+* Fixed
+  * Fixed issue with creating folders in the untracked folder (#1126)
+  * Fixed issue with deleting datasets in Gigantum Hub (#1157)
+  * Fixed issue with the collaborator modal not appearing in some cases (#1157)
+  * Various minor UI/UX and CSS fixes
+
 ## 2019-10-06
 
 ### Gigantum Client (1.0.1)

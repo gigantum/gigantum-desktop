@@ -136,6 +136,49 @@ class Installer {
     }
   };
 
+  checkDockerInstallerRunning = (callback) => {
+    if (isMac) {
+      try {
+        const dockerPs = spawnWrapper.getSpawn('ls', ['/Volumes/Docker']);
+        dockerPs.stdout.on('data', () => {
+          callback({ success: true, data: {} });
+        })
+        dockerPs.stderr.on('data', () => {
+          setTimeout(() => {
+            this.checkDockerInstallerRunning(callback);
+          }, 1000);
+        })
+        dockerPs.on('error', () => {
+          setTimeout(() => {
+            this.checkDockerInstallerRunning(callback);
+          }, 1000);
+        })
+      } catch (error) {
+        setTimeout(() => {
+          this.checkDockerInstallerRunning(callback);
+        }, 1000);
+      }
+    } else if (isWindows) {
+      const ps = new Shell({
+        executionPolicy: 'Bypass',
+        noProfile: true
+      });
+      ps.addCommand(
+        'Get-Process "Docker Desktop"'
+      );
+      ps.invoke()
+        .then(response => {
+           callback({ success: true, data: {} });
+        })
+        .catch(() => {
+          this.checkDockerInstallerRunning(callback);
+          ps.dispose();
+        });
+    } else {
+      callback({ success: true, data: {} });
+    }
+  }
+
   /**
    * @param {String} downloadedFile
    * @param {Function} callback
@@ -148,7 +191,7 @@ class Installer {
     } else if (isWindows) {
       open(downloadedFile);
     }
-    callback({ success: true, data: {} });
+    this.checkDockerInstallerRunning(callback);
   };
 
   /**
@@ -312,7 +355,6 @@ class Installer {
     } else if (isWindows) {
       settingsPath = `${os.homedir()}\\AppData\\Roaming\\Docker\\settings.json`;
     }
-
     if (fs.existsSync(settingsPath)) {
       const settingsRawData = fs.readFileSync(settingsPath);
       const settings = JSON.parse(settingsRawData);
@@ -372,6 +414,13 @@ class Installer {
         this.docker.stopDockerApplication(dockerStopCallback);
       }
     } else {
+      this.setTimeout(() => {
+        this.updateSettings(
+          callback,
+          windowsDockerStartedCallback,
+          windowsDockerRestartingCallback
+        );
+      }, 5000);
       callback({ success: true });
     }
   };

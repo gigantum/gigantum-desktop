@@ -73,6 +73,17 @@ export default class InstallDocker extends Component<Props> {
       }
     };
 
+    const launchCallback = response => {
+      if (response.success) {
+        setTimeout(() => {
+          this.installDockerTransition(SUCCESS);
+        }, 3000);
+      } else {
+        installErrorHandler();
+
+      }
+    }
+
     const progressCallback = response => {
       if (response.success) {
         this.setState({ progress: response.progress });
@@ -86,7 +97,7 @@ export default class InstallDocker extends Component<Props> {
       }
     };
 
-    props.interface.download(progressCallback, dndCallback);
+    props.interface.download(progressCallback, launchCallback, dndCallback);
   };
 
   render() {

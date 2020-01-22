@@ -12,7 +12,8 @@ import DockerSrc from 'Images/logos/docker.png';
 import {
   PROMPT,
   INSTALLING,
-  INSTALLED
+  INSTALLED,
+  LAUNCHING,
 } from '../../containers/machine/InstallDockerConstants';
 
 const isMac = process.platform === 'darwin';
@@ -84,6 +85,7 @@ export default class CheckDockerStatus extends Component<Props> {
           <div className={imageCSS} />
         </div>
       ),
+      [LAUNCHING]: progressMap['NO_PROGRESS'],
       [PROMPT]: (
         <div className="Layout__Status InstallDockerStatus">
           <div className="InstallDockerStatus__body">

@@ -86,12 +86,12 @@ class InstallerInterface {
    * handles docker download
    * @calls {installer.downloadDocker}
    */
-  download = (progressCallback, dndCallback) => {
+  download = (progressCallback, launchCallback, dndCallback) => {
     const { installer } = this;
     const downloadDockerCallback = response => {
       if (response.success && response.finished) {
         progressCallback({ success: true, progress: 100, finished: true });
-        this.handleDnD(response.data.downloadedFile, dndCallback);
+        this.handleDnD(response.data.downloadedFile, launchCallback, dndCallback);
       } else if (response.success) {
         progressCallback({ success: true, progress: response.data.progress });
       } else {
@@ -108,7 +108,7 @@ class InstallerInterface {
    * handles drag and drop
    * @calls {installer.openDragAndDrop}
    */
-  handleDnD = (downloadedFile, callback) => {
+  handleDnD = (downloadedFile, launchCallback, callback) => {
     const { installer } = this;
     /**
      * @param {Object} response
@@ -130,6 +130,7 @@ class InstallerInterface {
     const dragAndDropCallback = response => {
       if (response.success) {
         installer.checkDockerInstall(checkDockerInstallCallback);
+        launchCallback({ success: true, data: {} });
       } else {
         callback({ success: false, data: {} });
       }

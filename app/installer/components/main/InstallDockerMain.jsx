@@ -5,7 +5,8 @@ import open from 'open';
 import {
   PROMPT,
   INSTALLING,
-  INSTALLED
+  INSTALLED,
+  LAUNCHING,
 } from '../../containers/machine/InstallDockerConstants';
 // assets
 import './InstallDockerMain.scss';
@@ -92,6 +93,10 @@ export default class InstallDockerMain extends Component<Props> {
         </div>
       ),
       [INSTALLING]: <div className="Layout__Main">{installingText}</div>,
+      [LAUNCHING]: <div className="Layout__Main">
+        The Docker installer is launching. Please Wait.
+        <div className="Layout__subtext">Note: This can take up to several minutes depending on your security software.</div>
+      </div>,
       [INSTALLED]: (
         <div className="Layout__Main">
           {!isLinux && installedText}
