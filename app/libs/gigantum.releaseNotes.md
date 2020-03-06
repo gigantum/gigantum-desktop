@@ -1,3 +1,24 @@
+## 2020-01-23
+
+### Gigantum Client (1.2.1)
+
+Image Tag: fa7d5e79
+
+Image ID: ec37c98986
+
+**Note: Due to changes made in preparation of web browser updates coming in February 2020, you must be running v1.1.0 or later!**
+
+* Changed
+  * Base image configuration is updated in the background instead of at Client start, reducing startup time (#1190)
+  * Updated demo project Base to the latest revision
+
+* Fixed
+  * Fixed intermittent issue when inserting sensitive files into a running Project container (#1219)
+  * Fixed crashing upload workers when a very large number of files are uploaded (#1209)
+  * Fixed issues with file browser getting stuck in locked state when an invalid upload is attempted (#1225)
+  * Build status modal now closes on completion properly in both local and Hub deployments (#1207)
+​
+
 ## 2020-01-14
 
 ### Gigantum Client (1.2.0)
