@@ -57,3 +57,5 @@ npm-debug.log.*
 secrets
 
 app/sentry.js
+
+yarn.lock

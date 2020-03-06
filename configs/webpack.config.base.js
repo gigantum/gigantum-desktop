@@ -46,13 +46,8 @@ export default {
   plugins: [
     new webpack.EnvironmentPlugin({
       NODE_ENV: 'production',
-<<<<<<< Updated upstream
-      IMAGE_TAG: '2e28613d',
-      CLIENT_VERSION: '1.2.0'
-=======
       IMAGE_TAG: 'fa7d5e79',
       CLIENT_VERSION: '1.2.1'
->>>>>>> Stashed changes
     }),
 
     new webpack.NamedModulesPlugin()
