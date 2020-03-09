@@ -166,13 +166,23 @@ class Docker {
   startDockerApplication = callback => {
     let dockerSpawn;
     if (isWindows) {
-      dockerSpawn = childProcess.spawn('cmd', [
-        '/s',
-        '/c',
-        'start',
-        '',
-        'C:\\Program Files\\Docker\\Docker\\Docker Desktop'
-      ]);
+      try {
+        dockerSpawn = childProcess.spawn('cmd', [
+          '/s',
+          '/c',
+          'start',
+          '',
+          'C:\\Program Files\\Docker\\Docker\\Docker Desktop'
+        ]);
+      } catch (error) {
+        dockerSpawn = childProcess.spawn('cmd', [
+          '/s',
+          '/c',
+          'start',
+          '',
+          'C:\\Program Files\\Docker\\Docker\\Docker for Windows'
+        ]);
+      }
     } else if (isMac) {
       dockerSpawn = childProcess.spawn('open', ['-a', 'docker']);
       dockerSpawn.stdout.on('data', () => {});
