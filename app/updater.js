@@ -13,6 +13,7 @@ let checkUpToDate;
 
 autoUpdater.on('error', error => {
   if (error && checkUpToDate) {
+    log.warn('Error in auto updater:');
     log.warn(error);
     dialog.showMessageBox({
       title: 'Error checking for updates',

@@ -5,6 +5,7 @@ import pump from 'pump';
 import throughJSON from 'through-json';
 import through from 'through2';
 import uuidv4 from 'uuid/v4';
+import log from 'electron-log';
 // config
 import utils from './utilities';
 import Docker from './Docker';
@@ -477,6 +478,8 @@ class Gigantum extends Docker {
         };
         this.pullImage(callback, imageData);
       } else if (response && response.error) {
+        log.warn('Error in configure gigantum:');
+        log.warn(response.error);
         callback({ success: false, data: response.error });
       } else {
         callback({ success: true, data: { finished: true } });

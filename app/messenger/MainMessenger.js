@@ -64,6 +64,8 @@ const showToolbar = (toolbarWindow, tray) => {
   const windowPos = toolbarWindow.getBounds();
   let x = 0;
   let y = trayPos.y + TRAY_ARROW_HEIGHT;
+  const display = screen.getPrimaryDisplay();
+  const adjustedMax = display.bounds.width - 352;
 
   if (process.platform === 'darwin') {
     x = Math.round(trayPos.x + trayPos.width / 2 - windowPos.width / 2);
@@ -72,8 +74,15 @@ const showToolbar = (toolbarWindow, tray) => {
     x = Math.round(trayPos.x + trayPos.width / 2 - windowPos.width / 2);
   }
   if (process.platform === 'linux') {
-    const display = screen.getPrimaryDisplay();
-    x = display.bounds.width - 352;
+    x = adjustedMax;
+  }
+  if (process.platform === 'win32') {
+    if (x < 0) {
+      x = 0;
+    }
+    if (x > adjustedMax) {
+      x = adjustedMax;
+    }
   }
 
   toolbarWindow.setVisibleOnAllWorkspaces(true);

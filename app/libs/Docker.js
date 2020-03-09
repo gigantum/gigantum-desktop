@@ -9,6 +9,7 @@ import pump from 'pump';
 import throughJSON from 'through-json';
 import through from 'through2';
 import fixPath from 'fix-path';
+import log from 'electron-log';
 
 // config
 import config from './config';
@@ -102,6 +103,8 @@ class Docker {
         }
       );
     } else {
+      log.warn('Error when checking docker is ready:');
+      log.warn(reconnectCount);
       callback({
         success: false,
         data: {
@@ -127,6 +130,8 @@ class Docker {
         statusList.indexOf(data.status) !== -1 &&
         data.from === config.imageName
       ) {
+        log.warn('Error in check docker state');
+        log.warn(data);
         callback({ success: false });
         return null;
       }
