@@ -163,7 +163,7 @@ class Installer {
         executionPolicy: 'Bypass',
         noProfile: true
       });
-      ps.addCommand('Get-Process "Docker Desktop"');
+      ps.addCommand('Get-Process "Docker Desktop Installer"');
       ps.invoke()
         .then(response => {
           console.log(response);
