@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import open from 'open';
+import utils from '../../../../libs/utilities';
 // States
 import {
   CANCEL,
@@ -181,7 +181,7 @@ class Confirm extends React.Component<Props> {
         storage.set('hide.dockerWarning', true);
       }
       if (!confirm) {
-        open('https://docs.gigantum.com/');
+        utils.open('https://docs.gigantum.com/');
       } else {
         props.transition(CONFIRM_WARNING, {
           message: 'Click to Start'

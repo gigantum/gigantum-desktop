@@ -1,12 +1,12 @@
 // @ flow
 // vendor
 import fs from 'fs';
-import open from 'open';
 import pump from 'pump';
 import throughJSON from 'through-json';
 import through from 'through2';
 import uuidv4 from 'uuid/v4';
 // config
+import utils from './utilities';
 import Docker from './Docker';
 import config from './config';
 
@@ -310,7 +310,7 @@ class Gigantum extends Docker {
               data.headers.get('content-type') === 'application/json'
             ) {
               if (options.openPopup) {
-                open(config.defaultUrl);
+                utils.open(config.defaultUrl);
               }
 
               callback({ success: true, running: true, data: {} });

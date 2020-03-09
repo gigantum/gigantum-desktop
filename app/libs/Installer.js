@@ -2,7 +2,6 @@
 // vendor
 import childProcess from 'child_process';
 import download from 'download';
-import open from 'open';
 import fs from 'fs';
 import os from 'os';
 import fixPath from 'fix-path';
@@ -11,6 +10,7 @@ import sudo from 'sudo-prompt';
 import si from 'systeminformation';
 // libs
 import Docker from './Docker';
+import utils from './utilities';
 import spawnWrapper from './spawnWrapper';
 //
 const isLinux = process.platform === 'linux';
@@ -136,23 +136,23 @@ class Installer {
     }
   };
 
-  checkDockerInstallerRunning = (callback) => {
+  checkDockerInstallerRunning = callback => {
     if (isMac) {
       try {
         const dockerPs = spawnWrapper.getSpawn('ls', ['/Volumes/Docker']);
         dockerPs.stdout.on('data', () => {
           callback({ success: true, data: {} });
-        })
+        });
         dockerPs.stderr.on('data', () => {
           setTimeout(() => {
             this.checkDockerInstallerRunning(callback);
           }, 1000);
-        })
+        });
         dockerPs.on('error', () => {
           setTimeout(() => {
             this.checkDockerInstallerRunning(callback);
           }, 1000);
-        })
+        });
       } catch (error) {
         setTimeout(() => {
           this.checkDockerInstallerRunning(callback);
@@ -163,12 +163,12 @@ class Installer {
         executionPolicy: 'Bypass',
         noProfile: true
       });
-      ps.addCommand(
-        'Get-Process "Docker Desktop"'
-      );
+      ps.addCommand('Get-Process "Docker Desktop"');
       ps.invoke()
         .then(response => {
-           callback({ success: true, data: {} });
+          console.log(response);
+          callback({ success: true, data: {} });
+          return null;
         })
         .catch(() => {
           this.checkDockerInstallerRunning(callback);
@@ -177,7 +177,7 @@ class Installer {
     } else {
       callback({ success: true, data: {} });
     }
-  }
+  };
 
   /**
    * @param {String} downloadedFile
@@ -187,9 +187,9 @@ class Installer {
    */
   openDragAndDrop = (downloadedFile, callback) => {
     if (isMac) {
-      open(downloadedFile, ['-a', 'finder']);
+      utils.open(downloadedFile, ['-a', 'finder']);
     } else if (isWindows) {
-      open(downloadedFile);
+      utils.open(downloadedFile);
     }
     this.checkDockerInstallerRunning(callback);
   };

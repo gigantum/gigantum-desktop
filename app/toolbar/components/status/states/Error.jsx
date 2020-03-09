@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import open from 'open';
+import utils from '../../../../libs/utilities';
 // State
 import {
   SUCCESS,
@@ -58,8 +58,8 @@ const getSubText = message => {
             Restarting Docker often resolves most issues. If this problem
             persists, reboot your computer or{' '}
             <a
-              onKeyDown={() => open('https://docs.gigantum.com/')}
-              onClick={() => open('https://docs.gigantum.com/')}
+              onKeyDown={() => utils.open('https://docs.gigantum.com/')}
+              onClick={() => utils.open('https://docs.gigantum.com/')}
               tabIndex={0}
               role="button"
             >
