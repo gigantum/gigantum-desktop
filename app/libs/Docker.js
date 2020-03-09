@@ -4,6 +4,7 @@ import childProcess from 'child_process';
 import DockerApi from 'docker-remote-api';
 import Dockerode from 'dockerode';
 import os from 'os';
+import fs from 'fs';
 import path from 'path';
 import pump from 'pump';
 import throughJSON from 'through-json';
@@ -166,23 +167,22 @@ class Docker {
   startDockerApplication = callback => {
     let dockerSpawn;
     if (isWindows) {
-      try {
-        dockerSpawn = childProcess.spawn('cmd', [
-          '/s',
-          '/c',
-          'start',
-          '',
-          'C:\\Program Files\\Docker\\Docker\\Docker Desktop'
-        ]);
-      } catch (error) {
-        dockerSpawn = childProcess.spawn('cmd', [
-          '/s',
-          '/c',
-          'start',
-          '',
-          'C:\\Program Files\\Docker\\Docker\\Docker for Windows'
-        ]);
+      let isOldDocker = false;
+      const dockerDesktopPath =
+        'C:\\Program Files\\Docker\\Docker\\Docker Desktop';
+      const dockerWindowsPath =
+        'C:\\Program Files\\Docker\\Docker\\Docker for Windows';
+      if (!fs.existsSync(dockerDesktopPath)) {
+        isOldDocker = true;
       }
+      const dockerPath = isOldDocker ? dockerWindowsPath : dockerDesktopPath;
+      dockerSpawn = childProcess.spawn('cmd', [
+        '/s',
+        '/c',
+        'start',
+        '',
+        dockerPath
+      ]);
     } else if (isMac) {
       dockerSpawn = childProcess.spawn('open', ['-a', 'docker']);
       dockerSpawn.stdout.on('data', () => {});
