@@ -163,15 +163,16 @@ class Installer {
         executionPolicy: 'Bypass',
         noProfile: true
       });
-      ps.addCommand('Get-Process "Docker Desktop Installer"');
+      ps.addCommand('Get-Process "Docker%20for%20Windows%20Installer"');
       ps.invoke()
-        .then(response => {
-          console.log(response);
+        .then(() => {
           callback({ success: true, data: {} });
           return null;
         })
         .catch(() => {
-          this.checkDockerInstallerRunning(callback);
+          setTimeout(() => {
+            this.checkDockerInstallerRunning(callback);
+          }, 1000);
           ps.dispose();
         });
     } else {
