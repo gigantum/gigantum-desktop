@@ -1,3 +1,34 @@
+## 2020-03-12
+
+### Gigantum Client (1.3.0)
+
+Image Tag: f9736eef (406774645)
+
+Image ID: 8fe41642ab
+
+- New
+
+  - Projects now have `untracked` directories in input, output, and code sections (#1272)
+  - Changes to collaborator settings are now tracked in the Activity Feed (#1211)
+  - Added new anonymous auth middleware for future Gigantum Hub features and running without a login without the ability to sync (#1265)
+
+- Changed
+
+  - Updating Base image repository now only pulls one branch to reduce download size when updating (#1162)
+  - Updated the large file upload warning modal to be more useful and consistent (#1253)
+  - Improved Selenium test harness reliability (#1278)
+  - Improved internal representation of auto-activity data and increased error handling during record creation (#1252)
+  - File operations are now collapsed into single detail records to improve Activity Feed performance (#1264)
+
+- Fixed
+  - Fixed issues with multi-tenant git token storage, so now running multiple users when the Client is configured for multi-tenant mode is robust to different users syncing at the same time (#1096)
+  - Fixed issue with activity capture when a progress bar was used in a Jupyter notebook (#1260)
+  - Added pagination on collaborator listing for large number of collaborators (#1250)
+  - Fixed activity feed paging and new activity notification (#1231)
+  - Fixed bug related to not handling the latest Base revision field properly when a custom Base is used (#1274)
+  - Fixed issues with downloading folders and files in folders in Datasets (#1282)
+  - Various UI/UX fixes (#1232, #1281)
+
 ## 2020-01-23
 
 ### Gigantum Client (1.2.1)
@@ -8,16 +39,17 @@ Image ID: ec37c98986
 
 **Note: Due to changes made in preparation of web browser updates coming in February 2020, you must be running v1.1.0 or later!**
 
-* Changed
-  * Base image configuration is updated in the background instead of at Client start, reducing startup time (#1190)
-  * Updated demo project Base to the latest revision
+- Changed
 
-* Fixed
-  * Fixed intermittent issue when inserting sensitive files into a running Project container (#1219)
-  * Fixed crashing upload workers when a very large number of files are uploaded (#1209)
-  * Fixed issues with file browser getting stuck in locked state when an invalid upload is attempted (#1225)
-  * Build status modal now closes on completion properly in both local and Hub deployments (#1207)
-​
+  - Base image configuration is updated in the background instead of at Client start, reducing startup time (#1190)
+  - Updated demo project Base to the latest revision
+
+- Fixed
+  - Fixed intermittent issue when inserting sensitive files into a running Project container (#1219)
+  - Fixed crashing upload workers when a very large number of files are uploaded (#1209)
+  - Fixed issues with file browser getting stuck in locked state when an invalid upload is attempted (#1225)
+  - Build status modal now closes on completion properly in both local and Hub deployments (#1207)
+    ​
 
 ## 2020-01-14
 
@@ -27,19 +59,20 @@ Image Tag: 2e28613d (386059543)
 
 Image ID: 0ec7bf07d7
 
-* New
-  * Completed changes needed for running the Client directly in Gigantum Hub
+- New
 
-* Changed
-  * Updated container build messaging to include escape characters, better handling output from some tools such as conda. Note, Docker pull output is still merged and will be fixed in a future release.
+  - Completed changes needed for running the Client directly in Gigantum Hub
 
-* Fixed
-  * Completed large refactor to reduce errors induced by redux managing project and dataset namespace (#1152)
-  * Fixed bug when dragging and dropping nested folders in the file browser widget (#1179)
-  * Fixed issue that occasionally prevented the collaborator modal from opening (#1189)
-  * Fixed issue with package manager cancel button (#1188)
-  * Various minor UI/UX and CSS fixes
+- Changed
 
+  - Updated container build messaging to include escape characters, better handling output from some tools such as conda. Note, Docker pull output is still merged and will be fixed in a future release.
+
+- Fixed
+  - Completed large refactor to reduce errors induced by redux managing project and dataset namespace (#1152)
+  - Fixed bug when dragging and dropping nested folders in the file browser widget (#1179)
+  - Fixed issue that occasionally prevented the collaborator modal from opening (#1189)
+  - Fixed issue with package manager cancel button (#1188)
+  - Various minor UI/UX and CSS fixes
 
 ## 2019-12-18
 
@@ -49,20 +82,22 @@ Image Tag: 889a4463 (384834751)
 
 Image ID: 83a9e7ed8e
 
-* New
-  * Added support for user defined CA certificates. Place your `.crt` files in the `~/gigantum/certificates` directory and the Client and Projects will be automatically configured.
-  * Added preparations for updating authentication to use only 1st party cookies
+- New
 
-* Changed
-  * Completed refactor that enables launching the Client in Gigantum Hub
-  * Updated logos and colors
-  * Updated to Node 11 when building the UI
+  - Added support for user defined CA certificates. Place your `.crt` files in the `~/gigantum/certificates` directory and the Client and Projects will be automatically configured.
+  - Added preparations for updating authentication to use only 1st party cookies
 
-* Fixed
-  * Fixed issue with creating folders in the untracked folder (#1126)
-  * Fixed issue with deleting datasets in Gigantum Hub (#1157)
-  * Fixed issue with the collaborator modal not appearing in some cases (#1157)
-  * Various minor UI/UX and CSS fixes
+- Changed
+
+  - Completed refactor that enables launching the Client in Gigantum Hub
+  - Updated logos and colors
+  - Updated to Node 11 when building the UI
+
+- Fixed
+  - Fixed issue with creating folders in the untracked folder (#1126)
+  - Fixed issue with deleting datasets in Gigantum Hub (#1157)
+  - Fixed issue with the collaborator modal not appearing in some cases (#1157)
+  - Various minor UI/UX and CSS fixes
 
 ## 2019-10-06
 
