@@ -167,15 +167,16 @@ class Docker {
   startDockerApplication = callback => {
     let dockerSpawn;
     if (isWindows) {
-      let isOldDocker = false;
+      let isNewDocker = true;
+      const fsPath = 'C:/Program Files/Docker/Docker/Docker Desktop.exe';
       const dockerDesktopPath =
         'C:\\Program Files\\Docker\\Docker\\Docker Desktop';
       const dockerWindowsPath =
         'C:\\Program Files\\Docker\\Docker\\Docker for Windows';
-      if (!fs.existsSync(dockerDesktopPath)) {
-        isOldDocker = true;
+      if (!fs.existsSync(fsPath)) {
+        isNewDocker = false;
       }
-      const dockerPath = isOldDocker ? dockerWindowsPath : dockerDesktopPath;
+      const dockerPath = isNewDocker ? dockerDesktopPath : dockerWindowsPath;
       dockerSpawn = childProcess.spawn('cmd', [
         '/s',
         '/c',
