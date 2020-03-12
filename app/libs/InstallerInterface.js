@@ -1,6 +1,7 @@
 // @flow
 import disk from 'check-disk-space';
 import fixPath from 'fix-path';
+import log from 'electron-log';
 // libs
 import Docker from './Docker';
 import Gigantum from './Gigantum';
@@ -86,15 +87,21 @@ class InstallerInterface {
    * handles docker download
    * @calls {installer.downloadDocker}
    */
-  download = (progressCallback, dndCallback) => {
+  download = (progressCallback, launchCallback, dndCallback) => {
     const { installer } = this;
     const downloadDockerCallback = response => {
       if (response.success && response.finished) {
         progressCallback({ success: true, progress: 100, finished: true });
-        this.handleDnD(response.data.downloadedFile, dndCallback);
+        this.handleDnD(
+          response.data.downloadedFile,
+          launchCallback,
+          dndCallback
+        );
       } else if (response.success) {
         progressCallback({ success: true, progress: response.data.progress });
       } else {
+        log.warn('Error in download');
+        log.warn(response);
         progressCallback({ success: false });
       }
     };
@@ -108,7 +115,7 @@ class InstallerInterface {
    * handles drag and drop
    * @calls {installer.openDragAndDrop}
    */
-  handleDnD = (downloadedFile, callback) => {
+  handleDnD = (downloadedFile, launchCallback, callback) => {
     const { installer } = this;
     /**
      * @param {Object} response
@@ -119,6 +126,8 @@ class InstallerInterface {
       if (response.success) {
         callback(response);
       } else {
+        log.warn('Error in check docker install');
+        log.warn(response);
         callback({ success: false, data: {} });
       }
     };
@@ -130,7 +139,10 @@ class InstallerInterface {
     const dragAndDropCallback = response => {
       if (response.success) {
         installer.checkDockerInstall(checkDockerInstallCallback);
+        launchCallback({ success: true, data: {} });
       } else {
+        log.warn('Error in dnd callback');
+        log.warn(response);
         callback({ success: false, data: {} });
       }
     };
@@ -161,6 +173,8 @@ class InstallerInterface {
       if (response.success) {
         defaultCallback(response);
       } else {
+        log.warn('Error in update settings cb');
+        log.warn(response);
         defaultCallback({ success: false, data: {} });
       }
     };
@@ -181,6 +195,8 @@ class InstallerInterface {
           );
         }
       } else {
+        log.warn('Error in docker is ready cb');
+        log.warn(response);
         defaultCallback({ success: false, data: {} });
       }
     };
@@ -193,6 +209,8 @@ class InstallerInterface {
       if (response.success) {
         installer.checkIfDockerIsReady(dockerisReadyCallback);
       } else {
+        log.warn('Error in start docker cb');
+        log.warn(response);
         defaultCallback({ success: false, data: {} });
       }
     };

@@ -1,6 +1,6 @@
 // @flow
 import React, { Component } from 'react';
-import open from 'open';
+import utils from '../../../libs/utilities';
 
 // constants
 import {
@@ -35,7 +35,7 @@ export default class ErrorMain extends Component<Props> {
           If the issue persists visit our{' '}
           <span
             role="presentation"
-            onClick={() => open('https://spectrum.chat/gigantum')}
+            onClick={() => utils.open('https://spectrum.chat/gigantum')}
           >
             Spectrum Chat
           </span>{' '}

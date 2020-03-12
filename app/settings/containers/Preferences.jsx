@@ -20,6 +20,7 @@ const getText = (props, state) => {
   let shutDownDockerText = storage.get('close.dockerConfirm');
   let launchOnStartText = props.autoLaunch;
   let gigantumConfirmText = storage.get('close.gigantumConfirm');
+  const browserText = storage.get('defaultBrowser') || 'Default';
 
   if (shutDownDockerText === undefined) {
     shutDownDockerText = 'Prompt';
@@ -33,7 +34,8 @@ const getText = (props, state) => {
   return {
     shutDownDockerText: state.shutDownDockerText || shutDownDockerText,
     gigantumConfirmText: state.gigantumConfirmText || gigantumConfirmText,
-    launchOnStartText: state.launchOnStartText || launchOnStartText
+    launchOnStartText: state.launchOnStartText || launchOnStartText,
+    browserText: state.browserText || browserText
   };
 };
 
@@ -46,6 +48,7 @@ const getOptions = state => {
   const dockerOptions = ['Yes', 'No', 'Prompt'];
   const saveDisabled =
     state.shutDownDockerText === null &&
+    state.browserText === null &&
     state.launchOnStartText === null &&
     state.gigantumConfirmText === null;
 
@@ -53,6 +56,7 @@ const getOptions = state => {
     gigantumOptions: defaultOptions,
     launchOptions: defaultOptions,
     dockerOptions,
+    browserOptions: ['Chrome', 'Firefox', 'Default'],
     saveDisabled
   };
 };
@@ -64,9 +68,11 @@ export default class Preferences extends Component<Props> {
     gigantumDropdownVisible: false,
     dockerDropdownVisible: false,
     launchDropdownVisible: false,
+    browserDropdownVisible: false,
     launchOnStartText: null,
     shutDownDockerText: null,
-    gigantumConfirmText: null
+    gigantumConfirmText: null,
+    browserText: null
   };
 
   /**
@@ -106,7 +112,8 @@ export default class Preferences extends Component<Props> {
     const {
       shutDownDockerText,
       gigantumConfirmText,
-      launchOnStartText
+      launchOnStartText,
+      browserText
     } = state;
 
     if (shutDownDockerText) {
@@ -136,39 +143,61 @@ export default class Preferences extends Component<Props> {
       }
     }
 
+    if (browserText) {
+      if (browserText === 'Default') {
+        storage.set('defaultBrowser', null);
+      } else {
+        storage.set('defaultBrowser', browserText);
+      }
+    }
+
     this.cancelPreference();
   };
 
   render() {
-    const { props, state } = this;
+    const { props } = this;
+    const {
+      gigantumDropdownVisible,
+      dockerDropdownVisible,
+      launchDropdownVisible,
+      browserDropdownVisible
+    } = this.state;
     const { message } = props;
     const {
       shutDownDockerText,
       gigantumConfirmText,
-      launchOnStartText
-    } = getText(props, state);
+      launchOnStartText,
+      browserText
+    } = getText(props, this.state);
     const {
       gigantumOptions,
       launchOptions,
       dockerOptions,
-      saveDisabled
-    } = getOptions(state);
+      saveDisabled,
+      browserOptions
+    } = getOptions(this.state);
     const gigantumConfirmCSS = classNames({
       'Dropdown relative': true,
-      'Dropdown--open': state.gigantumDropdownVisible,
-      'Dropdown--collapsed': !state.gigantumDropdownVisible
+      'Dropdown--open': gigantumDropdownVisible,
+      'Dropdown--collapsed': !gigantumDropdownVisible
     });
 
     const dockerConfirmCSS = classNames({
       'Dropdown relative': true,
-      'Dropdown--open': state.dockerDropdownVisible,
-      'Dropdown--collapsed': !state.dockerDropdownVisible
+      'Dropdown--open': dockerDropdownVisible,
+      'Dropdown--collapsed': !dockerDropdownVisible
     });
 
     const launchConfirmCSS = classNames({
       'Dropdown relative': true,
-      'Dropdown--open': state.launchDropdownVisible,
-      'Dropdown--collapsed': !state.launchDropdownVisible
+      'Dropdown--open': launchDropdownVisible,
+      'Dropdown--collapsed': !launchDropdownVisible
+    });
+
+    const launchBrowserCSS = classNames({
+      'Dropdown relative': true,
+      'Dropdown--open': browserDropdownVisible,
+      'Dropdown--collapsed': !browserDropdownVisible
     });
 
     return (
@@ -180,19 +209,33 @@ export default class Preferences extends Component<Props> {
               <div className="Preferences__category-title">Startup</div>
               <Setting
                 css={launchConfirmCSS}
-                visible={state.launchDropdownVisible}
+                visible={launchDropdownVisible}
                 settingsText="Start Gigantum Desktop at system start"
                 currentText={launchOnStartText}
                 options={launchOptions}
                 listAction={() =>
                   this.toggleDropdown(
                     'launchDropdownVisible',
-                    !state.launchDropdownVisible
+                    !launchDropdownVisible
                   )
                 }
                 itemAction={item =>
                   this.setPreference('launchOnStartText', item)
                 }
+              />
+              <Setting
+                css={launchBrowserCSS}
+                visible={browserDropdownVisible}
+                settingsText="Default Browser for launching"
+                currentText={browserText}
+                options={browserOptions}
+                listAction={() =>
+                  this.toggleDropdown(
+                    'browserDropdownVisible',
+                    !browserDropdownVisible
+                  )
+                }
+                itemAction={item => this.setPreference('browserText', item)}
               />
             </div>
           )}
@@ -200,14 +243,14 @@ export default class Preferences extends Component<Props> {
             <div className="Preferences__category-title">Shutdown</div>
             <Setting
               css={gigantumConfirmCSS}
-              visible={state.gigantumDropdownVisible}
+              visible={gigantumDropdownVisible}
               settingsText="Show confirmation when stopping Gigantum Client"
               currentText={gigantumConfirmText}
               options={gigantumOptions}
               listAction={() =>
                 this.toggleDropdown(
                   'gigantumDropdownVisible',
-                  !state.gigantumDropdownVisible
+                  !gigantumDropdownVisible
                 )
               }
               itemAction={item =>
@@ -217,14 +260,14 @@ export default class Preferences extends Component<Props> {
             {isMac && (
               <Setting
                 css={dockerConfirmCSS}
-                visible={state.dockerDropdownVisible}
+                visible={dockerDropdownVisible}
                 settingsText="Shutdown Docker on Stop"
                 currentText={shutDownDockerText}
                 options={dockerOptions}
                 listAction={() =>
                   this.toggleDropdown(
                     'dockerDropdownVisible',
-                    !state.dockerDropdownVisible
+                    !dockerDropdownVisible
                   )
                 }
                 itemAction={item =>

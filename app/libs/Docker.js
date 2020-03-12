@@ -4,11 +4,13 @@ import childProcess from 'child_process';
 import DockerApi from 'docker-remote-api';
 import Dockerode from 'dockerode';
 import os from 'os';
+import fs from 'fs';
 import path from 'path';
 import pump from 'pump';
 import throughJSON from 'through-json';
 import through from 'through2';
 import fixPath from 'fix-path';
+import log from 'electron-log';
 
 // config
 import config from './config';
@@ -102,6 +104,8 @@ class Docker {
         }
       );
     } else {
+      log.warn('Error when checking docker is ready:');
+      log.warn(reconnectCount);
       callback({
         success: false,
         data: {
@@ -127,6 +131,8 @@ class Docker {
         statusList.indexOf(data.status) !== -1 &&
         data.from === config.imageName
       ) {
+        log.warn('Error in check docker state');
+        log.warn(data);
         callback({ success: false });
         return null;
       }
@@ -161,12 +167,21 @@ class Docker {
   startDockerApplication = callback => {
     let dockerSpawn;
     if (isWindows) {
+      let isOldDocker = false;
+      const dockerDesktopPath =
+        'C:\\Program Files\\Docker\\Docker\\Docker Desktop';
+      const dockerWindowsPath =
+        'C:\\Program Files\\Docker\\Docker\\Docker for Windows';
+      if (!fs.existsSync(dockerDesktopPath)) {
+        isOldDocker = true;
+      }
+      const dockerPath = isOldDocker ? dockerWindowsPath : dockerDesktopPath;
       dockerSpawn = childProcess.spawn('cmd', [
         '/s',
         '/c',
         'start',
         '',
-        'C:\\Program Files\\Docker\\Docker\\Docker Desktop'
+        dockerPath
       ]);
     } else if (isMac) {
       dockerSpawn = childProcess.spawn('open', ['-a', 'docker']);

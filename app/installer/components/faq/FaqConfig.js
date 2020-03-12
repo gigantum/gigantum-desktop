@@ -1,5 +1,5 @@
 import React from 'react';
-import open from 'open';
+import utils from '../../../libs/utilities';
 import {
   CHECKING,
   INSTALL_DOCKER,
@@ -18,7 +18,7 @@ const checkingAndInstall = [
         <span
           role="presentation"
           onClick={() =>
-            open('https://www.docker.com/resources/what-container')
+            utils.open('https://www.docker.com/resources/what-container')
           }
         >
           software containers
@@ -41,7 +41,9 @@ const checkingAndInstall = [
         you’d like to do it yourself you can find instructions on{' '}
         <span
           role="presentation"
-          onClick={() => open('https://www.docker.com/products/docker-desktop')}
+          onClick={() =>
+            utils.open('https://www.docker.com/products/docker-desktop')
+          }
         >
           Docker’s website
         </span>{' '}
@@ -49,7 +51,7 @@ const checkingAndInstall = [
         <span
           role="presentation"
           onClick={() =>
-            open('https://docs.gigantum.com/docs/configuring-docker')
+            utils.open('https://docs.gigantum.com/docs/configuring-docker')
           }
         >
           documentation
@@ -77,7 +79,7 @@ export default {
           <span
             role="presentation"
             onClick={() =>
-              open('https://docs.gigantum.com/docs/configuring-docker')
+              utils.open('https://docs.gigantum.com/docs/configuring-docker')
             }
           >
             documentation
@@ -117,7 +119,7 @@ export default {
           Check out{' '}
           <span
             role="presentation"
-            onClick={() => open('https://gigantum.com/explore')}
+            onClick={() => utils.open('https://gigantum.com/explore')}
           >
             Gigantum Hub
           </span>{' '}
@@ -146,7 +148,7 @@ export default {
           <span
             role="presentation"
             onClick={() =>
-              open('https://docs.gigantum.com/docs/working-remotely')
+              utils.open('https://docs.gigantum.com/docs/working-remotely')
             }
           >
             work remotely
@@ -154,7 +156,7 @@ export default {
           or in{' '}
           <span
             role="presentation"
-            onClick={() => open('https://gigantum.com/explore')}
+            onClick={() => utils.open('https://gigantum.com/explore')}
           >
             Gigantum Hub
           </span>

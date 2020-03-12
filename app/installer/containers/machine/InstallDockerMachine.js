@@ -1,7 +1,7 @@
 // @flow
 import { Machine } from 'xstate';
 // container states
-import { PROMPT, INSTALLING, INSTALLED } from './InstallDockerConstants';
+import { PROMPT, INSTALLING, INSTALLED, LAUNCHING } from './InstallDockerConstants';
 
 const stateMachine = Machine({
   initial: PROMPT,
@@ -13,6 +13,12 @@ const stateMachine = Machine({
       }
     },
     [INSTALLING]: {
+      meta: { message: 'Install Docker' },
+      on: {
+        SUCCESS: LAUNCHING
+      }
+    },
+    [LAUNCHING]: {
       meta: { message: 'Install Docker' },
       on: {
         SUCCESS: INSTALLED

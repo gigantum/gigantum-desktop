@@ -1,11 +1,12 @@
 // @flow
 import React, { Component, Fragment } from 'react';
-import open from 'open';
+import utils from '../../../libs/utilities';
 // constants
 import {
   PROMPT,
   INSTALLING,
-  INSTALLED
+  INSTALLED,
+  LAUNCHING
 } from '../../containers/machine/InstallDockerConstants';
 // assets
 import './InstallDockerMain.scss';
@@ -67,7 +68,7 @@ export default class InstallDockerMain extends Component<Props> {
               By downloading, you agree to the terms of the{' '}
               <span
                 onClick={() =>
-                  open(
+                  utils.open(
                     'https://www.docker.com/legal/docker-software-end-user-license-agreement'
                   )
                 }
@@ -78,7 +79,7 @@ export default class InstallDockerMain extends Component<Props> {
               and the{' '}
               <span
                 onClick={() =>
-                  open(
+                  utils.open(
                     'https://www.docker.com/sites/default/files/d8/2018-11/Docker-Data-Processing-Agreement-2018-06-08_0.pdf'
                   )
                 }
@@ -92,6 +93,15 @@ export default class InstallDockerMain extends Component<Props> {
         </div>
       ),
       [INSTALLING]: <div className="Layout__Main">{installingText}</div>,
+      [LAUNCHING]: (
+        <div className="Layout__Main">
+          The Docker installer is launching. Please Wait.
+          <div className="Layout__subtext">
+            Note: This can take up to several minutes depending on your security
+            software.
+          </div>
+        </div>
+      ),
       [INSTALLED]: (
         <div className="Layout__Main">
           {!isLinux && installedText}

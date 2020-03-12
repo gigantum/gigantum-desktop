@@ -1,18 +1,19 @@
 // @flow
 import React, { Component } from 'react';
 import classNames from 'classnames';
-import open from 'open';
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 // assets
+import DockerSrc from 'Images/logos/docker.png';
 import './Status.scss';
 import './InstallDockerStatus.scss';
-import DockerSrc from 'Images/logos/docker.png';
+import utils from '../../../libs/utilities';
 // constants
 import {
   PROMPT,
   INSTALLING,
-  INSTALLED
+  INSTALLED,
+  LAUNCHING
 } from '../../containers/machine/InstallDockerConstants';
 
 const isMac = process.platform === 'darwin';
@@ -84,6 +85,7 @@ export default class CheckDockerStatus extends Component<Props> {
           <div className={imageCSS} />
         </div>
       ),
+      [LAUNCHING]: progressMap.NO_PROGRESS,
       [PROMPT]: (
         <div className="Layout__Status InstallDockerStatus">
           <div className="InstallDockerStatus__body">
@@ -102,7 +104,7 @@ export default class CheckDockerStatus extends Component<Props> {
                 <span
                   role="presentation"
                   onClick={() =>
-                    open(
+                    utils.open(
                       'https://docs.docker.com/install/linux/docker-ce/debian/#install-using-the-convenience-script'
                     )
                   }

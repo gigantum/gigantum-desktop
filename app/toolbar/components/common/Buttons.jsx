@@ -1,8 +1,8 @@
 // @flow
 import React, { PureComponent } from 'react';
 import classNames from 'classnames';
-import open from 'open';
 import { remote } from 'electron';
+import utils from '../../../libs/utilities';
 // States
 import {
   STOPPED,
@@ -144,7 +144,7 @@ export default class Buttons extends PureComponent<Props> {
             className="Btn__Toolbar Btn--external"
             disabled={disableButtons}
             type="button"
-            onClick={() => open(defaultUrl)}
+            onClick={() => utils.open(defaultUrl)}
           >
             Open in Browser
           </button>
@@ -167,14 +167,14 @@ export default class Buttons extends PureComponent<Props> {
         </div>
         <div className="Buttons__Links">
           <button
-            onClick={() => open('https://spectrum.chat/gigantum/')}
+            onClick={() => utils.open('https://spectrum.chat/gigantum/')}
             className="Btn__Link"
             type="button"
           >
             Help
           </button>
           <button
-            onClick={() => open('https://docs.gigantum.com/')}
+            onClick={() => utils.open('https://docs.gigantum.com/')}
             className="Btn__Link"
             type="button"
           >

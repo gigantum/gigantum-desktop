@@ -1,7 +1,7 @@
 // @flow
 import React, { PureComponent } from 'react';
 import { remote } from 'electron';
-import open from 'open';
+import utils from '../../../libs/utilities';
 // States
 import {
   RUNNING,
@@ -17,7 +17,6 @@ import {
 import './Header.scss';
 
 const { Menu } = remote;
-
 const isLinux = process.platform === 'linux';
 const isWindows = process.platform === 'win32';
 const removeWarning = isLinux || isWindows;
@@ -109,7 +108,7 @@ export default class Header extends PureComponent<Props> {
     {
       label: 'Feedback',
       click: () => {
-        open('https://feedback.gigantum.com');
+        utils.utils.open('https://feedback.gigantum.com');
       }
     },
     { type: 'separator' },

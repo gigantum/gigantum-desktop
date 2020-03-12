@@ -2,6 +2,8 @@
 import Docker from './Docker';
 import Gigantum from './Gigantum';
 
+const isWindows = process.platform === 'win32';
+
 const pingDocker = (dockerConnectionTest, callback) => {
   dockerConnectionTest()
     .then(
@@ -55,7 +57,7 @@ class UpdaterInterface {
     const imageName = `gigantum/labmanager:${newImageTag}`;
 
     const pullImageCallback = response => {
-      if (updaterStartedDocker && response.data.finished) {
+      if (updaterStartedDocker && response.data.finished && !isWindows) {
         stopDockerApplication(() => callback(response));
       } else {
         callback(response);
