@@ -4,8 +4,10 @@ const path = require('path');
 var electron_notarize = require('electron-notarize');
 
 module.exports = async function(params) {
-  // Only notarize the app on Mac OS only.
-  if (process.platform !== 'darwin') {
+  // Only notarize the app on Mac OS only
+  console.log(process.env);
+  if (params.packager.platform.name !== 'mac') {
+    console.log('Notarize Ignored');
     return;
   }
   console.log('afterSign hook triggered', params);
