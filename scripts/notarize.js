@@ -4,11 +4,11 @@ const path = require('path');
 var electron_notarize = require('electron-notarize');
 
 module.exports = async function(params) {
-  // Only notarize the app on Mac OS only.
-  if (process.platform !== 'darwin') {
+  // Only notarize the app on Mac OS only
+  if (params.packager.platform.name !== 'mac') {
+    console.log('Notarize Ignored');
     return;
   }
-  console.log('afterSign hook triggered', params);
 
   // Same appId in electron-builder.
   let appId = 'com.gigantum.app';
