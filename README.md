@@ -67,18 +67,55 @@ repository](https://github.com/gigantum/gtm/tree/integration/docs/contributing.m
 
 TODO
 
-## Deploying a Build
+## Environment setup for build and deploying
 
-Go to https://github.com/settings/tokens > personal access tokens > Generate new token
+### Environment
+
+Request access to Gigantum's Apple developer accounts to get Developer Id App and Developer Id Installer certs. Certs will need to be copied from gigantum-desktop drive. // TODO add to drive
+
+#### Github Token
+
+1. Go to https://github.com/settings/tokens > personal access tokens > Generate new token
+2. Give token permissions `repo` and `user`
+
+Download `Gigantum.p12` from google drive folder and drop into the `secrets` directory. If you don't have a `secrets` directory create one at project root.
+
+Create a `config.json` in your secrets directory.
 
 ```
-  declare -x GITHUB_TOKEN=${github_token}
+{
+  "github_token": "your_github_token",
+  "cert_keyphrase": "cert_keyphrase_goes_here",
+  "cert_directory": "secrets/Gigantum.p12", // don't need to set
+  "apple_email": "your_apple_account_email_address",
+  "apple_pass": "your_apple_account_password"
+}
+```
 
-  declare -x WIN_CSC_LINK=${cert_directory}
-
-  declare -x WIN_CSC_KEY_PASSWORD=${cert_keyphrase}
+Run the following commands
 
 ```
+  sudo xcode-select --install
+
+  sudo xcode-select --reset
+
+  brew install jq
+
+```
+
+### Deploying a Build
+
+1. Update version in `package.json`
+
+2. Update `IMAGE_TAG` and `CLIENT_VERSION` in `config/webpack.base.js`
+
+3. Get size using `yarn image-size` and update the size in `app/libs/config.js`
+
+4. Update release README.md with latest notes.
+
+5. Run the `yarn deploy` and go to https://github.com/gigantum/gigantum-desktop/releases
+
+6. Click edit on the draft release and add the release `README.md` for releases change logs.
 
 ## License
 
