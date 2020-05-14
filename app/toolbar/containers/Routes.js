@@ -1,7 +1,7 @@
 // @flow
 import React, { Component } from 'react';
 import { Switch, Route } from 'react-router';
-import routes from '../../redux/constants/routes';
+import routes from '../../redux/constants/routes.json';
 import Main from './Main';
 
 type Props = {

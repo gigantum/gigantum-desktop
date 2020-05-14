@@ -8,7 +8,7 @@ import ToolbarMessenger from './messenger/ToolbarMessenger';
 import ToolbarInterface from '../libs/ToolbarInterface';
 import Installer from '../libs/Installer';
 // components
-import routes from '../redux/constants/routes';
+import routes from '../redux/constants/routes.json';
 import Main from './containers/Main';
 
 type Props = {

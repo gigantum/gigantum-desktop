@@ -193,6 +193,7 @@ class Docker {
       callback({ success: true, data: {} });
       return null;
     }
+
     dockerSpawn.on('exit', code => {
       if (code === 0) {
         callback({ success: true, data: {} });
@@ -286,7 +287,7 @@ class Docker {
       },
       (err, res) => {
         if (err) {
-          console.log('err');
+          console.log(err);
         } else {
           pump(res, throughJSON(), through.obj(handleContainerList), error => {
             if (error) {
