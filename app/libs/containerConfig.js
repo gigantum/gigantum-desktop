@@ -77,8 +77,8 @@ const dockerizeMountPath = (dockerode, callback) => {
     process.stdout,
     {
       Entrypoint: '/usr/bin/tail',
-      Volumes: {
-        [hostDirectory]: {}
+      HostConfig: {
+        Binds: [`${hostDirectory}:/mnt/gigantum`]
       }
     },
     {

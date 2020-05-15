@@ -92,10 +92,16 @@ class Docker {
       dockerode.ping(
         (error, response) => {
           // TODO test for errors coming from response
-          if (response === 'OK') {
+          const responseString =
+            typeof response === 'object' && response !== null
+              ? response.toString()
+              : response;
+          if (responseString === 'OK') {
             callback({ success: true, data: response });
-          } else {
+          } else if (response === null) {
             checkAgain();
+          } else {
+            callback({ success: false, data: response });
           }
           return null;
         },
