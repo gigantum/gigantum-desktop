@@ -43,16 +43,17 @@ export default class MenuBuilder {
     });
   }
 
-  buildDarwinTemplate() {
+  buildDarwinTemplate = () => {
     const subMenuAbout = {
       label: 'Gigantum',
       submenu: [
         {
           label: 'About Gignatum',
-          selector: 'orderFrontStandardAboutPanel:'
+          selector: 'orderFrontStandardAboutPanel:',
+          click: () => {
+            shell.openExternal('https://gigantum.com/about');
+          }
         },
-        { type: 'separator' },
-        { label: 'Services', submenu: [] },
         { type: 'separator' },
         {
           label: 'Hide Gigantum',
@@ -75,110 +76,42 @@ export default class MenuBuilder {
         }
       ]
     };
-    const subMenuEdit = {
-      label: 'Edit',
-      submenu: [
-        { label: 'Undo', accelerator: 'Command+Z', selector: 'undo:' },
-        { label: 'Redo', accelerator: 'Shift+Command+Z', selector: 'redo:' },
-        { type: 'separator' },
-        { label: 'Cut', accelerator: 'Command+X', selector: 'cut:' },
-        { label: 'Copy', accelerator: 'Command+C', selector: 'copy:' },
-        { label: 'Paste', accelerator: 'Command+V', selector: 'paste:' },
-        {
-          label: 'Select All',
-          accelerator: 'Command+A',
-          selector: 'selectAll:'
-        }
-      ]
-    };
-    const subMenuViewDev = {
-      label: 'View',
-      submenu: [
-        {
-          label: 'Reload',
-          accelerator: 'Command+R',
-          click: () => {
-            this.mainWindow.webContents.reload();
-          }
-        },
-        {
-          label: 'Toggle Full Screen',
-          accelerator: 'Ctrl+Command+F',
-          click: () => {
-            this.mainWindow.setFullScreen(!this.mainWindow.isFullScreen());
-          }
-        },
-        {
-          label: 'Toggle Developer Tools',
-          accelerator: 'Alt+Command+I',
-          click: () => {
-            this.mainWindow.toggleDevTools();
-          }
-        }
-      ]
-    };
-    const subMenuViewProd = {
-      label: 'View',
-      submenu: [
-        {
-          label: 'Toggle Full Screen',
-          accelerator: 'Ctrl+Command+F',
-          click: () => {
-            this.mainWindow.setFullScreen(!this.mainWindow.isFullScreen());
-          }
-        }
-      ]
-    };
-    const subMenuWindow = {
-      label: 'Window',
-      submenu: [
-        {
-          label: 'Minimize',
-          accelerator: 'Command+M',
-          selector: 'performMiniaturize:'
-        },
-        { label: 'Close', accelerator: 'Command+W', selector: 'performClose:' },
-        { type: 'separator' },
-        { label: 'Bring All to Front', selector: 'arrangeInFront:' }
-      ]
-    };
+
     const subMenuHelp = {
       label: 'Help',
       submenu: [
         {
-          label: 'Learn More',
+          label: 'Blog',
           click() {
-            shell.openExternal('http://electron.atom.io');
+            shell.openExternal('https://blog.gigantum.com/');
           }
         },
         {
           label: 'Documentation',
           click() {
-            shell.openExternal(
-              'https://github.com/atom/electron/tree/master/docs#readme'
-            );
+            shell.openExternal('https://docs.gigantum.com/');
           }
         },
         {
           label: 'Community Discussions',
           click() {
-            shell.openExternal('https://discuss.atom.io/c/electron');
+            shell.openExternal('https://spectrum.chat/gigantum/?tab=posts');
           }
         },
         {
-          label: 'Search Issues',
+          label: 'Feedback',
           click() {
-            shell.openExternal('https://github.com/atom/electron/issues');
+            shell.openExternal('https://feedback.gigantum.com');
           }
         }
       ]
     };
 
-    const subMenuView =
-      process.env.NODE_ENV === 'development' ? subMenuViewDev : subMenuViewProd;
+    // const subMenuView =
+    //   process.env.NODE_ENV === 'development' ? subMenuViewDev : subMenuViewProd;
 
-    return [subMenuAbout, subMenuEdit, subMenuView, subMenuWindow, subMenuHelp];
-  }
+    return [subMenuAbout, subMenuHelp];
+  };
 
   buildDefaultTemplate() {
     const templateDefault = [
@@ -199,73 +132,30 @@ export default class MenuBuilder {
         ]
       },
       {
-        label: '&View',
-        submenu:
-          process.env.NODE_ENV === 'development'
-            ? [
-                {
-                  label: '&Reload',
-                  accelerator: 'Ctrl+R',
-                  click: () => {
-                    this.mainWindow.webContents.reload();
-                  }
-                },
-                {
-                  label: 'Toggle &Full Screen',
-                  accelerator: 'F11',
-                  click: () => {
-                    this.mainWindow.setFullScreen(
-                      !this.mainWindow.isFullScreen()
-                    );
-                  }
-                },
-                {
-                  label: 'Toggle &Developer Tools',
-                  accelerator: 'Alt+Ctrl+I',
-                  click: () => {
-                    this.mainWindow.toggleDevTools();
-                  }
-                }
-              ]
-            : [
-                {
-                  label: 'Toggle &Full Screen',
-                  accelerator: 'F11',
-                  click: () => {
-                    this.mainWindow.setFullScreen(
-                      !this.mainWindow.isFullScreen()
-                    );
-                  }
-                }
-              ]
-      },
-      {
         label: 'Help',
         submenu: [
           {
-            label: 'Learn More',
+            label: 'Blog',
             click() {
-              shell.openExternal('http://electron.atom.io');
+              shell.openExternal('https://blog.gigantum.com/');
             }
           },
           {
             label: 'Documentation',
             click() {
-              shell.openExternal(
-                'https://github.com/atom/electron/tree/master/docs#readme'
-              );
+              shell.openExternal('https://docs.gigantum.com/');
             }
           },
           {
             label: 'Community Discussions',
             click() {
-              shell.openExternal('https://discuss.atom.io/c/electron');
+              shell.openExternal('https://spectrum.chat/gigantum/?tab=posts');
             }
           },
           {
-            label: 'Search Issues',
+            label: 'Feedback',
             click() {
-              shell.openExternal('https://github.com/atom/electron/issues');
+              shell.openExternal('https://feedback.gigantum.com');
             }
           }
         ]
