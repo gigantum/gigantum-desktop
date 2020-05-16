@@ -48,7 +48,7 @@ export default class MenuBuilder {
       label: 'Gigantum',
       submenu: [
         {
-          label: 'About Gignatum',
+          label: 'About Gigantum',
           selector: 'orderFrontStandardAboutPanel:',
           click: () => {
             shell.openExternal('https://gigantum.com/about');
