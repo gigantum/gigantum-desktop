@@ -136,7 +136,6 @@ class ToolbarInterface {
      * @calls {gigantum.start}
      */
     const checkIsDockerReadyCallback = response => {
-      console.trace('checkIsDockerReadyCallback');
       if (response.success) {
         gigantum.start(gigantumStartCallback);
       }

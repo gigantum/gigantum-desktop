@@ -2,9 +2,6 @@
 import { execSync } from 'child_process';
 import os from 'os';
 import path from 'path';
-// import pump from 'pump';
-// import throughJSON from 'through-json';
-// import through from 'through2';
 
 // gigantum image name
 const imageLabel = 'gigantum/labmanager';
