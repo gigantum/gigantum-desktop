@@ -1,7 +1,7 @@
 {
   "name": "gigantum",
   "productName": "Gigantum",
-  "version": "1.0.6",
+  "version": "1.1.0",
   "description": "The Gigantum Desktop app is used to run the Gigantum Client on your computer. Gigantum is an open platform for developing, executing, and sharing analysis via integrated repositories that bundle data, code, and environment configuration together.",
   "scripts": {
     "build": "concurrently \"yarn build-main\" \"yarn build-renderer\"",
@@ -37,12 +37,13 @@
     "test-e2e": "node -r @babel/register ./internals/scripts/CheckBuiltsExist.js && cross-env NODE_ENV=test testcafe electron:./ ./test/e2e/HomePage.e2e.js",
     "test-e2e-live": "node -r @babel/register ./internals/scripts/CheckBuiltsExist.js && cross-env NODE_ENV=test testcafe-live electron:./ ./test/e2e/HomePage.e2e.js",
     "test-watch": "yarn test --watch",
-    "deploy": "GITHUB_TOKEN=`cat secrets/config.json | json select '.github_token'` WIN_CSC_LINK=`cat secrets/config.json | json select '.cert_directory'` WIN_CSC_KEY_PASSWORD=`cat secrets/config.json | json select '.cert_keyphrase'` yarn package",
-    "deploy-variables": "APPLEID=`cat secrets/config.json | json select '.apple_email'` APPLEIDPASS=`cat secrets/config.json | json select '.apple_pass'` GITHUB_TOKEN=`cat secrets/config.json | json select '.github_token'`",
+    "deploy": "GITHUB_TOKEN=`cat secrets/config.json | json select '.github_token'`  WIN_CSC_LINK=`cat secrets/config.json | json select '.cert_directory'` WIN_CSC_KEY_PASSWORD=`cat secrets/config.json | json select '.cert_keyphrase'` yarn package",
+    "deploy-variables": "APPLEID=`cat secrets/config.json | json select '.apple_email'` APPLEIDPASS=`cat secrets/config.json | json select '.apple_pass'` GITHUB_TOKEN=`cat secrets/config.json | json select '.github_token'` GH_TOKEN=`cat secrets/config.json | json select '.github_token'`",
     "deploy-win-variables": "WIN_CSC_LINK=`cat secrets/config.json | json select '.cert_directory'` WIN_CSC_KEY_PASSWORD=`cat secrets/config.json | json select '.cert_keyphrase'`",
+    "deploy-linux": "yarn deploy-variables yarn publish-linux",
     "deploy-mac": "yarn deploy-variables yarn publish-mac",
     "deploy-win": "yarn deploy-variables yarn deploy-win-variables yarn publish-windows",
-    "deploy-all": "yarn deploy-mac && yarn deploy-win && yarn publish-linux",
+    "deploy-all": "yarn deploy-mac && yarn deploy-linux && yarn deploy-win",
     "image-size": "curl -s -H GET 'https://hub.docker.com/v2/repositories/gigantum/labmanager/tags/?page_size=100' | echo $(jq -r '.results[] | select(.name == \"latest\") | .images[0].size')"
   },
   "lint-staged": {
@@ -271,7 +272,7 @@
     "devtron": "^1.4.0",
     "docker-machine": "^3.0.1",
     "docker-remote-api": "^5.0.0",
-    "dockerode": "^2.5.8",
+    "dockerode": "^3.2.0",
     "download": "^7.1.0",
     "electron-debug": "^2.0.0",
     "electron-log": "^2.2.17",

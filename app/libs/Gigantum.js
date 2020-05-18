@@ -10,6 +10,7 @@ import log from 'electron-log';
 import utils from './utilities';
 import Docker from './Docker';
 import config from './config';
+import getContainerConfig from './containerConfig';
 
 class Gigantum extends Docker {
   trackedContainer = null;
@@ -62,17 +63,22 @@ class Gigantum extends Docker {
   */
   createGigantum(callback) {
     this.stopProjects();
-    this.dockerode
-      .createContainer(
-        Object.assign(config.containerConfig, { name: config.containerName })
-      )
-      .then(gigantumContainer => {
-        callback({ success: true, running: false, gigantumContainer });
-        return null;
-      })
-      .catch(error => {
-        console.log(error);
-      });
+
+    const configCallback = containerConfig => {
+      this.dockerode
+        .createContainer(
+          Object.assign(containerConfig, { name: config.containerName })
+        )
+        .then(gigantumContainer => {
+          callback({ success: true, running: false, gigantumContainer });
+          return null;
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    };
+
+    getContainerConfig(this.dockerode, configCallback);
   }
 
   /**
@@ -175,6 +181,7 @@ class Gigantum extends Docker {
     container.inspect((err, gigantumContainer) => {
       if (err) {
         callback({ success: false });
+        return;
       }
       if (
         gigantumContainer &&
@@ -210,7 +217,9 @@ class Gigantum extends Docker {
           }
         )
       )
-      .catch(() => this.runGigantum(callback));
+      .catch(() => {
+        this.runGigantum(callback);
+      });
   };
 
   /**
@@ -259,7 +268,7 @@ class Gigantum extends Docker {
       },
       (err, res) => {
         if (err) {
-          console.log('err');
+          console.log(err);
         } else {
           pump(res, throughJSON(), through.obj(handleContainerList), error => {
             if (error) {

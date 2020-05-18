@@ -92,10 +92,16 @@ class Docker {
       dockerode.ping(
         (error, response) => {
           // TODO test for errors coming from response
-          if (response === 'OK') {
+          const responseString =
+            typeof response === 'object' && response !== null
+              ? response.toString()
+              : response;
+          if (responseString === 'OK') {
             callback({ success: true, data: response });
-          } else {
+          } else if (response === null) {
             checkAgain();
+          } else {
+            callback({ success: false, data: response });
           }
           return null;
         },
@@ -193,6 +199,7 @@ class Docker {
       callback({ success: true, data: {} });
       return null;
     }
+
     dockerSpawn.on('exit', code => {
       if (code === 0) {
         callback({ success: true, data: {} });
@@ -286,7 +293,7 @@ class Docker {
       },
       (err, res) => {
         if (err) {
-          console.log('err');
+          console.log(err);
         } else {
           pump(res, throughJSON(), through.obj(handleContainerList), error => {
             if (error) {

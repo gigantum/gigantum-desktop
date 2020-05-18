@@ -42,7 +42,7 @@ type Props = {
   transition: () => void
 };
 
-export default class Header extends PureComponent<Props> {
+class Header extends PureComponent<Props> {
   props: Props;
 
   componentDidMount = () => {
@@ -108,7 +108,7 @@ export default class Header extends PureComponent<Props> {
     {
       label: 'Feedback',
       click: () => {
-        utils.utils.open('https://feedback.gigantum.com');
+        utils.open('https://feedback.gigantum.com');
       }
     },
     { type: 'separator' },
@@ -154,3 +154,5 @@ export default class Header extends PureComponent<Props> {
     );
   }
 }
+
+export default Header;
