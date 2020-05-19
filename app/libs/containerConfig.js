@@ -2,9 +2,6 @@
 import { execSync } from 'child_process';
 import os from 'os';
 import path from 'path';
-// import pump from 'pump';
-// import throughJSON from 'through-json';
-// import through from 'through2';
 
 // gigantum image name
 const imageLabel = 'gigantum/labmanager';
@@ -31,12 +28,6 @@ const hostDirectory = path.join(os.homedir(), 'gigantum');
 const envHost = isWindows
   ? 'WINDOWS_HOST=1'
   : `LOCAL_USER_ID=${os.userInfo().uid}`;
-
-const condaDir = 'CONDA_DIR=/opt/conda';
-const shell = 'SHELL=/bin/bash';
-const miniCondaVersion = 'MINICONDA_VERSION=4.3.31';
-const lc = 'LC_ALL=C.UTF-8';
-const lang = 'LANG=C.UTF-8';
 
 /**
  * @param {object} dockerode
@@ -94,15 +85,7 @@ const dockerizeMountPath = (dockerode, callback) => {
  * gets config object for gigantum container
  */
 const configReturn = (containerDirectory, callback) => {
-  const Env = [
-    `HOST_WORK_DIR=${containerDirectory}`,
-    envHost,
-    condaDir,
-    shell,
-    miniCondaVersion,
-    lc,
-    lang
-  ];
+  const Env = [`HOST_WORK_DIR=${containerDirectory}`, envHost];
 
   if (nvidiaConfig) {
     Env.push(nvidiaConfig);
@@ -118,7 +101,7 @@ const configReturn = (containerDirectory, callback) => {
       Binds: [
         'labmanager_share_vol:/mnt/share:rw',
         '/var/run/docker.sock:/var/run/docker.sock:rw',
-        `${containerDirectory}:/mnt/gigantum:${
+        `${hostDirectory}:/mnt/gigantum:${
           os.platform() === 'darwin' ? 'cached' : 'rw'
         }`
       ],
