@@ -29,12 +29,6 @@ const envHost = isWindows
   ? 'WINDOWS_HOST=1'
   : `LOCAL_USER_ID=${os.userInfo().uid}`;
 
-const condaDir = 'CONDA_DIR=/opt/conda';
-const shell = 'SHELL=/bin/bash';
-const miniCondaVersion = 'MINICONDA_VERSION=4.3.31';
-const lc = 'LC_ALL=C.UTF-8';
-const lang = 'LANG=C.UTF-8';
-
 /**
  * @param {object} dockerode
  * @param {function} dockerode
@@ -91,15 +85,7 @@ const dockerizeMountPath = (dockerode, callback) => {
  * gets config object for gigantum container
  */
 const configReturn = (containerDirectory, callback) => {
-  const Env = [
-    `HOST_WORK_DIR=${containerDirectory}`,
-    envHost,
-    condaDir,
-    shell,
-    miniCondaVersion,
-    lc,
-    lang
-  ];
+  const Env = [`HOST_WORK_DIR=${containerDirectory}`, envHost];
 
   if (nvidiaConfig) {
     Env.push(nvidiaConfig);
@@ -115,7 +101,7 @@ const configReturn = (containerDirectory, callback) => {
       Binds: [
         'labmanager_share_vol:/mnt/share:rw',
         '/var/run/docker.sock:/var/run/docker.sock:rw',
-        `${containerDirectory}:/mnt/gigantum:${
+        `${hostDirectory}:/mnt/gigantum:${
           os.platform() === 'darwin' ? 'cached' : 'rw'
         }`
       ],
