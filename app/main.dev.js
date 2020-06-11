@@ -42,6 +42,8 @@ sentry();
 
 const isWindows = process.platform === 'win32';
 
+const urlPath = `file:///${__dirname}/app.html`;
+
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');
   sourceMapSupport.install();
@@ -53,6 +55,51 @@ if (
 ) {
   require('electron-debug')();
 }
+
+/**
+@param {String} section
+creates settings window
+*/
+const initializeSettingsWindow = section => {
+  const settingsWindow = new BrowserWindow({
+    name: 'installer',
+    width: 669,
+    height: 405,
+    transparent: false,
+    resizable: false,
+    frame: false,
+    icon,
+    show: false,
+    alwaysOnTop: false,
+    fullscreenable: false,
+    webPreferences: {
+      backgroundThrottling: false
+    }
+  });
+  settingsWindow.loadURL(`${urlPath}?settings&section=${section}`);
+  const options = {};
+  if (isWindows) {
+    const exeName = path.basename(process.execPath);
+    options.path = process.exectPath;
+    options.args = [
+      '--processStart',
+      `"${exeName}"`,
+      '--process-start-args',
+      `"--hidden"`
+    ];
+  }
+  const { openAtLogin } = app.getLoginItemSettings(options);
+  settingsWindow.openAtLogin = openAtLogin;
+  settingsWindow.webContents.on('did-finish-load', () => {
+    if (!settingsWindow) {
+      throw new Error('"settingsWindow" is not defined');
+    }
+    if (process.env.START_MINIMIZED) {
+      settingsWindow.minimize();
+    }
+  });
+  return settingsWindow;
+};
 
 const installExtensions = async () => {
   const installer = require('electron-devtools-installer');
@@ -111,9 +158,14 @@ app.on('ready', async () => {
     }
   });
 
+  const aboutWindow = initializeSettingsWindow('about');
+  const preferencesWindow = initializeSettingsWindow('preferences');
+
   const mainMessenger = new MainMessenger({
     tray,
     toolbarWindow,
+    aboutWindow,
+    preferencesWindow,
     app
   });
 
