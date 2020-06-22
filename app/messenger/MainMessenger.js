@@ -189,54 +189,6 @@ class MainMessenger {
   @param {String} section
   creates settings window
   */
-  initializeSettingsWindow = section => {
-    const settingsWindow = new BrowserWindow({
-      name: 'installer',
-      width: 669,
-      height: 405,
-      transparent: false,
-      resizable: false,
-      frame: false,
-      icon,
-      show: false,
-      alwaysOnTop: false,
-      fullscreenable: false,
-      webPreferences: {
-        backgroundThrottling: false
-      }
-    });
-    settingsWindow.loadURL(`${appPath}?settings&section=${section}`);
-    const options = {};
-    if (isWindows) {
-      const exeName = path.basename(process.execPath);
-      options.path = process.exectPath;
-      options.args = [
-        '--processStart',
-        `"${exeName}"`,
-        '--process-start-args',
-        `"--hidden"`
-      ];
-    }
-    const { openAtLogin } = this.contents.app.getLoginItemSettings(options);
-    settingsWindow.openAtLogin = openAtLogin;
-    settingsWindow.webContents.on('did-finish-load', () => {
-      if (!settingsWindow) {
-        throw new Error('"settingsWindow" is not defined');
-      }
-      if (process.env.START_MINIMIZED) {
-        settingsWindow.minimize();
-      } else {
-        settingsWindow.show();
-        settingsWindow.focus();
-      }
-    });
-    this.contents.settingsWindow = settingsWindow;
-  };
-
-  /**
-  @param {String} section
-  creates settings window
-  */
   sendChangeLog = changeLog => {
     const { updaterWindow } = this.contents;
     if (updaterWindow) {
@@ -300,7 +252,8 @@ class MainMessenger {
       const {
         installerWindow,
         updaterWindow,
-        settingsWindow,
+        aboutWindow,
+        preferencesWindow,
         toolbarWindow
       } = this.contents;
 
@@ -337,29 +290,25 @@ class MainMessenger {
       }
 
       if (message === 'open.about') {
-        if (settingsWindow) {
-          settingsWindow.loadURL(`${appPath}?settings&section=about`);
-          settingsWindow.show();
-          settingsWindow.focus();
-        } else {
-          this.initializeSettingsWindow('about');
+        if (aboutWindow) {
+          aboutWindow.show();
+          aboutWindow.focus();
         }
       }
 
       if (message === 'open.preferences') {
-        if (settingsWindow) {
-          settingsWindow.loadURL(`${appPath}?settings&section=preferences`);
-          settingsWindow.show();
-          settingsWindow.focus();
-        } else {
-          this.initializeSettingsWindow('preferences');
+        if (preferencesWindow) {
+          preferencesWindow.show();
+          preferencesWindow.focus();
         }
       }
 
       if (message === 'close.settings') {
-        if (settingsWindow) {
-          settingsWindow.close();
-          delete this.contents.settingsWindow;
+        if (preferencesWindow) {
+          preferencesWindow.hide();
+        }
+        if (aboutWindow) {
+          aboutWindow.hide();
         }
       }
 
