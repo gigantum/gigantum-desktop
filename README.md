@@ -111,7 +111,12 @@ Run the following commands
 
 3. Get size using `yarn image-size` and update the size in `app/libs/config.js`
 
-4. Update release README.md with latest notes.
+4. Update `gigantum.releaseNotes.md` with latest notes.
+   Add size after image tag.
+
+   ```
+   Image Tag: IMAGE_TAG (SIZE)
+   ```
 
 5. Run the `yarn deploy-all` and go to https://github.com/gigantum/gigantum-desktop/releases
 
