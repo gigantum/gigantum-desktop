@@ -115,7 +115,7 @@ Run the following commands
 
 5. Run the `yarn deploy-all` and go to https://github.com/gigantum/gigantum-desktop/releases
 
-6. Click edit on the draft release and add the release `README.md` for releases change logs.
+6. Click edit on the draft release and add the release `README.md` for releases change logs. Add size after image tag.
 
 ## License
 
