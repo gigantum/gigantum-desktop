@@ -29,7 +29,8 @@ type Props = {
   },
   messenger: {
     checkUpdatesResponse: () => void,
-    checkUpdates: () => void
+    checkUpdates: () => void,
+    showManageServer: () => void
   }
 };
 
@@ -119,6 +120,16 @@ export default class Buttons extends PureComponent<Props> {
     return 'Up To Date';
   };
 
+  /**
+   * @param {} -
+   * opens manager server window
+   */
+  manageServers = () => {
+    const { messenger } = this.props;
+    console.log('manageServers');
+    messenger.showManageServer();
+  };
+
   render() {
     const { props, state } = this;
     const disableButtons =
@@ -163,6 +174,13 @@ export default class Buttons extends PureComponent<Props> {
             disabled={disableUpdatebutton}
           >
             {updateText}
+          </button>
+          <button
+            className="Btn__Toolbar"
+            type="button"
+            onClick={() => this.manageServers()}
+          >
+            Manage Servers
           </button>
         </div>
         <div className="Buttons__Links">

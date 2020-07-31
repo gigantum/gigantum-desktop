@@ -6,7 +6,8 @@ import {
   AKNOWLEDGEMENTS,
   RELEASE_NOTES,
   ABOUT,
-  PREFERENCES
+  PREFERENCES,
+  MANAGE_SERVER
 } from './machine/SettingsConstants';
 import stateMachine from './machine/SettingsMachine';
 // messenger
@@ -15,8 +16,14 @@ import SettingsMessenger from './messenger/SettingsMessenger';
 import About from './containers/About';
 import Markdown from './containers/Markdown';
 import Preferences from './containers/Preferences';
+import ManageServer from '../server/ManageServer';
 // assets
 import './Settings.scss';
+
+const capitalize = s => {
+  if (typeof s !== 'string') return '';
+  return s.charAt(0).toUpperCase() + s.slice(1);
+};
 
 type Props = {
   location: {
@@ -26,7 +33,7 @@ type Props = {
   }
 };
 
-export default class Settings extends React.Component<Props> {
+class Settings extends React.Component<Props> {
   props: Props;
 
   state = {
@@ -38,10 +45,9 @@ export default class Settings extends React.Component<Props> {
   componentWillMount = () => {
     const { props } = this;
     const subString = props.location.search.substr(1).split('&')[1];
-    const section = subString.split('=')[1];
-    const message = section === 'about' ? 'About' : 'Preferences';
+    const section = capitalize(subString.split('=')[1]);
     const autoLaunch = remote.getCurrentWindow().openAtLogin;
-    this.setState({ message, autoLaunch });
+    this.setState({ message: section, autoLaunch });
   };
 
   messenger = new SettingsMessenger();
@@ -66,9 +72,14 @@ export default class Settings extends React.Component<Props> {
 
   render() {
     const { props, state, transition, messenger } = this;
-    const renderValue =
-      state.message === 'Preferences' ? PREFERENCES : state.machine.value;
-
+    const renderValue = {
+      Preferences: PREFERENCES,
+      About: ABOUT,
+      ManageServer: MANAGE_SERVER,
+      'Release Notes': RELEASE_NOTES,
+      Aknowledgements: AKNOWLEDGEMENTS
+    }[state.message];
+    console.log(state, renderValue);
     const renderMap = {
       [ABOUT]: <About {...props} {...state} transition={transition} />,
       [RELEASE_NOTES]: (
@@ -79,6 +90,14 @@ export default class Settings extends React.Component<Props> {
       ),
       [PREFERENCES]: (
         <Preferences
+          {...props}
+          {...state}
+          transition={transition}
+          messenger={messenger}
+        />
+      ),
+      [MANAGE_SERVER]: (
+        <ManageServer
           {...props}
           {...state}
           transition={transition}
@@ -98,3 +117,5 @@ export default class Settings extends React.Component<Props> {
     );
   }
 }
+
+export default Settings;

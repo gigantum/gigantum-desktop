@@ -27,7 +27,7 @@ const icon = nativeImage.createFromPath(`${__dirname}/assets/tray/icon.png`);
 icon.setTemplateImage(true);
 
 const mainWindow = null;
-const isSecondInstance = app.makeSingleInstance(() => {
+const isSecondInstance = app.requestSingleInstanceLock(() => {
   if (mainWindow) {
     if (mainWindow.isMinimized()) mainWindow.restore();
     mainWindow.focus();
@@ -143,7 +143,7 @@ app.on('ready', async () => {
   const toolbarWindow = new BrowserWindow({
     name: 'toolbar',
     width: 352,
-    height: 409,
+    height: 444,
     transparent: true,
     resizable: false,
     frame: false,
@@ -160,13 +160,15 @@ app.on('ready', async () => {
 
   const aboutWindow = initializeSettingsWindow('about');
   const preferencesWindow = initializeSettingsWindow('preferences');
+  const manageServerWindow = initializeSettingsWindow('manageServer');
 
   const mainMessenger = new MainMessenger({
     tray,
     toolbarWindow,
     aboutWindow,
     preferencesWindow,
-    app
+    app,
+    manageServerWindow
   });
 
   if (isDev) {

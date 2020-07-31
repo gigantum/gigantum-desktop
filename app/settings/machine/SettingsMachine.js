@@ -5,7 +5,8 @@ import {
   AKNOWLEDGEMENTS,
   RELEASE_NOTES,
   BACK,
-  ABOUT
+  ABOUT,
+  MANAGE_SERVER
 } from './SettingsConstants';
 
 const stateMachine = Machine({
@@ -28,6 +29,13 @@ const stateMachine = Machine({
       meta: { message: 'About' },
       on: {
         [BACK]: ABOUT
+      }
+    },
+    [MANAGE_SERVER]: {
+      meta: { message: 'Manager Server' },
+      on: {
+        MANAGE_SERVER,
+        [BACK]: MANAGE_SERVER
       }
     }
   }
