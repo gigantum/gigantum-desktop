@@ -45,6 +45,7 @@ class AvailableServers extends Component<Props> {
         </section>
       );
     }
+
     return (
       <section>
         <h4 className="ManageServer__h4">Available Servers</h4>
