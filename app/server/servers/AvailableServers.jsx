@@ -6,7 +6,11 @@ import { fetchAvailableServers } from './utils/fetchAvailableServers';
 // css
 import './AvailableServers.scss';
 
-class AvailableServers extends Component {
+type Props = {
+  uuid: string
+};
+
+class AvailableServers extends Component<Props> {
   state = {
     servers: []
   };
@@ -18,9 +22,30 @@ class AvailableServers extends Component {
     fetchAvailableServers(callback);
   }
 
+  componentDidUpdate(prevProps) {
+    const callback = servers => {
+      this.setState({ servers });
+    };
+    const { uuid } = this.props;
+    if (uuid !== prevProps.uuid) {
+      fetchAvailableServers(callback);
+    }
+  }
+
   render() {
     const { servers } = this.state;
-    console.log(servers);
+    if (servers.length < 1) {
+      return (
+        <section>
+          <h4 className="ManageServer__h4">Available Servers</h4>
+          <p className="AvailableServers__p AvailableServers__p--error">
+            {
+              "There was a problem loading your configured servers, or you don't have any configured."
+            }
+          </p>
+        </section>
+      );
+    }
     return (
       <section>
         <h4 className="ManageServer__h4">Available Servers</h4>
@@ -35,7 +60,7 @@ class AvailableServers extends Component {
             {servers.map(server => (
               <tr className="AvailableServers__tr">
                 <td>{server.server.name}</td>
-                <td>{`https://${server.server.id}/`}</td>
+                <td>{server.server.hub_api_url}</td>
               </tr>
             ))}
           </tbody>

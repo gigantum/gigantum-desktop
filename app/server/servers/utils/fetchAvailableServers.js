@@ -3,6 +3,11 @@ import fs from 'fs';
 import os from 'os';
 import glob from 'glob';
 
+/**
+ * Method gets directory for users servers config files
+ * @param {}
+ * @return {string}
+ */
 const serverConfigDir = () => {
   const homedir = os.homedir();
   const dir = `${homedir}/gigantum/.labmanager/servers/`;
@@ -13,6 +18,11 @@ const serverConfigDir = () => {
   return dir;
 };
 
+/**
+ * Method gets all json files in `${homedir}/gigantum/.labmanager/servers/` and returns an array of Objects
+ * @param {function} callback
+ * @return {array}
+ */
 const fetchAvailableServers = callback => {
   const dir = serverConfigDir();
 

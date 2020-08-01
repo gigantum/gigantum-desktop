@@ -1,0 +1,64 @@
+@import '~Styles/_imports.scss';
+
+.AddServer {
+  &__container {
+    height: 60px;
+  }
+  &__container,
+  &__p {
+    margin-left: 2em;
+    &--error {
+      margin: 0;
+      color: $warning;
+    }
+  }
+
+  &__button {
+    margin: 5px 1em;
+    height: 30px;
+    width: 30px;
+    border: 0;
+    border-radius: 15px;
+
+    &:disabled {
+      background-color: $font-grey;
+    }
+
+    &--add {
+      background: $white url('~Images/icons/add.svg') no-repeat center center;
+      background-size: 28px;
+      &:disabled {
+        background: $white url('~Images/icons/add-grey.svg') no-repeat center
+          center;
+        background-size: 28px;
+      }
+    }
+
+    &--loading {
+      background: $primary url('~Images/loaders/spinner-white.svg') no-repeat
+        center center;
+      background-size: 24px;
+
+      &:disabled {
+        background-color: $primary;
+      }
+    }
+
+    &--done {
+      background: $white url('~Images/icons/check-selected.svg') no-repeat
+        center center;
+      background-size: 42px;
+      &:disabled {
+        background-color: $white;
+      }
+    }
+
+    &--error {
+      background: $white url('~Images/icons/error.svg') no-repeat center center;
+      background-size: 28px;
+      &:disabled {
+        background-color: $white;
+      }
+    }
+  }
+}
