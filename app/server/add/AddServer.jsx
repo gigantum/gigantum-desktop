@@ -23,8 +23,6 @@ class AddServer extends Component<Props> {
    * @param {object} evt
    */
   updateUrl = evt => {
-    console.log(evt.key);
-
     if (evt.key === 'Enter') {
       this.addServer();
     } else {

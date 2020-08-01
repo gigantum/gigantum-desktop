@@ -39,9 +39,8 @@ class AvailableServers extends Component<Props> {
         <section>
           <h4 className="ManageServer__h4">Available Servers</h4>
           <p className="AvailableServers__p AvailableServers__p--error">
-            {
-              "There was a problem loading your configured servers, or you don't have any configured."
-            }
+            There was a problem loading your configured servers, or you
+            don&apos;t have any configured.
           </p>
         </section>
       );

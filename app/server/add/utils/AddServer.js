@@ -22,7 +22,6 @@ const fetchServerData = (url, data, fetchType, callback) => {
       return true;
     })
     .catch(error => {
-      console.log(error);
       callback(error);
     });
 };
@@ -50,7 +49,6 @@ const serverConfigDir = () => {
  * @return {string}
  */
 const writeToFile = (data, callback) => {
-  console.log(data);
   const serverId = data.server.id;
   const filename = `${serverId}.json`;
   const dir = serverConfigDir();
@@ -100,15 +98,12 @@ const addServer = (url: string, callbackAdd) => {
         fetchServerData(discoveryService, {}, 'server', callback);
       },
       (data, callback) => {
-        console.log(data);
         checkUrlFormat(data, callback);
       },
       (data, callback) => {
-        console.log(data);
         fetchServerData(data.server.auth_config_url, data, 'auth', callback);
       },
       (data, callback) => {
-        console.log(data);
         writeToFile(data, callback);
       }
     ],
@@ -116,7 +111,6 @@ const addServer = (url: string, callbackAdd) => {
       if (err) {
         callbackAdd(err, null);
       } else {
-        console.log(result);
         callbackAdd(null, result);
       }
     }
