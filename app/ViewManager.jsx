@@ -42,7 +42,7 @@ class ViewManager extends Component<Props> {
 
     return (
       <Router>
-        <div>
+        <div style={{ width: '100%', height: '100%' }}>
           <Route
             path="/"
             component={renderProps => (

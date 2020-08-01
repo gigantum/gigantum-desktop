@@ -9,7 +9,7 @@
             <g id="icon/add-note-copy" transform="translate(19.798990, 19.798990) rotate(-315.000000) translate(-19.798990, -19.798990) translate(5.798990, 5.798990)">
                 <g id="Group-3" transform="translate(0.000000, 0.000000)">
                     <g id="Button/Add-activity" transform="translate(0.000000, 0.000000)">
-                        <circle id="Oval-2" stroke="#FFFFFF" fill="#386e80" cx="14" cy="14" r="13"></circle>
+                        <circle id="Oval-2" stroke="#FFFFFF" fill="#2F8DA3" cx="14" cy="14" r="13"></circle>
                         <path d="M16.4055916,5.91134266 L16.4055916,19.9113427" id="Line" stroke="#FFFFFF" stroke-linecap="round"></path>
                         <path d="M9.33452378,20.363961 L16.4055916,20.363961" id="Line" stroke="#FFFFFF" stroke-linecap="round"></path>
                     </g>

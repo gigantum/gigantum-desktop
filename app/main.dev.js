@@ -60,11 +60,11 @@ if (
 @param {String} section
 creates settings window
 */
-const initializeSettingsWindow = section => {
+const initializeSettingsWindow = (section, width, height) => {
   const settingsWindow = new BrowserWindow({
-    name: 'installer',
-    width: 669,
-    height: 405,
+    name: section,
+    width,
+    height,
     transparent: false,
     resizable: false,
     frame: false,
@@ -158,9 +158,9 @@ app.on('ready', async () => {
     }
   });
 
-  const aboutWindow = initializeSettingsWindow('about');
-  const preferencesWindow = initializeSettingsWindow('preferences');
-  const manageServerWindow = initializeSettingsWindow('manageServer');
+  const aboutWindow = initializeSettingsWindow('about', 669, 405);
+  const preferencesWindow = initializeSettingsWindow('preferences', 669, 405);
+  const manageServerWindow = initializeSettingsWindow('manageServer', 669, 480);
 
   const mainMessenger = new MainMessenger({
     tray,

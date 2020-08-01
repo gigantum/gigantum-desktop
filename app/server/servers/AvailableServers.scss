@@ -1,0 +1,40 @@
+@import '~Styles/_imports.scss';
+
+.AvailableServers {
+  &__table {
+    width: 38em;
+    margin: 0 2em;
+  }
+
+  &__thead {
+    border: 1px solid $primary;
+
+    tr th {
+      color: $mineShaft;
+      font-weight: 300;
+      font-size: 16px;
+      padding: 10px 30px;
+      height: 30px;
+      text-align: left;
+    }
+  }
+
+  &__tbody {
+    border: 1px solid $primary;
+    min-height: 100px;
+    height: 100px;
+
+    tr td {
+      color: $mineShaft;
+      font-weight: 300;
+      font-size: 13px;
+      padding: 10px 30px;
+      height: 30px;
+      text-align: left;
+    }
+  }
+
+  &__tr {
+    border: 0;
+  }
+}
