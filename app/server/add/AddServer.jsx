@@ -68,20 +68,8 @@ class AddServer extends Component<Props> {
     return (
       <section>
         <h4 className="ManageServer__h4">Add Server</h4>
-        <p className="AddServer__p">
-          If you have access to a self-hosted Team or Enterprise Server, add it
-          here. The server will then appear as an option on the Client login
-          screen.{' '}
-          <a
-            role="presentation"
-            onKeyUp={() => {}}
-            onClick={() => utils.open('https://docs.gigantum.com/')}
-          >
-            Learn more.
-          </a>
-        </p>
         <div className="AddServer__container">
-          <div className="AddServer___input flex">
+          <div className="flex">
             <input
               placeholder="Enter server url here"
               onKeyUp={evt => this.updateUrl(evt)}
@@ -98,11 +86,23 @@ class AddServer extends Component<Props> {
           </div>
           {button === 'error' && (
             <p className="AddServer__p AddServer__p--error">
-              Failed to connect to the server provided. Make sure the url is
-              formatted correctly.
+              The server doesn&apos;t have a valid service or is not responding.
             </p>
           )}
         </div>
+
+        <p className="AddServer__p">
+          If you have access to a self-hosted Team or Enterprise Server, add it
+          here. The server will then appear as an option on the Client login
+          screen.{' '}
+          <a
+            role="presentation"
+            onKeyUp={() => {}}
+            onClick={() => utils.open('https://docs.gigantum.com/')}
+          >
+            Learn more.
+          </a>
+        </p>
       </section>
     );
   }

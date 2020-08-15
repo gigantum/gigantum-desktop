@@ -289,7 +289,6 @@
     "node-powershell": "^4.0.0",
     "normalize-sass": "^1.0.0",
     "open": "^6.4.0",
-    "ping": "^0.2.3",
     "pump": "^3.0.0",
     "react": "^16.6.3",
     "react-circular-progressbar": "^2.0.2",

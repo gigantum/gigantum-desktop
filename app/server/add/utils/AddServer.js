@@ -15,20 +15,8 @@ import os from 'os';
  */
 const fetchServerData = (url, data, fetchType, callback) => {
   fetch(url)
-    .then(res => {
-      if (
-        res.status !== 200 ||
-        res.headers.get('content-type') !== 'application/json'
-      ) {
-        return { message: 'No json', server: false };
-      }
-      return res.json();
-    })
+    .then(res => res.json())
     .then(body => {
-      if (body.message) {
-        callback(null, body);
-        return;
-      }
       data[fetchType] = body;
       callback(null, data);
       return true;
@@ -93,6 +81,8 @@ const checkUrlFormat = (data, callback) => {
   callback(null, data);
 };
 
+// https://gtm-dev.cloud/
+
 /**
  * Method to discover a server's configuration and add it to the local configured servers
  * @param {string} url
@@ -100,20 +90,12 @@ const checkUrlFormat = (data, callback) => {
  * @return {string}
  */
 const addServer = (url: string, callbackAdd) => {
-  const teamURL = `${url}gigantum/.well-known/discover.json`;
-  const enterpriseURL = `${url}.well-known/discover.json`;
+  const discoveryService = `${url}.well-known/discover.json`;
 
   async.waterfall(
     [
       callback => {
-        fetchServerData(teamURL, {}, 'server', callback);
-      },
-      (data, callback) => {
-        if (data.server === false) {
-          fetchServerData(enterpriseURL, {}, 'server', callback);
-        } else {
-          callback(null, data);
-        }
+        fetchServerData(discoveryService, {}, 'server', callback);
       },
       (data, callback) => {
         checkUrlFormat(data, callback);
