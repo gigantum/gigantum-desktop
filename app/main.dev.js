@@ -27,7 +27,7 @@ const icon = nativeImage.createFromPath(`${__dirname}/assets/tray/icon.png`);
 icon.setTemplateImage(true);
 
 const mainWindow = null;
-const isSecondInstance = app.requestSingleInstanceLock(() => {
+const isSecondInstance = app.makeSingleInstance(() => {
   if (mainWindow) {
     if (mainWindow.isMinimized()) mainWindow.restore();
     mainWindow.focus();

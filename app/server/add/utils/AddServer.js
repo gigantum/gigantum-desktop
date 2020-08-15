@@ -1,5 +1,5 @@
 // vendor
-import fetch from 'node-fetch';
+// import fetch from 'node-fetch';
 import async from 'async';
 import fs from 'fs';
 import os from 'os';
@@ -14,6 +14,7 @@ import os from 'os';
  * @return {string}
  */
 const fetchServerData = (url, data, fetchType, callback) => {
+  console.log(url, data, fetchType, callback);
   fetch(url)
     .then(res => {
       if (
