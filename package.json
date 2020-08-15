@@ -77,8 +77,7 @@
     "afterSign": "scripts/notarize.js",
     "mac": {
       "hardenedRuntime": true,
-      "entitlements": "./resources/entitlements.mac.plist",
-      "entitlementsInherit": "./resources/entitlements.mac.inherit.plist"
+      "entitlements": "./resources/entitlements.mac.inherit.plist"
     },
     "dmg": {
       "iconSize": 170,
