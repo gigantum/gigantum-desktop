@@ -37,7 +37,13 @@ class AddServer extends Component<Props> {
   addServer = () => {
     const { updateRenderId } = this.props;
     const { url } = this.state;
+    const urlHTTPS =
+      url.indexOf('https://') < 0 && url.indexOf('http://') < 0
+        ? `https://${url}`
+        : url;
+
     this.setState({ button: 'loading' });
+
     const callback = err => {
       setTimeout(() => {
         if (err) {
@@ -52,8 +58,10 @@ class AddServer extends Component<Props> {
         this.setState({ button: 'add' });
       }, 10000);
     };
-    const urlLastIndex = url.length - 1;
-    const checkedUrl = url[urlLastIndex] === '/' ? url : `${url}/`;
+    const urlLastIndex = urlHTTPS.length - 1;
+    const checkedUrl =
+      urlHTTPS[urlLastIndex] === '/' ? urlHTTPS : `${urlHTTPS}/`;
+
     addServer(checkedUrl, callback);
   };
 

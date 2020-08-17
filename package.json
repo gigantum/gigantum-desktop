@@ -1,7 +1,7 @@
 {
   "name": "gigantum",
   "productName": "Gigantum",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "description": "The Gigantum Desktop app is used to run the Gigantum Client on your computer. Gigantum is an open platform for developing, executing, and sharing analysis via integrated repositories that bundle data, code, and environment configuration together.",
   "scripts": {
     "build": "concurrently \"yarn build-main\" \"yarn build-renderer\"",
@@ -38,7 +38,7 @@
     "test-e2e-live": "node -r @babel/register ./internals/scripts/CheckBuiltsExist.js && cross-env NODE_ENV=test testcafe-live electron:./ ./test/e2e/HomePage.e2e.js",
     "test-watch": "yarn test --watch",
     "deploy": "GITHUB_TOKEN=`cat secrets/config.json | json select '.github_token'`  WIN_CSC_LINK=`cat secrets/config.json | json select '.cert_directory'` WIN_CSC_KEY_PASSWORD=`cat secrets/config.json | json select '.cert_keyphrase'` yarn package",
-    "deploy-variables": "APPLEID=`cat secrets/config.json | json select '.apple_email'` APPLEIDPASS=`cat secrets/config.json | json select '.apple_pass'` GITHUB_TOKEN=`cat secrets/config.json | json select '.github_token'` GH_TOKEN=`cat secrets/config.json | json select '.github_token'`",
+    "deploy-variables": "PROVIDER=`cat secrets/config.json | json select '.provider_shortname'` APPLEID=`cat secrets/config.json | json select '.apple_email'` APPLEIDPASS=`cat secrets/config.json | json select '.apple_pass'` GITHUB_TOKEN=`cat secrets/config.json | json select '.github_token'` GH_TOKEN=`cat secrets/config.json | json select '.github_token'`",
     "deploy-win-variables": "WIN_CSC_LINK=`cat secrets/config.json | json select '.cert_directory'` WIN_CSC_KEY_PASSWORD=`cat secrets/config.json | json select '.cert_keyphrase'`",
     "deploy-linux": "yarn deploy-variables yarn publish-linux",
     "deploy-mac": "yarn deploy-variables yarn publish-mac",
@@ -68,6 +68,7 @@
   },
   "main": "./app/main.prod.js",
   "build": {
+    "appId": "com.gigantum.app",
     "files": [
       "app/",
       "resources/",
@@ -299,6 +300,8 @@
     "react-relay": "4.0.0",
     "react-router": "^5.0.1",
     "react-router-dom": "^4.3.1",
+    "react-text-truncate": "^0.16.0",
+    "react-tooltip": "^4.2.8",
     "redux": "^4.0.1",
     "redux-thunk": "^2.3.0",
     "relay-compiler": "4.0.0",
@@ -313,6 +316,7 @@
     "systeminformation": "^4.14.8",
     "through-json": "^1.1.0",
     "through2": "^2.0.3",
+    "truncate": "^2.1.0",
     "tunnel-ssh": "^4.1.4",
     "xstate": "^4.5.0"
   },

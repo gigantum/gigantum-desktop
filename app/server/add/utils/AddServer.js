@@ -14,7 +14,6 @@ import os from 'os';
  * @return {string}
  */
 const fetchServerData = (url, data, fetchType, callback) => {
-  console.log(url, data, fetchType, callback);
   fetch(url)
     .then(res => {
       if (

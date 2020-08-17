@@ -79,7 +79,6 @@ class Settings extends React.Component<Props> {
       'Release Notes': RELEASE_NOTES,
       Aknowledgements: AKNOWLEDGEMENTS
     }[state.message];
-    console.log(state, renderValue);
     const renderMap = {
       [ABOUT]: <About {...props} {...state} transition={transition} />,
       [RELEASE_NOTES]: (

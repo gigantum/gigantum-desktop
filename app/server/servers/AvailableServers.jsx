@@ -3,6 +3,8 @@
 import React, { Component } from 'react';
 // utils
 import { fetchAvailableServers } from './utils/fetchAvailableServers';
+// components
+import Row from './row/Row';
 // css
 import './AvailableServers.scss';
 
@@ -58,10 +60,7 @@ class AvailableServers extends Component<Props> {
           </thead>
           <tbody className="AvailableServers__tbody">
             {servers.map(server => (
-              <tr className="AvailableServers__tr">
-                <td>{server.server.name}</td>
-                <td>{server.server.hub_api_url}</td>
-              </tr>
+              <Row server={server.server} />
             ))}
           </tbody>
         </table>

@@ -126,7 +126,6 @@ export default class Buttons extends PureComponent<Props> {
    */
   manageServers = () => {
     const { messenger } = this.props;
-    console.log('manageServers');
     messenger.showManageServer();
   };
 

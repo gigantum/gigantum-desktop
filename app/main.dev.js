@@ -26,16 +26,21 @@ import checkForUpdates from './updater';
 const icon = nativeImage.createFromPath(`${__dirname}/assets/tray/icon.png`);
 icon.setTemplateImage(true);
 
+const gotTheLock = app.requestSingleInstanceLock();
 const mainWindow = null;
-const isSecondInstance = app.makeSingleInstance(() => {
-  if (mainWindow) {
-    if (mainWindow.isMinimized()) mainWindow.restore();
-    mainWindow.focus();
-  }
-});
-
-if (isSecondInstance) {
+if (!gotTheLock) {
   app.quit();
+} else {
+  app.on('second-instance', () => {
+    // Someone tried to run a second instance, we should focus our window.
+    if (mainWindow) {
+      if (mainWindow.isMinimized()) mainWindow.restore();
+      mainWindow.focus();
+    }
+  });
+
+  // Create mainWindow, load the rest of the app, etc...
+  app.on('ready', () => {});
 }
 
 sentry();

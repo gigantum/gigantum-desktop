@@ -36,17 +36,6 @@
     min-height: 100px;
     height: 100px;
     overflow: auto;
-
-    tr td {
-      color: $mineShaft;
-      font-weight: 300;
-      font-size: 13px;
-      padding: 0 2rem;
-      line-height: 2rem;
-      height: 2rem;
-      text-align: left;
-      width: 50%;
-    }
   }
 
   &__tr {
