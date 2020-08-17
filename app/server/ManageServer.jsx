@@ -27,7 +27,7 @@ class ManageServer extends Component {
     const { uuid } = this.state;
     return (
       <div className="ManageServer">
-        <Header message="Manage Server" />
+        <Header message="Manage Servers" />
         <div className="ManageServer__container">
           <AddServer updateRenderId={this.updateRenderId} />
           <AvailableServers uuid={uuid} />

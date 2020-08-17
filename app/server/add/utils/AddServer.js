@@ -116,7 +116,11 @@ const addServer = (url: string, callbackAdd) => {
         }
       },
       (data, callback) => {
-        checkUrlFormat(data, callback);
+        if (data.server === false) {
+          callback(null, data);
+        } else {
+          checkUrlFormat(data, callback);
+        }
       },
       (data, callback) => {
         fetchServerData(data.server.auth_config_url, data, 'auth', callback);

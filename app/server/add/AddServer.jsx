@@ -15,7 +15,7 @@ type Props = {
 class AddServer extends Component<Props> {
   state = {
     url: '',
-    button: 'add' // add, loading, done, error
+    buttonType: 'add' // add, loading, done, error
   };
 
   /**
@@ -42,20 +42,20 @@ class AddServer extends Component<Props> {
         ? `https://${url}`
         : url;
 
-    this.setState({ button: 'loading' });
+    this.setState({ buttonType: 'loading' });
 
     const callback = err => {
       setTimeout(() => {
         if (err) {
-          this.setState({ button: 'error' });
+          this.setState({ buttonType: 'error' });
         } else {
-          this.setState({ button: 'done', url: '' });
+          this.setState({ buttonType: 'done', url: '' });
         }
         updateRenderId();
       }, 1000);
 
       setTimeout(() => {
-        this.setState({ button: 'add' });
+        this.setState({ buttonType: 'add' });
       }, 10000);
     };
     const urlLastIndex = urlHTTPS.length - 1;
@@ -66,12 +66,12 @@ class AddServer extends Component<Props> {
   };
 
   render() {
-    const { button, url } = this.state;
-    const buttonDisabled = url === '' || button !== 'add';
+    const { buttonType, url } = this.state;
+    const buttonDisabled = url === '' || buttonType !== 'add';
     // declare css here
     const buttonCSS = classNames({
       'AddServer__button Btn': true,
-      [`AddServer__button--${button}`]: true
+      [`AddServer__button--${buttonType}`]: true
     });
     return (
       <section>
@@ -104,7 +104,7 @@ class AddServer extends Component<Props> {
               type="button"
             />
           </div>
-          {button === 'error' && (
+          {buttonType === 'error' && (
             <p className="AddServer__p AddServer__p--error">
               Failed to connect to the server provided. Make sure the url is
               formatted correctly.
