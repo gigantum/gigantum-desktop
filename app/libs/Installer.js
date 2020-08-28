@@ -336,6 +336,98 @@ class Installer {
     }
   };
 
+  /* WSL2 CHANGES */
+
+  /**
+   * @param {Function} callback
+   * Enable Windows Subsystem for Linux
+   */
+  enableWindowsSubystem = callback => {
+    const ps = new Shell({
+      executionPolicy: 'Bypass',
+      noProfile: true
+    });
+    ps.addCommand(
+      'dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart'
+    );
+    ps.invoke()
+      .then(response => {
+        console.log('response in enableWindowsSubystem', response);
+        callback({ success: true, data: {} });
+        return null;
+      })
+      .catch(() => {
+        ps.dispose();
+      });
+  };
+
+  /**
+   * @param {Function} callback
+   * Set WSL2 as default version
+   */
+  setDefaultWsl2 = callback => {
+    const ps = new Shell({
+      executionPolicy: 'Bypass',
+      noProfile: true
+    });
+    ps.addCommand('wsl --set-default-version 2');
+    ps.invoke()
+      .then(response => {
+        console.log('response in setDefaultWsl2', response);
+        callback({ success: true, data: {} });
+        return null;
+      })
+      .catch(() => {
+        ps.dispose();
+      });
+  };
+
+  /**
+   * @param {Function} callback
+   * Downloads linux subsystem
+   */
+  downloadLinuxSubysystem = callback => {
+    const ps = new Shell({
+      executionPolicy: 'Bypass',
+      noProfile: true
+    });
+    ps.addCommand(
+      'Invoke-WebRequest -Uri https://aka.ms/wsl-ubuntu-1604 -OutFile Ubuntu.appx -UseBasicParsing'
+    );
+    ps.invoke()
+      .then(response => {
+        console.log('response in downloadLinuxSubysystem', response);
+        callback({ success: true, data: {} });
+        return null;
+      })
+      .catch(() => {
+        ps.dispose();
+      });
+  };
+
+  /**
+   * @param {Function} callback
+   * Installs linux subsystem
+   */
+  installLinuxSubysystem = callback => {
+    const ps = new Shell({
+      executionPolicy: 'Bypass',
+      noProfile: true
+    });
+    ps.addCommand('Add-AppxPackage .\\app_name.appx');
+    ps.invoke()
+      .then(response => {
+        console.log('response in installLinuxSubysystem', response);
+        callback({ success: true, data: {} });
+        return null;
+      })
+      .catch(() => {
+        ps.dispose();
+      });
+  };
+
+  /* End WSL2 Functions */
+
   /**
    * @param {Function} callback
    * @param {Function} windowsDockerStartedCallback
