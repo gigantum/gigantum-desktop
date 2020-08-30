@@ -1,3 +1,40 @@
+## 2020-08-27
+
+### Gigantum Client (v1.3.3)
+
+Image Tag: d0c812c2 (399956946)
+
+Image ID: 2e8a683b8e
+
+- **FIX**
+
+  - Fixed a typo in the main fallback error component (Grey screen of death) (#1422)
+  - Resolved an issue with notification tray rapidly opening and closing. (#1415)
+  - Uploading an empty folder will no longer display the same warning multiple times (#1415)
+  - Fixes loading cards temporarily not displaying when remote projects/datasets are loading. (#1462)
+  - git add_all was raising an exception when trying to add an ignored directory (e.g. in untracked) (#1457)
+  - There was an issue with change visibility firing during large publish and sync jobs. To resolve this the change visibility button should be disabled while project is 'busy'. (#1405)
+  - Fixes file size warning not appearing when file size is exactly 500MB (#1458)
+  - Fixed several minor styling issues for Safari that were captured during testing (#1424)
+  - Modified git add operations to ignore gitignored files (#1408)
+  - Files that are exactly 500MB in size will now recieve a warning on filesize limits while uploading (#1407)
+  - Added loading state for fileBrowser while worker processes files (#1460)
+  - Support popup blocker modal for newly supported browsers (#1460)
+  - Remote Datasets will correctly show loading cards while paging (#1460)
+  - Adjusted the min-size of text input elements. This solves overflow issues with some input fields on Firefox. (#1406)
+  - Resolved a CSS issue that caused the fullscreen editor to break the UI in Safari and Edge (#1423)
+  - Resolved an issue with checking for commits ahead or behind on branches that aren't checked out (#1420)
+
+- **IMPROVEMENT**
+
+  - The color of the dropdown filter options in the select base modal match the color of the tags they add. (#1421)
+  - Improved messaging when the browser's popup blocker prevents launching of the development tool (#1410)
+  - Added ability for multiple anonymous accounts when using anon_review auth (#1449)
+  - Updates browser detect to support safari, edge-chromium and opera (#1447)
+
+- **NEW**
+  - Implement the baseline functionality for the new automated test framework (#1435)
+
 ## 2020-06-24
 
 ### Gigantum Client (v1.3.2)
