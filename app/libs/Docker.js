@@ -189,13 +189,6 @@ class Docker {
       }
       const dockerPath = isNewDocker ? dockerDesktopPath : dockerWindowsPath;
 
-      // console.log(process.env.Path)
-      // if (process.env.Path){
-      //   delete process.env.Path;
-      // }
-      // console.log(process.env.Path);
-      // console.log('...')
-
       ps.addCommand(`Remove-Item env:Path; Start-Process "${dockerPath}"`);
       ps.invoke()
         .then(() => {
