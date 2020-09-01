@@ -4,6 +4,7 @@ import React, { Component } from 'react';
 import {
   CHECKING,
   INSTALL_DOCKER,
+  INSTALL_WSL2,
   CONFIGURE_DOCKER,
   CONFIGURE_GIGANTUM,
   INSTALL_COMPLETE,
@@ -19,6 +20,7 @@ import InstallerClass from '../libs/Installer';
 // containers
 import Checking from './containers/Checking';
 import Error from './containers/Error';
+import InstallWSL2 from './containers/InstallWSL2';
 import InstallDocker from './containers/InstallDocker';
 import ConfigureDocker from './containers/ConfigureDocker';
 import ConfigureGigantum from './containers/ConfigureGigantum';
@@ -63,6 +65,7 @@ export default class Installer extends Component<Props> {
   */
   transition = (eventType, nextState) => {
     const { state } = this;
+    console.log(eventType, nextState);
     const newState = stateMachine.transition(state.machine.value, eventType, {
       state
     });
@@ -87,6 +90,8 @@ export default class Installer extends Component<Props> {
 
   render() {
     const { props, state, transition } = this;
+    console.log(state.machine);
+
     const renderMap = {
       [CHECKING]: (
         <Checking
@@ -98,6 +103,14 @@ export default class Installer extends Component<Props> {
       ),
       [INSTALL_DOCKER]: (
         <InstallDocker
+          {...props}
+          {...state}
+          transition={transition}
+          interface={this.interface}
+        />
+      ),
+      [INSTALL_WSL2]: (
+        <InstallWSL2
           {...props}
           {...state}
           transition={transition}

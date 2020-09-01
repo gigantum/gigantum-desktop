@@ -5,6 +5,7 @@ import {
   CHECKING,
   ERROR,
   INSTALL_DOCKER,
+  INSTALL_WSL2,
   CONFIGURE_DOCKER,
   CONFIGURE_GIGANTUM,
   INSTALL_COMPLETE,
@@ -22,7 +23,15 @@ const stateMachine = Machine({
         ERROR,
         INSTALL_DOCKER,
         CONFIGURE_DOCKER,
-        CONFIGURE_GIGANTUM
+        CONFIGURE_GIGANTUM,
+        INSTALL_WSL2
+      }
+    },
+    [INSTALL_WSL2]: {
+      meta: { message: 'Configure Windows Subsystem', additionalInfo: '' },
+      on: {
+        SUCCESS: CHECKING,
+        ERROR
       }
     },
     [INSTALL_DOCKER]: {

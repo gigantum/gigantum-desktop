@@ -1,7 +1,8 @@
 // @flow
 import disk from 'check-disk-space';
-import fixPath from 'fix-path';
+import childProcess from 'child_process';
 import log from 'electron-log';
+import os from 'os';
 // libs
 import Docker from './Docker';
 import Gigantum from './Gigantum';
@@ -9,8 +10,6 @@ import Installer from './Installer';
 import spawnWrapper from './spawnWrapper';
 
 const isWindows = process.platform === 'win32';
-
-fixPath();
 
 class InstallerInterface {
   /**
@@ -26,11 +25,7 @@ class InstallerInterface {
    * Defaults END
    */
 
-  /**
-   * @param {Function} callback
-   * checks if docker is installed
-   */
-  check = callback => {
+  checkDocker = callback => {
     const dockerVersion = spawnWrapper.getSpawn('docker', ['-v']);
     dockerVersion.on('error', error => {
       console.log(error);
@@ -82,6 +77,47 @@ class InstallerInterface {
   };
 
   /**
+   * @param {Function} callback
+   * checks if docker is installed
+   */
+  check = callback => {
+    console.log(isWindows);
+    if (isWindows) {
+      const build = os.release().split('.')[2];
+      const wsl2Supported = Number(build) >= 19041;
+      console.log('ran here');
+      if (wsl2Supported) {
+        console.log('wsl2 supported');
+        const wslCheck = childProcess.spawn('powershell', ['wsl', '-l', '-v']);
+        wslCheck.stdout.on('data', data => {
+          const repositoryUninstalled =
+            data
+              .toString()
+              .split('\n')[0]
+              .replace(/[^a-zA-Z ]/g, '') ===
+            'Windows Subsystem for Linux has no installed distributions';
+
+          if (repositoryUninstalled) {
+            console.log('wsl2 callback called');
+            callback({
+              success: false,
+              data: {
+                error: {
+                  message: 'WSL2 not configured.'
+                }
+              }
+            });
+          } else {
+            this.checkDocker(callback);
+          }
+        });
+      }
+    } else {
+      this.checkDocker(callback);
+    }
+  };
+
+  /**
    * @param {Function} progressCallback
    * @param {Function} dndCallback
    * handles docker download
@@ -89,6 +125,7 @@ class InstallerInterface {
    */
   download = (progressCallback, launchCallback, dndCallback) => {
     const { installer } = this;
+
     const downloadDockerCallback = response => {
       if (response.success && response.finished) {
         progressCallback({ success: true, progress: 100, finished: true });
@@ -107,6 +144,36 @@ class InstallerInterface {
     };
 
     installer.downloadDocker(downloadDockerCallback);
+  };
+
+  /**
+   * @param {Function} progressCallback
+   * @param {Function} dndCallback
+   * handles docker download
+   * @calls {installer.downloadDocker}
+   */
+  downloadLinux = (progressCallback, launchCallback, configureCallback) => {
+    const { installer } = this;
+
+    const downloadLinuxCallback = response => {
+      if (response.success && response.finished) {
+        progressCallback({ success: true, progress: 100, finished: true });
+        installer.enableWindowsSubystem(
+          launchCallback,
+          response.data.downloadedFile,
+          configureCallback
+        );
+      } else if (response.success) {
+        progressCallback({ success: true, progress: response.data.progress });
+      } else {
+        log.warn('Error in download');
+        log.warn(response);
+        progressCallback({ success: false });
+      }
+    };
+
+    // installer.downloadDocker(downloadDockerCallback);
+    installer.downloadLinux(downloadLinuxCallback);
   };
 
   /**
@@ -170,6 +237,7 @@ class InstallerInterface {
      * @calls {callback}
      */
     const updateSettingsCallback = response => {
+      console.log(response);
       if (response.success) {
         defaultCallback(response);
       } else {
@@ -184,6 +252,7 @@ class InstallerInterface {
      * @calls {installer.startDockerApplication}
      */
     const dockerisReadyCallback = response => {
+      console.log(response);
       if (response.success) {
         if (skipConfigure) {
           defaultCallback(response);
@@ -206,7 +275,9 @@ class InstallerInterface {
      * @calls {installer.checkIfDockerIsReady}
      */
     const startDockerCallback = response => {
+      console.log(response);
       if (response.success) {
+        console.log('ran in start docker callback');
         installer.checkIfDockerIsReady(dockerisReadyCallback);
       } else {
         log.warn('Error in start docker cb');
@@ -227,6 +298,7 @@ class InstallerInterface {
     const configureDockerCallback = () => {
       gigantum.configureGigantum(callback);
     };
+    console.log('made it here');
     this.configureDocker({ defaultCallback: configureDockerCallback }, true);
   };
 }

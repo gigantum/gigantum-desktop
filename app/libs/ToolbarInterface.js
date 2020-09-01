@@ -1,12 +1,8 @@
-// @flow
-import fixPath from 'fix-path';
 // libs
 import Docker from './Docker';
 import Installer from './Installer';
 import Gigantum from './Gigantum';
 import spawnWrapper from './spawnWrapper';
-
-fixPath();
 
 const pingDocker = (dockerConnectionTest, callback) => {
   dockerConnectionTest()

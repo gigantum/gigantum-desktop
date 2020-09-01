@@ -4,7 +4,6 @@ import childProcess from 'child_process';
 import download from 'download';
 import fs from 'fs';
 import os from 'os';
-import fixPath from 'fix-path';
 import Shell from 'node-powershell';
 import sudo from 'sudo-prompt';
 import si from 'systeminformation';
@@ -16,8 +15,6 @@ import spawnWrapper from './spawnWrapper';
 const isLinux = process.platform === 'linux';
 const isMac = process.platform === 'darwin';
 const isWindows = process.platform === 'win32';
-
-fixPath();
 
 const mb = 1048576;
 let cores;
@@ -262,14 +259,13 @@ class Installer {
    *
    */
   checkIfDockerIsReady = (callback, reconnectCount = 0, checkNotReady) => {
+    console.log('running in isReadyLoop');
     if (reconnectCount < 601 || checkNotReady) {
-      if (isWindows && process.env.PATH.indexOf('Docker') === -1) {
-        process.env.PATH = `C:\\ProgramData\\DockerDesktop\\version-bin;C:\\Program Files\\Docker\\Docker\\Resources\\bin;${process.env.PATH}`;
-      }
       try {
         const dockerPs = spawnWrapper.getSpawn('docker', ['ps']);
         dockerPs.stdout.on('data', data => {
           const message = data.toString();
+          console.log(message);
           if (!checkNotReady) {
             callback({ success: true, data: { message } });
           } else if (!this.timeout) {
@@ -284,7 +280,10 @@ class Installer {
           }
         });
 
-        dockerPs.stderr.on('data', () => {
+        dockerPs.stderr.on('data', data => {
+          const message = data.toString();
+          console.log(message);
+
           if (checkNotReady) {
             callback({ success: true });
           } else {
@@ -297,7 +296,8 @@ class Installer {
             }, 1000);
           }
         });
-        dockerPs.on('error', () => {
+        dockerPs.on('error', err => {
+          console.log(err);
           if (checkNotReady) {
             callback({ success: true });
           } else {
@@ -311,6 +311,7 @@ class Installer {
           }
         });
       } catch (error) {
+        console.log(error);
         if (checkNotReady) {
           callback({ success: true });
         } else {
@@ -342,66 +343,86 @@ class Installer {
    * @param {Function} callback
    * Enable Windows Subsystem for Linux
    */
-  enableWindowsSubystem = callback => {
-    const ps = new Shell({
-      executionPolicy: 'Bypass',
-      noProfile: true
-    });
-    ps.addCommand(
-      'dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart'
+  enableWindowsSubystem = (callback, downloadedFile, configureCallback) => {
+    const options = { name: 'Gigantum', shell: true };
+    sudo.exec(
+      `powershell dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart; wsl --set-default-version 2; Add-AppxPackage ${downloadedFile}; Start-Process .\\wsl_update_x64.msi -ArgumentList '/quiet' -Wait; Start-Process 'C:\\Program Files\\WindowsApps\\CanonicalGroupLimited.Ubuntu20.04onWindows_2004.2020.424.0_x64__79rhkp1fndgsc\\ubuntu2004.exe'`,
+      options,
+      (error, response) => {
+        console.log(error, response);
+        if (error) {
+          callback({
+            success: false,
+            data: {}
+          });
+        } else {
+          callback({
+            success: true,
+            data: {}
+          });
+          this.checkLinuxInstall(configureCallback);
+        }
+      }
     );
-    ps.invoke()
-      .then(response => {
-        console.log('response in enableWindowsSubystem', response);
-        callback({ success: true, data: {} });
-        return null;
-      })
-      .catch(() => {
-        ps.dispose();
-      });
   };
 
   /**
    * @param {Function} callback
-   * Set WSL2 as default version
+   * Downloads required files for linux subsystem
    */
-  setDefaultWsl2 = callback => {
-    const ps = new Shell({
-      executionPolicy: 'Bypass',
-      noProfile: true
-    });
-    ps.addCommand('wsl --set-default-version 2');
-    ps.invoke()
-      .then(response => {
-        console.log('response in setDefaultWsl2', response);
-        callback({ success: true, data: {} });
-        return null;
+  downloadLinux = callback => {
+    let downloadProgress = 0;
+    const downloadLink = 'https://aka.ms/wslubuntu2004';
+    const downloadDirectory = `${os.homedir()}\\Downloads`;
+    const downloadedFile = `${downloadDirectory}\\Ubuntu.appx`;
+    download(downloadLink, downloadDirectory, {
+      extract: false,
+      strip: 1,
+      filename: 'Ubuntu.appx'
+    })
+      .on('response', response => {
+        const totalSize = response.headers['content-length'];
+        console.log(totalSize);
+        let count = 0;
+        response.on('data', data => {
+          count += 1;
+          downloadProgress += data.length;
+          // delay frequency of callback firing - causes UI to crash
+          if (count % 50 === 0) {
+            console.log(
+              'PROGRESS:',
+              (downloadProgress / totalSize) * 100,
+              totalSize
+            );
+            callback({
+              success: true,
+              finished: false,
+              data: {
+                progress: (downloadProgress / totalSize) * 100
+              }
+            });
+          }
+        });
       })
-      .catch(() => {
-        ps.dispose();
-      });
-  };
+      .then(() => {
+        console.log('DONE DOWNLOADING');
 
-  /**
-   * @param {Function} callback
-   * Downloads linux subsystem
-   */
-  downloadLinuxSubysystem = callback => {
-    const ps = new Shell({
-      executionPolicy: 'Bypass',
-      noProfile: true
-    });
-    ps.addCommand(
-      'Invoke-WebRequest -Uri https://aka.ms/wsl-ubuntu-1604 -OutFile Ubuntu.appx -UseBasicParsing'
-    );
-    ps.invoke()
-      .then(response => {
-        console.log('response in downloadLinuxSubysystem', response);
-        callback({ success: true, data: {} });
+        callback({
+          success: true,
+          finished: true,
+          data: { downloadedFile }
+        });
+
         return null;
       })
-      .catch(() => {
-        ps.dispose();
+      .catch(error => {
+        console.log('error');
+        callback({
+          success: false,
+          finished: false,
+          data: { downloadedFile }
+        });
+        console.log(error);
       });
   };
 
@@ -409,16 +430,20 @@ class Installer {
    * @param {Function} callback
    * Installs linux subsystem
    */
-  installLinuxSubysystem = callback => {
+  checkLinuxInstall = callback => {
     const ps = new Shell({
       executionPolicy: 'Bypass',
       noProfile: true
     });
-    ps.addCommand('Add-AppxPackage .\\app_name.appx');
+    ps.addCommand('wsl -l -v');
     ps.invoke()
       .then(response => {
-        console.log('response in installLinuxSubysystem', response);
-        callback({ success: true, data: {} });
+        console.log(response);
+        if (response.indexOf('Running') > 1) {
+          callback({ success: true, data: {} });
+        } else {
+          this.checkLinuxInstall(callback);
+        }
         return null;
       })
       .catch(() => {

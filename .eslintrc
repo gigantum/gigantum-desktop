@@ -52,6 +52,7 @@
     "promise/param-names": "error",
     "promise/always-return": "error",
     "promise/catch-or-return": "error",
+    "lint-break-style": "windows",
     "promise/no-native": "off",
     "react/sort-comp": [
       "error",
