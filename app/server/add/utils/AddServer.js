@@ -43,9 +43,15 @@ const fetchServerData = (url, data, fetchType, callback) => {
  *
  * @return {string}
  */
-const serverConfigDir = () => {
+const serverConfigDir = serverId => {
   const homedir = os.homedir();
-  const dir = `${homedir}/gigantum/servers/`;
+  const dir = `${homedir}/gigantum/.labmanager/servers/`;
+  const configDir = `${homedir}/gigantum/servers/${serverId}`;
+
+  if (!fs.existsSync(configDir)) {
+    fs.mkdirSync(configDir);
+  }
+
   if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir);
   }
@@ -63,7 +69,7 @@ const serverConfigDir = () => {
 const writeToFile = (data, callback) => {
   const serverId = data.server.id;
   const filename = `${serverId}.json`;
-  const dir = serverConfigDir();
+  const dir = serverConfigDir(data.server.id);
   const filePath = `${dir}${filename}`;
 
   fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
@@ -71,6 +77,14 @@ const writeToFile = (data, callback) => {
   callback(null, data);
 };
 
+/**
+ * Method normalizes url fields to always have a trailing slash
+ * @param {Object} data
+ * @param {Function} callback
+ *
+ * @calls {callback}
+ * @return {string}
+ */
 const checkUrlFormat = (data, callback) => {
   const gitLastIndex = data.server.git_url.length - 1;
   data.server.git_url =
