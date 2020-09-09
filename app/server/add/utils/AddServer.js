@@ -45,7 +45,7 @@ const fetchServerData = (url, data, fetchType, callback) => {
  */
 const serverConfigDir = () => {
   const homedir = os.homedir();
-  const dir = `${homedir}/gigantum/.labmanager/servers/`;
+  const dir = `${homedir}/gigantum/servers/`;
   if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir);
   }

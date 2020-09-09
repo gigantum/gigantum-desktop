@@ -377,7 +377,7 @@ class Gigantum extends Docker {
   */
   fetchImageData = callback => {
     fetch(
-      `https://hub.docker.com/v2/repositories/gigantum/labmanager/tags/${config.imageTag}`
+      `https://hub.docker.com/v2/repositories/gigantum/labmanager-edge/tags/${config.imageTag}`
     )
       .then(response => response.json())
       .then(response => callback({ success: true, data: response }))
