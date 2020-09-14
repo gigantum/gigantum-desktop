@@ -8,6 +8,8 @@
 <PROJECT_ROOT>/dll/.*
 <PROJECT_ROOT>/release/.*
 <PROJECT_ROOT>/git/.*
+<PROJECT_ROOT>/node_modules/.*
+
 
 [include]
 
