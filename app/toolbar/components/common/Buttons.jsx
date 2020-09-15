@@ -179,7 +179,8 @@ export default class Buttons extends PureComponent<Props> {
             type="button"
             onClick={() => this.manageServers()}
           >
-            Manage Servers
+            <span>Manage Servers</span>
+            <div className="Buttons__badge">New</div>
           </button>
         </div>
         <div className="Buttons__Links">

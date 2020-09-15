@@ -2,6 +2,7 @@
   "name": "gigantum",
   "productName": "Gigantum",
   "version": "1.1.0",
+  "corejs": "2.6.11",
   "description": "The Gigantum Desktop app is used to run the Gigantum Client on your computer. Gigantum is an open platform for developing, executing, and sharing analysis via integrated repositories that bundle data, code, and environment configuration together.",
   "scripts": {
     "build": "concurrently \"yarn build-main\" \"yarn build-renderer\"",
@@ -263,6 +264,7 @@
     "yarn": "^1.22.0"
   },
   "dependencies": {
+    "@babel/helper-compilation-targets": "^7.10.4",
     "@fortawesome/fontawesome-free": "^5.5.0",
     "@sentry/electron": "^0.5.5",
     "auto-launch": "^5.0.5",
@@ -270,6 +272,7 @@
     "check-disk-space": "^2.1.0",
     "chmod": "^0.2.1",
     "classnames": "^2.2.6",
+    "core-js": "2",
     "devtron": "^1.4.0",
     "docker-machine": "^3.0.1",
     "docker-remote-api": "^5.0.0",

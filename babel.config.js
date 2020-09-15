@@ -15,7 +15,7 @@ const productionPlugins = [
 
 module.exports = api => {
   // see docs about api at https://babeljs.io/docs/en/config-files#apicache
-
+  const version = require('electron/package.json').version || '10.1.2';
   const development = api.env(developmentEnvironments);
 
   return {
@@ -23,7 +23,7 @@ module.exports = api => {
       [
         require('@babel/preset-env'),
         {
-          targets: { electron: require('electron/package.json').version },
+          targets: { electron: version },
           useBuiltIns: 'usage'
         }
       ],
@@ -47,7 +47,6 @@ module.exports = api => {
         { loose: false }
       ],
       require('@babel/plugin-proposal-do-expressions'),
-
       // Stage 2
       [require('@babel/plugin-proposal-decorators'), { legacy: true }],
       require('@babel/plugin-proposal-function-sent'),

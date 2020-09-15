@@ -10,7 +10,13 @@
  *
  * @flow
  */
-import { app, BrowserWindow, Menu, Tray, nativeImage } from 'electron';
+import electron, {
+  app,
+  BrowserWindow,
+  Menu,
+  Tray,
+  nativeImage
+} from 'electron';
 import { autoUpdater } from 'electron-updater';
 import path from 'path';
 import isDev from 'electron-is-dev';
@@ -23,6 +29,7 @@ import MainMessenger, {
 import sentry from './sentry';
 import checkForUpdates from './updater';
 
+console.log(electron);
 const icon = nativeImage.createFromPath(`${__dirname}/assets/tray/icon.png`);
 icon.setTemplateImage(true);
 
@@ -78,7 +85,9 @@ const initializeSettingsWindow = (section, width, height) => {
     alwaysOnTop: false,
     fullscreenable: false,
     webPreferences: {
-      backgroundThrottling: false
+      backgroundThrottling: false,
+      nodeIntegration: true,
+      enableRemoteModule: true
     }
   });
   settingsWindow.loadURL(`${urlPath}?settings&section=${section}`);
@@ -159,7 +168,9 @@ app.on('ready', async () => {
     webPreferences: {
       // Prevents renderer process code from not running when window is
       // hidden
-      backgroundThrottling: false
+      backgroundThrottling: false,
+      nodeIntegration: true,
+      enableRemoteModule: true
     }
   });
 
