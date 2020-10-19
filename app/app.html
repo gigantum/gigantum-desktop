@@ -23,6 +23,28 @@
        --font-size: 14px;
       }
 
+      .react-loading {
+        background-color: #2f8da3;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .react-loading__text {
+        color: #FFF;
+        font-size: 24px;
+      }
+      .react-loading__spinner {
+        height: 200px;
+        width: 200px;
+        content: "";
+        background: url('assets/images/loaders/spinner.svg') no-repeat center center;
+        background-size: 100px;
+      }
+
       /* The arrow at the top of the window */
       .header-arrow {
          position: absolute;
@@ -68,7 +90,12 @@
   </head>
   <body>
     <div class="header-arrow"></div>
-    <div id="root"></div>
+    <div id="root">
+      <div class="react-loading">
+        <div class="react-loading__text">Gigantum is Loading...</div>
+        <div class="react-loading__spinner"></div>
+      </div>
+    </div>
     <script>
       {
         const scripts = [];

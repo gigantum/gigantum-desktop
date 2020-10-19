@@ -165,6 +165,7 @@ app.on('ready', async () => {
     icon,
     alwaysOnTop: true,
     fullscreenable: false,
+    backgroundColor: '#2f8da3',
     webPreferences: {
       // Prevents renderer process code from not running when window is
       // hidden
