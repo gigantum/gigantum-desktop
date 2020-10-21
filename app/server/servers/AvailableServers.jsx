@@ -9,6 +9,7 @@ import Row from './row/Row';
 import './AvailableServers.scss';
 
 type Props = {
+  messenger: Function,
   uuid: string
 };
 
@@ -18,10 +19,15 @@ class AvailableServers extends Component<Props> {
   };
 
   componentDidMount() {
+    const { messenger } = this.props;
     const callback = servers => {
       this.setState({ servers });
     };
     fetchAvailableServers(callback);
+
+    const messengerCallback = () => fetchAvailableServers(callback);
+    // sets event listener
+    messenger.checkUpdatesResponse(messengerCallback);
   }
 
   componentDidUpdate(prevProps) {

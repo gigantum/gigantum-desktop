@@ -276,6 +276,7 @@ class MainMessenger {
         if (manageServerWindow) {
           manageServerWindow.show();
           manageServerWindow.focus();
+          manageServerWindow.webContents.send('recheck.servers');
         }
       }
 

@@ -11,6 +11,11 @@ import glob from 'glob';
 const serverConfigDir = () => {
   const homedir = os.homedir();
   const dir = `${homedir}/gigantum/.labmanager/servers/`;
+  const parentDir = `${homedir}/gigantum/.labmanager/`;
+
+  if (!fs.existsSync(parentDir)) {
+    fs.mkdirSync(parentDir);
+  }
   if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir);
   }
