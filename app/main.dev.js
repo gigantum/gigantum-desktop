@@ -166,8 +166,6 @@ app.on('ready', async () => {
     alwaysOnTop: true,
     fullscreenable: false,
     webPreferences: {
-      // Prevents renderer process code from not running when window is
-      // hidden
       backgroundThrottling: false,
       nodeIntegration: true,
       enableRemoteModule: true
@@ -197,11 +195,6 @@ app.on('ready', async () => {
 
   toolbarWindow.loadURL(`file:///${__dirname}/${appPath}?toolbar`);
 
-  // @TODO: Use 'ready-to-show' event
-  //        https://github.com/electron/electron/blob/master/docs/api/browser-window.md#using-ready-to-show-event
-  //
-  //
-
   toolbarWindow.webContents.on('did-finish-load', () => {
     if (!toolbarWindow) {
       throw new Error('"toolbarWindow" is not defined');
@@ -217,7 +210,4 @@ app.on('ready', async () => {
 
   const menuBuilder = new MenuBuilder(toolbarWindow);
   menuBuilder.buildMenu();
-
-  // Remove this if your app does not use auto updates
-  // eslint-disable-next-line
 });

@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 // State
-import { SUCCESS, START, ERROR } from '../../../machine/ToolbarConstants';
+import { SUCCESS, START, ERROR } from '../../../../machine/ToolbarConstants';
 // assets
 import './Stopped.scss';
 

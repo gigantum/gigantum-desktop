@@ -2,7 +2,7 @@
 import React, { PureComponent } from 'react';
 import classNames from 'classnames';
 import { remote } from 'electron';
-import utils from '../../../libs/utilities';
+import utils from '../../../../libs/utilities';
 // States
 import {
   STOPPED,
@@ -14,7 +14,7 @@ import {
   FORCE_RESTART,
   ERROR,
   SUCCESS
-} from '../../machine/ToolbarConstants';
+} from '../../../machine/ToolbarConstants';
 // assets
 import './Buttons.scss';
 
