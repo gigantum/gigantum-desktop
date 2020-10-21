@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import utils from '../../../../libs/utilities';
+import utils from '../../../../../libs/utilities';
 // States
 import {
   CANCEL,
@@ -11,7 +11,7 @@ import {
   CONFIRM_WARNING,
   ERROR,
   CONFIRM_RESTART
-} from '../../../machine/ToolbarConstants';
+} from '../../../../machine/ToolbarConstants';
 // assets
 import './Confirm.scss';
 
