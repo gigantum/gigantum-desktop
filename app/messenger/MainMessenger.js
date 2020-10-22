@@ -129,6 +129,8 @@ class MainMessenger {
       icon,
       fullscreenable: false,
       webPreferences: {
+        nodeIntegration: true,
+        enableRemoteModule: true,
         backgroundThrottling: false
       }
     });
@@ -166,6 +168,8 @@ class MainMessenger {
       alwaysOnTop: false,
       fullscreenable: false,
       webPreferences: {
+        nodeIntegration: true,
+        enableRemoteModule: true,
         backgroundThrottling: false
       }
     });

@@ -54,7 +54,7 @@ class UpdaterInterface {
       checkIsDockerReady,
       stopDockerApplication
     } = docker;
-    const imageName = `gigantum/labmanager-edge:${newImageTag}`;
+    const imageName = `gigantum/labmanager:${newImageTag}`;
 
     const pullImageCallback = response => {
       if (updaterStartedDocker && response.data.finished && !isWindows) {
