@@ -10,13 +10,7 @@
  *
  * @flow
  */
-import electron, {
-  app,
-  BrowserWindow,
-  Menu,
-  Tray,
-  nativeImage
-} from 'electron';
+import { app, BrowserWindow, Menu, Tray, nativeImage } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import path from 'path';
 import isDev from 'electron-is-dev';
@@ -29,7 +23,6 @@ import MainMessenger, {
 import sentry from './sentry';
 import checkForUpdates from './updater';
 
-console.log(electron);
 const icon = nativeImage.createFromPath(`${__dirname}/assets/tray/icon.png`);
 icon.setTemplateImage(true);
 
