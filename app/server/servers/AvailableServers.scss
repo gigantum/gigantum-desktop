@@ -1,0 +1,47 @@
+@import '~Styles/_imports.scss';
+
+.AvailableServers {
+  &__p {
+    margin-left: 2em;
+    &--error {
+      color: $warning;
+    }
+  }
+
+  &__table {
+    width: 38em;
+    height: 10em;
+    margin: 0 2em;
+  }
+
+  &__thead {
+    border: 1px solid $primary;
+    display: block;
+
+    .AvailableServers__tr th {
+      color: $mineShaft;
+      font-weight: 300;
+      font-size: 16px;
+      padding: 0 2rem;
+      height: 2rem;
+      line-height: 2rem;
+      text-align: left;
+      width: 50%;
+    }
+  }
+
+  &__tbody {
+    display: block;
+    border: 1px solid $primary;
+    min-height: 100px;
+    height: 100px;
+    overflow: auto;
+  }
+
+  &__tr {
+    border: 0;
+    display: flex;
+    width: 35em;
+    min-width: 100%;
+  }
+}

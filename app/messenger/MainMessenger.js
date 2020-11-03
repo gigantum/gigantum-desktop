@@ -107,7 +107,7 @@ class MainMessenger {
     const storage = new Storage();
     const install = storage.get('install');
     if (!install) {
-      this.initializeInstalledWindow();
+      this.initializeInstallerWindow();
     }
   }
 
@@ -129,6 +129,8 @@ class MainMessenger {
       icon,
       fullscreenable: false,
       webPreferences: {
+        nodeIntegration: true,
+        enableRemoteModule: true,
         backgroundThrottling: false
       }
     });
@@ -153,7 +155,7 @@ class MainMessenger {
   @param {} -
   creates installer window
   */
-  initializeInstalledWindow = () => {
+  initializeInstallerWindow = () => {
     const installerWindow = new BrowserWindow({
       name: 'installer',
       width: 1033,
@@ -166,6 +168,8 @@ class MainMessenger {
       alwaysOnTop: false,
       fullscreenable: false,
       webPreferences: {
+        nodeIntegration: true,
+        enableRemoteModule: true,
         backgroundThrottling: false
       }
     });
@@ -253,6 +257,7 @@ class MainMessenger {
         installerWindow,
         updaterWindow,
         aboutWindow,
+        manageServerWindow,
         preferencesWindow,
         toolbarWindow
       } = this.contents;
@@ -261,13 +266,21 @@ class MainMessenger {
         if (installerWindow) {
           showWindow(installerWindow);
         } else {
-          this.initializeInstalledWindow();
+          this.initializeInstallerWindow();
         }
       }
 
       if (message === 'open.toolbar') {
         if (toolbarWindow) {
           showWindow(toolbarWindow);
+        }
+      }
+
+      if (message === 'open.manageServer') {
+        if (manageServerWindow) {
+          manageServerWindow.show();
+          manageServerWindow.focus();
+          manageServerWindow.webContents.send('recheck.servers');
         }
       }
 
@@ -303,12 +316,21 @@ class MainMessenger {
         }
       }
 
+      if (message === 'close.manageServer') {
+        if (manageServerWindow) {
+          manageServerWindow.hide();
+        }
+      }
+
       if (message === 'close.settings') {
         if (preferencesWindow) {
           preferencesWindow.hide();
         }
         if (aboutWindow) {
           aboutWindow.hide();
+        }
+        if (manageServerWindow) {
+          manageServerWindow.hide();
         }
       }
 

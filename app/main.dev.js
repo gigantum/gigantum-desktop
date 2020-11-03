@@ -26,16 +26,21 @@ import checkForUpdates from './updater';
 const icon = nativeImage.createFromPath(`${__dirname}/assets/tray/icon.png`);
 icon.setTemplateImage(true);
 
+const gotTheLock = app.requestSingleInstanceLock();
 const mainWindow = null;
-const isSecondInstance = app.makeSingleInstance(() => {
-  if (mainWindow) {
-    if (mainWindow.isMinimized()) mainWindow.restore();
-    mainWindow.focus();
-  }
-});
-
-if (isSecondInstance) {
+if (!gotTheLock) {
   app.quit();
+} else {
+  app.on('second-instance', () => {
+    // Someone tried to run a second instance, we should focus our window.
+    if (mainWindow) {
+      if (mainWindow.isMinimized()) mainWindow.restore();
+      mainWindow.focus();
+    }
+  });
+
+  // Create mainWindow, load the rest of the app, etc...
+  app.on('ready', () => {});
 }
 
 sentry();
@@ -60,11 +65,11 @@ if (
 @param {String} section
 creates settings window
 */
-const initializeSettingsWindow = section => {
+const initializeSettingsWindow = (section, width, height) => {
   const settingsWindow = new BrowserWindow({
-    name: 'installer',
-    width: 669,
-    height: 405,
+    name: section,
+    width,
+    height,
     transparent: false,
     resizable: false,
     frame: false,
@@ -73,7 +78,9 @@ const initializeSettingsWindow = section => {
     alwaysOnTop: false,
     fullscreenable: false,
     webPreferences: {
-      backgroundThrottling: false
+      backgroundThrottling: false,
+      nodeIntegration: true,
+      enableRemoteModule: true
     }
   });
   settingsWindow.loadURL(`${urlPath}?settings&section=${section}`);
@@ -143,7 +150,7 @@ app.on('ready', async () => {
   const toolbarWindow = new BrowserWindow({
     name: 'toolbar',
     width: 352,
-    height: 409,
+    height: 444,
     transparent: true,
     resizable: false,
     frame: false,
@@ -151,22 +158,25 @@ app.on('ready', async () => {
     icon,
     alwaysOnTop: true,
     fullscreenable: false,
+    backgroundColor: '#2f8da3',
     webPreferences: {
-      // Prevents renderer process code from not running when window is
-      // hidden
-      backgroundThrottling: false
+      backgroundThrottling: false,
+      nodeIntegration: true,
+      enableRemoteModule: true
     }
   });
 
-  const aboutWindow = initializeSettingsWindow('about');
-  const preferencesWindow = initializeSettingsWindow('preferences');
+  const aboutWindow = initializeSettingsWindow('about', 669, 405);
+  const preferencesWindow = initializeSettingsWindow('preferences', 669, 405);
+  const manageServerWindow = initializeSettingsWindow('manageServer', 669, 480);
 
   const mainMessenger = new MainMessenger({
     tray,
     toolbarWindow,
     aboutWindow,
     preferencesWindow,
-    app
+    app,
+    manageServerWindow
   });
 
   if (isDev) {
@@ -178,11 +188,6 @@ app.on('ready', async () => {
   toolbarLaunch(toolbarWindow, tray);
 
   toolbarWindow.loadURL(`file:///${__dirname}/${appPath}?toolbar`);
-
-  // @TODO: Use 'ready-to-show' event
-  //        https://github.com/electron/electron/blob/master/docs/api/browser-window.md#using-ready-to-show-event
-  //
-  //
 
   toolbarWindow.webContents.on('did-finish-load', () => {
     if (!toolbarWindow) {
@@ -199,7 +204,4 @@ app.on('ready', async () => {
 
   const menuBuilder = new MenuBuilder(toolbarWindow);
   menuBuilder.buildMenu();
-
-  // Remove this if your app does not use auto updates
-  // eslint-disable-next-line
 });

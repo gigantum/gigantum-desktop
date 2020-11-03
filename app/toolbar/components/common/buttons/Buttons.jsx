@@ -2,7 +2,7 @@
 import React, { PureComponent } from 'react';
 import classNames from 'classnames';
 import { remote } from 'electron';
-import utils from '../../../libs/utilities';
+import utils from '../../../../libs/utilities';
 // States
 import {
   STOPPED,
@@ -14,7 +14,7 @@ import {
   FORCE_RESTART,
   ERROR,
   SUCCESS
-} from '../../machine/ToolbarConstants';
+} from '../../../machine/ToolbarConstants';
 // assets
 import './Buttons.scss';
 
@@ -29,7 +29,8 @@ type Props = {
   },
   messenger: {
     checkUpdatesResponse: () => void,
-    checkUpdates: () => void
+    checkUpdates: () => void,
+    showManageServer: () => void
   }
 };
 
@@ -119,6 +120,15 @@ export default class Buttons extends PureComponent<Props> {
     return 'Up To Date';
   };
 
+  /**
+   * @param {} -
+   * opens manager server window
+   */
+  manageServers = () => {
+    const { messenger } = this.props;
+    messenger.showManageServer();
+  };
+
   render() {
     const { props, state } = this;
     const disableButtons =
@@ -163,6 +173,14 @@ export default class Buttons extends PureComponent<Props> {
             disabled={disableUpdatebutton}
           >
             {updateText}
+          </button>
+          <button
+            className="Btn__Toolbar"
+            type="button"
+            onClick={() => this.manageServers()}
+          >
+            <span>Manage Servers</span>
+            <div className="Buttons__badge">New</div>
           </button>
         </div>
         <div className="Buttons__Links">

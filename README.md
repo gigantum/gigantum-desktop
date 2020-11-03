@@ -24,7 +24,7 @@ This project requires [Node.js](https://nodejs.org/en/)
 
 #### Quick-start
 
-```
+```bash
 git clone https://github.com/gigantum/gigantum-desktop.git
 cd gigantum-desktop
 npm install
@@ -82,7 +82,7 @@ Download `Gigantum.p12` from google drive folder and drop into the `secrets` dir
 
 Create a `config.json` in your secrets directory.
 
-```
+```json
 {
   "github_token": "your_github_token",
   "cert_keyphrase": "cert_keyphrase_goes_here",
@@ -94,7 +94,7 @@ Create a `config.json` in your secrets directory.
 
 Run the following commands
 
-```
+```bash
   sudo xcode-select --install
 
   sudo xcode-select --reset
