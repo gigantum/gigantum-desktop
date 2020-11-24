@@ -16,8 +16,11 @@ if (isLinux || isWindows) {
     const rawNvidiaOutput = execSync(
       'nvidia-smi --query-gpu=driver_version --format=csv,noheader'
     ).toString();
-    const nvidiaVersions = rawNvidiaOutput.split('\n')[0].split('.');
-    const formattedNvidiaVersion = `${nvidiaVersions[0].nvidiaVersions[1]}`;
+    const nvidiaVersions = rawNvidiaOutput
+      .split('\n')[0]
+      .trim()
+      .split('.');
+    const formattedNvidiaVersion = `${nvidiaVersions[0]}.${nvidiaVersions[1]}`;
     nvidiaConfig = `NVIDIA_DRIVER_VERSION=${formattedNvidiaVersion}`;
   } catch (error) {
     // TODO DC: Do we have a better standard way of reporting status?

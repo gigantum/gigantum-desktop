@@ -69,7 +69,6 @@
   },
   "main": "./app/main.prod.js",
   "build": {
-    "appId": "com.gigantum.app",
     "files": [
       "app/",
       "resources/",

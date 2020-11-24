@@ -34,6 +34,6 @@ export default {
     'releaseNotes',
     'failed'
   ],
-  fileSize: 396649054,
+  fileSize: 374221886,
   version
 };
