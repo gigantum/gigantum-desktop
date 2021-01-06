@@ -8,13 +8,20 @@ const imageLabel = 'gigantum/labmanager';
 const imageTag = process.env.IMAGE_TAG;
 
 let nvidiaConfig;
+const isLinux = os.platform() === 'linux';
+const isWindows = os.platform() === 'win32';
 
-if (os.platform() === 'linux') {
+if (isLinux || isWindows) {
   try {
     const rawNvidiaOutput = execSync(
       'nvidia-smi --query-gpu=driver_version --format=csv,noheader'
     ).toString();
-    nvidiaConfig = `NVIDIA_DRIVER_VERSION=${rawNvidiaOutput.split('\n')[0]}`;
+    const nvidiaVersions = rawNvidiaOutput
+      .split('\n')[0]
+      .trim()
+      .split('.');
+    const formattedNvidiaVersion = `${nvidiaVersions[0]}.${nvidiaVersions[1]}`;
+    nvidiaConfig = `NVIDIA_DRIVER_VERSION=${formattedNvidiaVersion}`;
   } catch (error) {
     // TODO DC: Do we have a better standard way of reporting status?
     // I think we should avoid bare catches
@@ -22,7 +29,6 @@ if (os.platform() === 'linux') {
   }
 }
 
-const isWindows = os.platform() === 'win32';
 const hostDirectory = path.join(os.homedir(), 'gigantum');
 
 const envHost = isWindows
