@@ -39,6 +39,24 @@ class ToolbarMesseneger {
 
   /**
     @param {} -
+    sends open.addServer to ipcRenderer
+    MainMessenger recieves message and opens addServer window
+  */
+  showManageServer = () => {
+    ipcRenderer.send('asynchronous-message', 'open.manageServer');
+  };
+
+  /**
+    @param {} -
+    sends open.addServer to ipcRenderer
+    MainMessenger recieves message and opens addServer window
+  */
+  closeManageServer = () => {
+    ipcRenderer.send('asynchronous-message', 'close.manageServer');
+  };
+
+  /**
+    @param {} -
     sends open.preferences to ipcRenderer
     MainMessenger recieves message and opens preferences window
   */

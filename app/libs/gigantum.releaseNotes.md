@@ -1,3 +1,34 @@
+## 2020-11-04
+
+### Gigantum Client (v1.4.0)
+
+Image Tag: 2f7d8d06 (396649054)
+
+Image ID: 40f11ed41b
+
+- **NEW**
+
+  - Client now supports multiple servers
+  - Client automatically configures using gigantum.com on first start if no server configs are present (#1511)
+  - Test case of package manager delete functionality. (#1497)
+  - On start, user data directories are migrated to new organization based on server id (#1469)
+  - Test case to add python packages mentioned in requirements.txt (#1499)
+  - Datasets supported in self-hosted servers with configurable server-side encryption (#1452)
+  - Server configuration is automatically discovered via new .well-known services (#1409)
+
+- **FIX**
+
+  - Refactors detail records to fix issues with more/less buttons not functioning as expected. (#1507)
+  - Catch unexpected error on Docker Desktop for Mac 2.5.0.0 when checking for a container that does not exist. (#1516)
+  - Fixes datasets listing not left aligning, fixes alignment and spacing issues on the select server page. (#1454)
+  - Fixes css overflow issue introduced by issue 1489. (#1515)
+
+- **IMPROVEMENT**
+  - Moves api query to QueryRenderer and adds react context to provide and consume context for neted components (#1454)
+  - Client configuration is now cached, reducing file IO during API calls (#1409)
+  - User data is now organized by server ID (#1409)
+  - Update authentiaction workflow to improve security and support multiple servers (#1505)
+
 ## 2020-08-27
 
 ### Gigantum Client (v1.3.3)

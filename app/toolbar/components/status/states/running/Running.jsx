@@ -8,7 +8,7 @@ import {
   SUCCESS,
   UNEXPECTED_STOP,
   SHOW_WARNING
-} from '../../../machine/ToolbarConstants';
+} from '../../../../machine/ToolbarConstants';
 // assets
 import './Running.scss';
 
