@@ -87,9 +87,9 @@ class Installer {
         downloadedFile = `${downloadDirectory}/docker.dmg`;
       } else if (isWindows) {
         downloadLink =
-          'https://download.docker.com/win/stable/Docker for Windows Installer.exe';
+          'https://download.docker.com/win/stable/Docker%20Desktop%20Installer.exe';
         downloadDirectory = `${os.homedir()}\\Downloads`;
-        downloadedFile = `${downloadDirectory}\\Docker%20for%20Windows%20Installer.exe`;
+        downloadedFile = `${downloadDirectory}\\Docker%20Desktop%20Installer.exe`;
       }
 
       let downloadProgress = 0;
@@ -160,7 +160,7 @@ class Installer {
         executionPolicy: 'Bypass',
         noProfile: true
       });
-      ps.addCommand('Get-Process "Docker%20for%20Windows%20Installer"');
+      ps.addCommand('Get-Process "Docker%20Desktop%20Installer"');
       ps.invoke()
         .then(() => {
           callback({ success: true, data: {} });
@@ -265,7 +265,6 @@ class Installer {
         const dockerPs = spawnWrapper.getSpawn('docker', ['ps']);
         dockerPs.stdout.on('data', data => {
           const message = data.toString();
-          console.log(message);
           if (!checkNotReady) {
             callback({ success: true, data: { message } });
           } else if (!this.timeout) {
@@ -280,10 +279,7 @@ class Installer {
           }
         });
 
-        dockerPs.stderr.on('data', data => {
-          const message = data.toString();
-          console.log(message);
-
+        dockerPs.stderr.on('data', () => {
           if (checkNotReady) {
             callback({ success: true });
           } else {
@@ -343,112 +339,46 @@ class Installer {
    * @param {Function} callback
    * Enable Windows Subsystem for Linux
    */
-  enableWindowsSubystem = (callback, downloadedFile, configureCallback) => {
+  enableWindowsSubystem = callback => {
     const options = { name: 'Gigantum', shell: true };
-    sudo.exec(
-      `powershell dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart; wsl --set-default-version 2; Add-AppxPackage ${downloadedFile}; Start-Process .\\wsl_update_x64.msi -ArgumentList '/quiet' -Wait; Start-Process 'C:\\Program Files\\WindowsApps\\CanonicalGroupLimited.Ubuntu20.04onWindows_2004.2020.424.0_x64__79rhkp1fndgsc\\ubuntu2004.exe'`,
-      options,
-      (error, response) => {
-        console.log(error, response);
-        if (error) {
-          callback({
-            success: false,
-            data: {}
-          });
-        } else {
-          callback({
-            success: true,
-            data: {}
-          });
-          this.checkLinuxInstall(configureCallback);
-        }
-      }
-    );
-  };
-
-  /**
-   * @param {Function} callback
-   * Downloads required files for linux subsystem
-   */
-  downloadLinux = callback => {
-    let downloadProgress = 0;
-    const downloadLink = 'https://aka.ms/wslubuntu2004';
-    const downloadDirectory = `${os.homedir()}\\Downloads`;
-    const downloadedFile = `${downloadDirectory}\\Ubuntu.appx`;
-    download(downloadLink, downloadDirectory, {
-      extract: false,
-      strip: 1,
-      filename: 'Ubuntu.appx'
-    })
-      .on('response', response => {
-        const totalSize = response.headers['content-length'];
-        console.log(totalSize);
-        let count = 0;
-        response.on('data', data => {
-          count += 1;
-          downloadProgress += data.length;
-          // delay frequency of callback firing - causes UI to crash
-          if (count % 50 === 0) {
-            console.log(
-              'PROGRESS:',
-              (downloadProgress / totalSize) * 100,
-              totalSize
-            );
-            callback({
-              success: true,
-              finished: false,
-              data: {
-                progress: (downloadProgress / totalSize) * 100
-              }
-            });
-          }
-        });
-      })
-      .then(() => {
-        console.log('DONE DOWNLOADING');
-
-        callback({
-          success: true,
-          finished: true,
-          data: { downloadedFile }
-        });
-
-        return null;
-      })
-      .catch(error => {
-        console.log('error');
+    const execScript =
+      'powershell dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart; dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart; Restart-Computer';
+    sudo.exec(execScript, options, error => {
+      if (error) {
         callback({
           success: false,
-          finished: false,
-          data: { downloadedFile }
+          data: {}
         });
-        console.log(error);
-      });
+      } else {
+        callback({
+          success: true,
+          data: {}
+        });
+      }
+    });
   };
 
   /**
    * @param {Function} callback
-   * Installs linux subsystem
+   * installs linux kernal
    */
-  checkLinuxInstall = callback => {
-    const ps = new Shell({
-      executionPolicy: 'Bypass',
-      noProfile: true
+  installKernal = callback => {
+    const options = { name: 'Gigantum', shell: true };
+    const execScript =
+      'powershell Invoke-WebRequest -Uri https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi -OutFile wsl_update_x64.msi -UseBasicParsing; Start-Process .\\wsl_update_x64.msi -ArgumentList "/quiet" -Wait';
+    sudo.exec(execScript, options, error => {
+      if (error) {
+        callback({
+          success: false,
+          data: {}
+        });
+      } else {
+        callback({
+          success: true,
+          data: {}
+        });
+      }
     });
-    ps.addCommand('wsl -l -v');
-    ps.invoke()
-      .then(response => {
-        console.log(response);
-        if (response.indexOf('Running') > 1) {
-          callback({ success: true, data: {} });
-        } else {
-          this.checkLinuxInstall(callback);
-        }
-        return null;
-      })
-      .catch(() => {
-        ps.dispose();
-      });
   };
 
   /* End WSL2 Functions */

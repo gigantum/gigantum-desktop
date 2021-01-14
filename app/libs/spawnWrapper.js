@@ -15,6 +15,6 @@ export default {
         }
       });
     }
-    childProcess.spawn(command, arr);
+    return childProcess.spawn(command, arr);
   }
 };

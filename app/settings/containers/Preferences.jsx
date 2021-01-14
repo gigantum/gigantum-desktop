@@ -4,11 +4,14 @@ import classNames from 'classnames';
 // componenets
 import Header from '../components/Header';
 import Setting from '../components/Setting';
+// libs
+import wslStatus from '../../libs/wslStatus';
 // assets
 import './Preferences.scss';
 
 const isMac = process.platform === 'darwin';
 const isLinux = process.platform === 'linux';
+const isWindows = process.platform === 'win32';
 
 /**
   @param {Object} props
@@ -73,6 +76,26 @@ export default class Preferences extends Component<Props> {
     shutDownDockerText: null,
     gigantumConfirmText: null,
     browserText: null
+  };
+
+  componentDidMount = () => {
+    const { storage } = this.props;
+    const showWsl2Section = isWindows && storage.get('wslConfigured');
+    wslStatus(
+      () => this.setState({ showWsl2Section: false }),
+      () => this.setState({ showWsl2Section: false }),
+      () => this.setState({ showWsl2Section })
+    );
+  };
+
+  /**
+    @param {} 
+    Enables WSL
+  */
+  enableWSL = () => {
+    const { storage, messenger } = this.props;
+    storage.set('wslConfigured', false);
+    messenger.showInstaller();
   };
 
   /**
@@ -160,7 +183,8 @@ export default class Preferences extends Component<Props> {
       gigantumDropdownVisible,
       dockerDropdownVisible,
       launchDropdownVisible,
-      browserDropdownVisible
+      browserDropdownVisible,
+      showWsl2Section
     } = this.state;
     const { message } = props;
     const {
@@ -276,6 +300,20 @@ export default class Preferences extends Component<Props> {
               />
             )}
           </div>
+
+          {showWsl2Section && (
+            <div className="Preferences__category flex">
+              <div className="Preferences__category-title">Enable WSL2</div>
+              <button
+                type="button"
+                className="Btn__Status Btn--primary"
+                onClick={() => this.enableWSL()}
+              >
+                Enable WSL2
+              </button>
+            </div>
+          )}
+
           <div className="Preferences__buttons">
             <button
               type="button"

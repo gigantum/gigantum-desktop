@@ -17,18 +17,17 @@ import CheckDockerStatus from '../components/status/CheckDockerStatus';
 import './Container.scss';
 
 const isLinux = process.platform === 'linux';
+const isWindows = process.platform === 'win32';
 
 export default class Checking extends Component<Props> {
   props: Props;
 
   componentDidMount() {
-    console.log('CHECKING MOUNTED');
     const { props } = this;
     const dockerConfigured = props.storage.get('dockerConfigured');
     const callback = response => {
-      console.log(response);
       if (response.success) {
-        if (dockerConfigured || isLinux) {
+        if (dockerConfigured || isLinux || isWindows) {
           props.transition(CONFIGURE_GIGANTUM, {
             message: 'Configure Gigantum'
           });
@@ -37,7 +36,6 @@ export default class Checking extends Component<Props> {
         }
       } else {
         const { message } = response.data.error;
-        console.log(message);
         if (message && message.indexOf('Not Enough Disk Space') > -1) {
           const { spaceAvailable } = response.data.error;
           props.transition(ERROR, {
@@ -45,7 +43,6 @@ export default class Checking extends Component<Props> {
             metaData: { spaceAvailable }
           });
         } else if (message && message.indexOf('WSL2 not configured.') > -1) {
-          console.log('ran here.');
           props.transition(INSTALL_WSL2, {
             message: 'Configure Windows Subsystem'
           });
@@ -61,7 +58,6 @@ export default class Checking extends Component<Props> {
 
   render() {
     const { machine, message } = this.props;
-    console.log('state updated in checking');
     return (
       <div data-tid="container">
         <Layout

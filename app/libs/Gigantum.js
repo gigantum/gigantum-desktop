@@ -6,6 +6,7 @@ import throughJSON from 'through-json';
 import through from 'through2';
 import uuidv4 from 'uuid/v4';
 import log from 'electron-log';
+import Shell from 'node-powershell';
 // config
 import utils from './utilities';
 import Docker from './Docker';
@@ -80,6 +81,89 @@ class Gigantum extends Docker {
 
     getContainerConfig(this.dockerode, configCallback);
   }
+
+  /**
+    @param {Function} callback
+    enforces creation of wsl2 directory
+    @calls {}
+  */
+  enforceWSL2Directory = callback => {
+    const fileCheck = new Shell({
+      executionPolicy: 'Bypass',
+      noProfile: true
+    });
+    fileCheck.addCommand("wsl -e bash -c 'mkdir $HOME/gigantum'");
+    fileCheck
+      .invoke()
+      .then(() => {
+        this.checkImage(callback);
+        return null;
+      })
+      .catch(err => {
+        this.checkImage(callback);
+        console.log(err);
+        fileCheck.dispose();
+      });
+  };
+
+  /**
+    @param {Function} callback
+    starts container with wsl2
+    @calls {}
+  */
+  checkImage = callback => {
+    const ps = new Shell({
+      executionPolicy: 'Bypass',
+      noProfile: true
+    });
+    ps.addCommand(
+      `docker image inspect gigantum/labmanager:${process.env.IMAGE_TAG}`
+    );
+    ps.invoke()
+      .then(() => {
+        this.startWSL2(callback);
+        return null;
+      })
+      .catch(() => {
+        callback({ success: false, error: { message: 'no such image' } });
+        ps.dispose();
+      });
+  };
+
+  /**
+    @param {Function} callback
+    starts container by default measures
+    @calls {}
+  */
+  startDefault = callback => {
+    const getContainerCallback = response => {
+      if (!response.running && response.success) {
+        response.gigantumContainer
+          .start()
+          .then(() => {
+            this.checkApi(callback, { openPopup: true });
+
+            return null;
+          })
+          .catch(error => {
+            console.log(error);
+            const errorMessage = error.json.message.split(':')[
+              error.json.message.split(':').length - 1
+            ];
+
+            if (errorMessage === ' port is already allocated') {
+              callback({ success: false, error: error.json });
+            } else {
+              this.checkApi(callback, { openPopup: true });
+            }
+          });
+      } else {
+        callback(response);
+      }
+    };
+
+    this.getContainer(getContainerCallback);
+  };
 
   /**
     @param {Function} callback

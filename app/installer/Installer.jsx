@@ -65,7 +65,6 @@ export default class Installer extends Component<Props> {
   */
   transition = (eventType, nextState) => {
     const { state } = this;
-    console.log(eventType, nextState);
     const newState = stateMachine.transition(state.machine.value, eventType, {
       state
     });
@@ -90,7 +89,6 @@ export default class Installer extends Component<Props> {
 
   render() {
     const { props, state, transition } = this;
-    console.log(state.machine);
 
     const renderMap = {
       [CHECKING]: (

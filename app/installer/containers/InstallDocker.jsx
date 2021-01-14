@@ -14,6 +14,7 @@ import InstallDockerStatus from '../components/status/InstallDockerStatus';
 import './Container.scss';
 
 const isLinux = process.platform === 'linux';
+const isWindows = process.platform === 'win32';
 
 export default class InstallDocker extends Component<Props> {
   props: Props;
@@ -61,7 +62,7 @@ export default class InstallDocker extends Component<Props> {
         setTimeout(() => {
           const dockerConfigured = props.storage.get('dockerConfigured');
           const message =
-            dockerConfigured || isLinux
+            dockerConfigured || isLinux || isWindows
               ? 'Configure Gigantum'
               : 'Configure Docker';
           props.transition(SUCCESS, {
@@ -80,9 +81,8 @@ export default class InstallDocker extends Component<Props> {
         }, 3000);
       } else {
         installErrorHandler();
-
       }
-    }
+    };
 
     const progressCallback = response => {
       if (response.success) {

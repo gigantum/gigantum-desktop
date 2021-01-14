@@ -7,18 +7,31 @@ import { ERROR, SUCCESS } from '../machine/InstallerConstants';
 import { INSTALL } from './machine/InstallWSL2Constants';
 // containers
 import Layout from './Layout';
+// libs
+import wslStatus from '../../libs/wslStatus';
 // componenets
 import InstallWSL2Main from '../components/main/InstallWSL2Main';
 import InstallWSL2Status from '../components/status/InstallWSL2Status';
 // assets
 import './Container.scss';
 
-export default class InstallWSL2 extends Component<Props> {
+class InstallWSL2 extends Component<Props> {
   props: Props;
 
   state = {
     machine: installWSL2Machine.initialState,
-    progress: 0
+    progress: 0,
+    wslLookupComplete: false
+  };
+
+  componentDidMount = () => {
+    const wslExistsCallback = () => {
+      this.installWSL2Transition(SUCCESS);
+      this.setState({ wslLookupComplete: true });
+    };
+    wslStatus(wslExistsCallback, wslExistsCallback, () =>
+      this.setState({ wslLookupComplete: true })
+    );
   };
 
   /**
@@ -44,29 +57,50 @@ export default class InstallWSL2 extends Component<Props> {
    * @param {}
    *  changes state when installing begins
    */
+  installKernal = () => {
+    const { props } = this;
+    this.installWSL2Transition(SUCCESS);
+    const installCallback = response => {
+      if (response.success) {
+        props.storage.set('wslConfigured', true);
+        props.transition(SUCCESS, {
+          message: 'Checking For Docker'
+        });
+      } else {
+        props.transition(ERROR, {
+          message: 'WSL2 Setup Failed'
+        });
+      }
+    };
+    props.interface.installKernal(installCallback);
+  };
+
+  /**
+   * @param {}
+   *  changes state when installing begins
+   */
+  optOut = () => {
+    const { props } = this;
+    props.transition(SUCCESS, {
+      message: 'Checking For Docker'
+    });
+  };
+
+  /**
+   * @param {}
+   *  changes state when installing begins
+   */
   startInstall = () => {
     const { props } = this;
     this.installWSL2Transition(INSTALL);
 
     const installErrorHandler = () => {
       props.transition(ERROR, {
-        message: 'Ubuntu Install Failed'
+        message: 'WSL2 Setup Failed'
       });
     };
 
-    const configureCallback = response => {
-      if (response.success) {
-        setTimeout(() => {
-          props.transition(SUCCESS, {
-            message: 'Checking For Docker'
-          });
-        }, 2500);
-      } else {
-        installErrorHandler();
-      }
-    };
-
-    const launchCallback = response => {
+    const callback = response => {
       if (response.success) {
         setTimeout(() => {
           this.installWSL2Transition(SUCCESS);
@@ -76,30 +110,16 @@ export default class InstallWSL2 extends Component<Props> {
       }
     };
 
-    const progressCallback = response => {
-      if (response.success) {
-        this.setState({ progress: response.progress });
-        if (response.finished) {
-          setTimeout(() => {
-            this.installWSL2Transition(SUCCESS);
-          }, 3000);
-        }
-      } else {
-        installErrorHandler();
-      }
-    };
-
-    props.interface.downloadLinux(
-      progressCallback,
-      launchCallback,
-      configureCallback
-    );
+    props.interface.enableSubsystem(callback);
   };
 
   render() {
     const { state, props } = this;
     const { machine, message } = props;
-    console.log('ran');
+    const { wslLookupComplete } = this.state;
+    if (!wslLookupComplete) {
+      return <div className="Spinner" />;
+    }
     return (
       <div data-tid="container">
         <Layout
@@ -110,8 +130,11 @@ export default class InstallWSL2 extends Component<Props> {
           status={
             <InstallWSL2Status
               startInstall={this.startInstall}
+              installKernal={this.installKernal}
+              optOut={this.optOut}
               machine={state.machine}
               progress={state.progress}
+              storage={props.storage}
             />
           }
         />
@@ -119,3 +142,5 @@ export default class InstallWSL2 extends Component<Props> {
     );
   }
 }
+
+export default InstallWSL2;

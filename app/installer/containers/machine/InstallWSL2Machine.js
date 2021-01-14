@@ -3,10 +3,10 @@ import { Machine } from 'xstate';
 // container states
 import {
   PROMPT,
-  INSTALLING,
-  INSTALLED,
-  LAUNCHING
-} from './InstallDockerConstants';
+  ERROR,
+  KERNAL_PROMPT,
+  INSTALLING
+} from './InstallWSL2Constants';
 
 const stateMachine = Machine({
   initial: PROMPT,
@@ -14,22 +14,24 @@ const stateMachine = Machine({
     [PROMPT]: {
       meta: { message: 'Configure Windows Subsystem' },
       on: {
-        INSTALL: INSTALLING
+        SUCCESS: KERNAL_PROMPT,
+        ERROR
+      }
+    },
+    [KERNAL_PROMPT]: {
+      meta: { message: 'Configure Windows Subsystem' },
+      on: {
+        SUCCESS: INSTALLING,
+        ERROR
       }
     },
     [INSTALLING]: {
       meta: { message: 'Configure Windows Subsystem' },
       on: {
-        SUCCESS: LAUNCHING
+        ERROR
       }
     },
-    [LAUNCHING]: {
-      meta: { message: 'Configure Windows Subsystem' },
-      on: {
-        SUCCESS: INSTALLED
-      }
-    },
-    [INSTALLED]: {
+    [ERROR]: {
       meta: { message: 'Configure Windows Subsystem' },
       on: {}
     }

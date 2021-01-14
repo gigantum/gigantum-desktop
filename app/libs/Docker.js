@@ -188,8 +188,15 @@ class Docker {
         isNewDocker = false;
       }
       const dockerPath = isNewDocker ? dockerDesktopPath : dockerWindowsPath;
+      let psCommand = '';
+      if (process.env.NODE_ENV === 'development') {
+        psCommand = `Remove-Item env:Path; Start-Process "${dockerPath}"`;
+      } else {
+        process.env.Path = `C:\\ProgramData\\DockerDesktop\\version-bin;C:\\Program Files\\Docker\\Docker\\Resources\\bin;${process.env.Path}`;
+        psCommand = `Start-Process "${dockerPath}"`;
+      }
 
-      ps.addCommand(`Remove-Item env:Path; Start-Process "${dockerPath}"`);
+      ps.addCommand(psCommand);
       ps.invoke()
         .then(() => {
           callback({ success: true, data: {} });
