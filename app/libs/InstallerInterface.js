@@ -29,9 +29,7 @@ class InstallerInterface {
 
   checkDocker = callback => {
     const dockerVersion = spawnWrapper.getSpawn('docker', ['-v']);
-    dockerVersion.on('error', error => {
-      console.log(error);
-    });
+    dockerVersion.on('error', () => {});
     dockerVersion.on('close', code => {
       if (code === 0) {
         callback({ success: true, data: {} });
@@ -296,7 +294,6 @@ class InstallerInterface {
      */
     const startDockerCallback = response => {
       if (response.success) {
-        console.log('ran in start docker callback');
         installer.checkIfDockerIsReady(dockerisReadyCallback);
       } else {
         log.warn('Error in start docker cb');

@@ -82,7 +82,6 @@ class Docker {
     recursively checks docker state untill it is ready
   */
   checkIsDockerReady = (callback, reconnectCount = 0) => {
-    console.log('checking docker is ready');
     const nextInterval = reconnectCount + 1;
     const { dockerode } = this;
 
@@ -95,7 +94,6 @@ class Docker {
     if (reconnectCount < 601) {
       dockerode.ping(
         (error, response) => {
-          console.log(error, response);
           // TODO test for errors coming from response
           const responseString =
             typeof response === 'object' && response !== null

@@ -573,7 +573,6 @@ class Gigantum extends Docker {
       } else if (response && response.error) {
         log.warn('Error in configure gigantum:');
         log.warn(response.error);
-        console.log(response.error);
         callback({ success: false, data: response.error });
       } else {
         callback({ success: true, data: { finished: true } });

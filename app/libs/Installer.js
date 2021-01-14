@@ -122,13 +122,12 @@ class Installer {
 
           return null;
         })
-        .catch(error => {
+        .catch(() => {
           callback({
             success: false,
             finished: false,
             data: { downloadedFile }
           });
-          console.log(error);
         });
     }
   };
@@ -259,7 +258,6 @@ class Installer {
    *
    */
   checkIfDockerIsReady = (callback, reconnectCount = 0, checkNotReady) => {
-    console.log('running in isReadyLoop');
     if (reconnectCount < 601 || checkNotReady) {
       try {
         const dockerPs = spawnWrapper.getSpawn('docker', ['ps']);
@@ -292,8 +290,7 @@ class Installer {
             }, 1000);
           }
         });
-        dockerPs.on('error', err => {
-          console.log(err);
+        dockerPs.on('error', () => {
           if (checkNotReady) {
             callback({ success: true });
           } else {
@@ -307,7 +304,6 @@ class Installer {
           }
         });
       } catch (error) {
-        console.log(error);
         if (checkNotReady) {
           callback({ success: true });
         } else {
