@@ -9,8 +9,8 @@ import path from 'path';
 import pump from 'pump';
 import throughJSON from 'through-json';
 import through from 'through2';
-import fixPath from 'fix-path';
 import log from 'electron-log';
+import Shell from 'node-powershell';
 
 // config
 import config from './config';
@@ -18,7 +18,10 @@ import config from './config';
 const isMac = process.platform === 'darwin';
 const isWindows = process.platform === 'win32';
 
-fixPath();
+const ps = new Shell({
+  executionPolicy: 'Bypass',
+  noProfile: true
+});
 
 /**
   @param {} -
@@ -183,61 +186,75 @@ class Docker {
         isNewDocker = false;
       }
       const dockerPath = isNewDocker ? dockerDesktopPath : dockerWindowsPath;
-      dockerSpawn = childProcess.spawn('cmd', [
-        '/s',
-        '/c',
-        'start',
-        '',
-        dockerPath
-      ]);
+      let psCommand = '';
+      if (process.env.NODE_ENV === 'development') {
+        psCommand = `Remove-Item env:Path; Start-Process "${dockerPath}"`;
+      } else {
+        process.env.Path = `C:\\ProgramData\\DockerDesktop\\version-bin;C:\\Program Files\\Docker\\Docker\\Resources\\bin;${process.env.Path}`;
+        psCommand = `Start-Process "${dockerPath}"`;
+      }
+
+      ps.addCommand(psCommand);
+      ps.invoke()
+        .then(() => {
+          callback({ success: true, data: {} });
+          return null;
+        })
+        .catch(() => {
+          callback({
+            success: true,
+            data: {},
+            error: { message: 'Docker failed to start' }
+          });
+        });
     } else if (isMac) {
       dockerSpawn = childProcess.spawn('open', ['-a', 'docker']);
       dockerSpawn.stdout.on('data', () => {});
 
       dockerSpawn.stderr.on('data', () => {});
+
+      dockerSpawn.on('exit', code => {
+        if (code === 0) {
+          callback({ success: true, data: {} });
+        } else {
+          callback({
+            success: false,
+            data: {
+              error: {
+                message: 'Docker is not installed'
+              }
+            }
+          });
+        }
+      });
+
+      dockerSpawn.on('error', error => {
+        // TODO handle this error
+        console.log(error);
+      });
+
+      dockerSpawn.on('close', code => {
+        if (code === 0) {
+          callback({
+            success: true,
+            data: {},
+            error: { message: 'Docker failed to start' }
+          });
+        } else {
+          callback({
+            success: false,
+            data: {
+              error: {
+                message: 'Docker is not installed'
+              }
+            }
+          });
+        }
+      });
     } else {
       callback({ success: true, data: {} });
       return null;
     }
-
-    dockerSpawn.on('exit', code => {
-      if (code === 0) {
-        callback({ success: true, data: {} });
-      } else {
-        callback({
-          success: false,
-          data: {
-            error: {
-              message: 'Docker is not installed'
-            }
-          }
-        });
-      }
-    });
-
-    dockerSpawn.on('error', error => {
-      // TODO handle this error
-      console.log(error);
-    });
-
-    dockerSpawn.on('close', code => {
-      if (code === 0) {
-        callback({
-          success: true,
-          data: {},
-          error: { message: 'Docker failed to start' }
-        });
-      } else {
-        callback({
-          success: false,
-          data: {
-            error: {
-              message: 'Docker is not installed'
-            }
-          }
-        });
-      }
-    });
   };
 
   /**

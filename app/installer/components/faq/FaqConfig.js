@@ -6,6 +6,7 @@ import {
   CONFIGURE_DOCKER,
   CONFIGURE_GIGANTUM,
   INSTALL_COMPLETE,
+  INSTALL_WSL2,
   ERROR
 } from '../../machine/InstallerConstants';
 
@@ -65,6 +66,7 @@ const checkingAndInstall = [
 export default {
   [CHECKING]: checkingAndInstall,
   [INSTALL_DOCKER]: checkingAndInstall,
+  [INSTALL_WSL2]: checkingAndInstall,
   [CONFIGURE_DOCKER]: [
     {
       question: 'Why is this needed?',

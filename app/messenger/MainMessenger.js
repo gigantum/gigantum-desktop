@@ -1,6 +1,7 @@
 import { ipcMain, BrowserWindow, screen, nativeImage } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import path from 'path';
+import os from 'os';
 import checkForUpdates from '../updater';
 import Storage from '../storage/Storage';
 
@@ -106,8 +107,14 @@ class MainMessenger {
     this.contents = { ...props };
     const storage = new Storage();
     const install = storage.get('install');
-    if (!install) {
-      this.initializeInstallerWindow();
+    const wslConfigured = storage.get('wslConfigured');
+    let wsl2Supported = false;
+    if (isWindows) {
+      const build = os.release().split('.')[2];
+      wsl2Supported = Number(build) >= 19041;
+    }
+    if (!install || (isWindows && !wslConfigured && wsl2Supported)) {
+      this.initializeInstalledWindow();
     }
   }
 

@@ -1,16 +1,17 @@
 // @flow
 import disk from 'check-disk-space';
-import fixPath from 'fix-path';
+import Shell from 'node-powershell';
 import log from 'electron-log';
+import os from 'os';
 // libs
 import Docker from './Docker';
 import Gigantum from './Gigantum';
 import Installer from './Installer';
 import spawnWrapper from './spawnWrapper';
+import Storage from '../storage/Storage';
+import wslStatus from './wslStatus';
 
 const isWindows = process.platform === 'win32';
-
-fixPath();
 
 class InstallerInterface {
   /**
@@ -26,15 +27,9 @@ class InstallerInterface {
    * Defaults END
    */
 
-  /**
-   * @param {Function} callback
-   * checks if docker is installed
-   */
-  check = callback => {
+  checkDocker = callback => {
     const dockerVersion = spawnWrapper.getSpawn('docker', ['-v']);
-    dockerVersion.on('error', error => {
-      console.log(error);
-    });
+    dockerVersion.on('error', () => {});
     dockerVersion.on('close', code => {
       if (code === 0) {
         callback({ success: true, data: {} });
@@ -82,6 +77,86 @@ class InstallerInterface {
   };
 
   /**
+   * @param {Function} callback
+   * checks if linux kernal is installed
+   */
+  checkKernalInstall = callback => {
+    const isInstalled = () => {
+      const ps = new Shell({
+        executionPolicy: 'Bypass',
+        noProfile: true
+      });
+      ps.addCommand(
+        '(gp HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\*).DisplayName -Contains "Windows Subsystem for Linux Update"'
+      );
+      ps.invoke()
+        .then(response => {
+          const formattedResponse = response.replace(/^\s+|\s+$/g, '');
+          if (formattedResponse !== 'True') {
+            ps.dispose();
+            callback({ success: false });
+          } else {
+            callback({ success: true });
+          }
+          return null;
+        })
+        .catch(() => {
+          ps.dispose();
+        });
+    };
+    isInstalled();
+  };
+
+  /**
+   * @param {Function} callback
+   * checks if docker is installed
+   */
+  check = callback => {
+    const storage = new Storage();
+    const wslConfigured = storage.get('wslConfigured');
+    let wsl2Supported = false;
+    console.log('check running');
+    if (isWindows) {
+      const build = os.release().split('.')[2];
+      wsl2Supported = Number(build) >= 19041;
+    }
+    if (isWindows && !wslConfigured && wsl2Supported) {
+      // callback if WSL returns error, when WSL command doesn't exist
+      const noWSLCallback = () => {
+        callback({
+          success: false,
+          data: {
+            error: {
+              message: 'WSL2 not configured.'
+            }
+          }
+        });
+      };
+      // when wsl is available, checks kernal install
+      const wslAvailableCallback = () => {
+        this.checkKernalInstall(res => {
+          if (res.success) {
+            this.checkDocker(callback);
+          } else {
+            callback({
+              success: false,
+              data: {
+                error: {
+                  message: 'WSL2 not configured.'
+                }
+              }
+            });
+          }
+        });
+      };
+      this.checkKernalInstall(res => console.log(res));
+      wslStatus(wslAvailableCallback, wslAvailableCallback, noWSLCallback);
+    } else {
+      this.checkDocker(callback);
+    }
+  };
+
+  /**
    * @param {Function} progressCallback
    * @param {Function} dndCallback
    * handles docker download
@@ -107,6 +182,17 @@ class InstallerInterface {
     };
 
     installer.downloadDocker(downloadDockerCallback);
+  };
+
+  /**
+   * @param {Function} callback
+   * handles enabling WSL
+   * @calls {installer.enableWindowsSubystem}
+   */
+  enableSubsystem = callback => {
+    const { installer } = this;
+
+    installer.enableWindowsSubystem(callback);
   };
 
   /**
@@ -228,6 +314,17 @@ class InstallerInterface {
       gigantum.configureGigantum(callback);
     };
     this.configureDocker({ defaultCallback: configureDockerCallback }, true);
+  };
+
+  /**
+   * @param {Function} callback
+   * handles linux terminal launch
+   * @calls {installer.installKernal}
+   */
+  installKernal = callback => {
+    const { installer } = this;
+
+    installer.installKernal(callback);
   };
 }
 

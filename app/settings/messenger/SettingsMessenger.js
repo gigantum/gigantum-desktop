@@ -21,6 +21,15 @@ class ToolbarMesseneger {
 
   /**
     @param {} -
+    sends open.installer to ipcRenderer
+    MainMessenger recieves message and opens installer window
+  */
+  showInstaller = () => {
+    ipcRenderer.send('asynchronous-message', 'open.installer');
+  };
+
+  /**
+    @param {} -
     sends autolaunch.on to ipcRenderer
     MainMessenger recieves message and sets autolaunch on
   */
