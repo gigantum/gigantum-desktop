@@ -11,11 +11,11 @@ import {
   STOPPING
 } from '../../machine/ToolbarConstants';
 // Componenets
-import Error from './states/Error';
-import Running from './states/Running';
-import Stopped from './states/Stopped';
-import Transition from './states/Transition';
-import Confirm from './states/Confirm';
+import Error from './states/error/Error';
+import Running from './states/running/Running';
+import Stopped from './states/stopped/Stopped';
+import Transition from './states/transition/Transition';
+import Confirm from './states/confirm/Confirm';
 // assets
 import './Status.scss';
 

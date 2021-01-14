@@ -6,8 +6,8 @@ import stateMachine from '../machine/ToolbarMachine';
 import { STOPPED, ERROR, RUNNING } from '../machine/ToolbarConstants';
 // components
 import Status from '../components/status/Status';
-import Header from '../components/common/Header';
-import Buttons from '../components/common/Buttons';
+import Header from '../components/common/header/Header';
+import Buttons from '../components/common/buttons/Buttons';
 // assets
 import './Main.scss';
 

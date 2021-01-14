@@ -6,6 +6,7 @@ import Toolbar from './toolbar/Toolbar';
 import Settings from './settings/Settings';
 import Installer from './installer/Installer';
 import Updater from './updater/Updater';
+import ManageServer from './server/ManageServer';
 // assets
 import './assets/css/critical.scss';
 
@@ -19,7 +20,8 @@ class ViewManager extends Component<Props> {
       toolbar: <Toolbar {...props} />,
       settings: <Settings {...props} />,
       installer: <Installer {...props} />,
-      updater: <Updater {...props} />
+      updater: <Updater {...props} />,
+      manageServer: <ManageServer {...props} />
     };
   }
 
@@ -40,7 +42,7 @@ class ViewManager extends Component<Props> {
 
     return (
       <Router>
-        <div>
+        <div style={{ width: '100%', height: '100%' }}>
           <Route
             path="/"
             component={renderProps => (

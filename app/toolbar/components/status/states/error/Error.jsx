@@ -1,13 +1,13 @@
 // @flow
 import * as React from 'react';
-import utils from '../../../../libs/utilities';
+import utils from '../../../../../libs/utilities';
 // State
 import {
   SUCCESS,
   TRY_AGAIN,
   TRY_AGAIN_STOPPED,
   ERROR
-} from '../../../machine/ToolbarConstants';
+} from '../../../../machine/ToolbarConstants';
 // assets
 import './Error.scss';
 

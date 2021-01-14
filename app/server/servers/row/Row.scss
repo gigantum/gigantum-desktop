@@ -1,0 +1,51 @@
+@import '~Styles/_imports.scss';
+
+.Row {
+  border: 0;
+  display: flex;
+  min-width: 100%;
+
+  td {
+    min-width: 80px;
+    color: $mineShaft;
+    font-weight: 300;
+    font-size: 13px;
+    padding: 0 2rem;
+    line-height: 2rem;
+    height: 2rem;
+    text-align: left;
+    width: 50%;
+  }
+
+  &__button {
+    height: 2em;
+    width: 2em;
+
+    border-radius: 1em;
+    border: 0;
+
+    background: $primary url('~Images/icons/copy.svg') no-repeat center center;
+    background-size: 28px;
+
+    &--copied {
+      background: $primary url('~Images/icons/check-selected.svg') no-repeat
+        center center !important;
+      background-size: 28px;
+    }
+  }
+
+  &__container {
+    position: absolute;
+    right: 40px;
+    width: 140px;
+    height: 0;
+    align-content: center;
+    align-self: center;
+  }
+
+  &__tooltip {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+  }
+}

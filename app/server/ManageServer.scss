@@ -1,0 +1,14 @@
+@import '~Styles/_imports.scss';
+
+.ManageServer {
+  color: $mineShaft;
+  font-weight: 400;
+
+  &__h4 {
+    font-weight: 400 !important;
+  }
+
+  &__container {
+    margin: 2em;
+  }
+}

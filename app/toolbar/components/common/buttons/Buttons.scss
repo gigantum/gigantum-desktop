@@ -1,16 +1,29 @@
 @import '~Styles/_imports.scss';
 
-.Buttons__Actions {
-  display: block;
-  @include flex(flex-start, column);
-  border-top: 1px solid $grey-border;
-  border-bottom: 1px solid $grey-border;
-}
-.Buttons__Links {
-  display: block;
-  @include flex(flex-start, row);
+.Buttons {
+  &__Actions {
+    display: block;
+    @include flex(flex-start, column);
+    border-top: 1px solid $grey-border;
+    border-bottom: 1px solid $grey-border;
+  }
+
+  &__badge {
+    background: $orange;
+    color: $white;
+    display: inline-block;
+    margin: 0 1em;
+    padding: 0.125em 0.5em;
+    border-radius: 1.5em;
+  }
+
+  &__Links {
+    display: block;
+    @include flex(flex-start, row);
+  }
 }
 .Btn {
+  cursor: pointer;
   &__Toolbar {
     cursor: pointer;
     color: $primary;

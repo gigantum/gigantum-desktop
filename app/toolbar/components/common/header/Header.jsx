@@ -1,7 +1,7 @@
 // @flow
 import React, { PureComponent } from 'react';
 import { remote } from 'electron';
-import utils from '../../../libs/utilities';
+import utils from '../../../../libs/utilities';
 // States
 import {
   RUNNING,
@@ -12,7 +12,7 @@ import {
   STOPPING,
   STOP,
   FORCE_STOP
-} from '../../machine/ToolbarConstants';
+} from '../../../machine/ToolbarConstants';
 // assets
 import './Header.scss';
 
