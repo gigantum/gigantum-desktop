@@ -59,7 +59,6 @@ class InstallWSL2 extends Component<Props> {
    */
   installKernal = () => {
     const { props } = this;
-    this.installWSL2Transition(SUCCESS);
     const installCallback = response => {
       if (response.success) {
         props.storage.set('wslConfigured', true);
@@ -72,6 +71,9 @@ class InstallWSL2 extends Component<Props> {
         });
       }
     };
+
+    this.installWSL2Transition(SUCCESS);
+
     props.interface.installKernal(installCallback);
   };
 
@@ -92,7 +94,6 @@ class InstallWSL2 extends Component<Props> {
    */
   startInstall = () => {
     const { props } = this;
-    this.installWSL2Transition(INSTALL);
 
     const installErrorHandler = () => {
       props.transition(ERROR, {
@@ -110,12 +111,15 @@ class InstallWSL2 extends Component<Props> {
       }
     };
 
+    this.installWSL2Transition(INSTALL);
+
     props.interface.enableSubsystem(callback);
   };
 
   render() {
     const { state, props } = this;
     const { machine, message } = props;
+    const { value } = machine;
     const { wslLookupComplete } = this.state;
     if (!wslLookupComplete) {
       return <div className="Spinner" />;
@@ -123,7 +127,7 @@ class InstallWSL2 extends Component<Props> {
     return (
       <div data-tid="container">
         <Layout
-          currentState={machine.value}
+          currentState={value}
           message={message}
           progress={1}
           main={<InstallWSL2Main machine={state.machine} />}

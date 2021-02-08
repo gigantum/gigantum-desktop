@@ -115,7 +115,6 @@ class InstallerInterface {
     const storage = new Storage();
     const wslConfigured = storage.get('wslConfigured');
     let wsl2Supported = false;
-    console.log('check running');
     if (isWindows) {
       const build = os.release().split('.')[2];
       wsl2Supported = Number(build) >= 19041;

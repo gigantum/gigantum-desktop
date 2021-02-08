@@ -108,12 +108,10 @@ class MainMessenger {
     const storage = new Storage();
     const install = storage.get('install');
     const wslConfigured = storage.get('wslConfigured');
-    let wsl2Supported = false;
-    if (isWindows) {
-      const build = os.release().split('.')[2];
-      wsl2Supported = Number(build) >= 19041;
-    }
-    if (!install || (isWindows && !wslConfigured && wsl2Supported)) {
+    const build = os.release().split('.')[2];
+    const isWsl2Supported = isWindows && Number(build) >= 19041;
+
+    if (!install || (!wslConfigured && isWsl2Supported)) {
       this.initializeInstalledWindow();
     }
   }

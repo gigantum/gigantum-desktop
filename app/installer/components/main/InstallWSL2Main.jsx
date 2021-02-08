@@ -16,7 +16,7 @@ type Props = {
   }
 };
 
-export default class InstallWSL2Main extends Component<Props> {
+class InstallWSL2Main extends Component<Props> {
   props: Props;
 
   render() {
@@ -63,3 +63,5 @@ export default class InstallWSL2Main extends Component<Props> {
     return renderMap[props.machine.value];
   }
 }
+
+export default InstallWSL2Main;
