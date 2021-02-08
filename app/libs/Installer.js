@@ -4,7 +4,6 @@ import childProcess from 'child_process';
 import download from 'download';
 import fs from 'fs';
 import os from 'os';
-import fixPath from 'fix-path';
 import Shell from 'node-powershell';
 import sudo from 'sudo-prompt';
 import si from 'systeminformation';
@@ -16,8 +15,6 @@ import spawnWrapper from './spawnWrapper';
 const isLinux = process.platform === 'linux';
 const isMac = process.platform === 'darwin';
 const isWindows = process.platform === 'win32';
-
-fixPath();
 
 const mb = 1048576;
 let cores;
@@ -90,9 +87,9 @@ class Installer {
         downloadedFile = `${downloadDirectory}/docker.dmg`;
       } else if (isWindows) {
         downloadLink =
-          'https://download.docker.com/win/stable/Docker for Windows Installer.exe';
+          'https://download.docker.com/win/stable/Docker%20Desktop%20Installer.exe';
         downloadDirectory = `${os.homedir()}\\Downloads`;
-        downloadedFile = `${downloadDirectory}\\Docker%20for%20Windows%20Installer.exe`;
+        downloadedFile = `${downloadDirectory}\\Docker%20Desktop%20Installer.exe`;
       }
 
       let downloadProgress = 0;
@@ -125,13 +122,12 @@ class Installer {
 
           return null;
         })
-        .catch(error => {
+        .catch(() => {
           callback({
             success: false,
             finished: false,
             data: { downloadedFile }
           });
-          console.log(error);
         });
     }
   };
@@ -163,7 +159,7 @@ class Installer {
         executionPolicy: 'Bypass',
         noProfile: true
       });
-      ps.addCommand('Get-Process "Docker%20for%20Windows%20Installer"');
+      ps.addCommand('Get-Process "Docker%20Desktop%20Installer"');
       ps.invoke()
         .then(() => {
           callback({ success: true, data: {} });
@@ -335,6 +331,56 @@ class Installer {
       });
     }
   };
+
+  /* WSL2 CHANGES */
+
+  /**
+   * @param {Function} callback
+   * Enable Windows Subsystem for Linux
+   */
+  enableWindowsSubystem = callback => {
+    const options = { name: 'Gigantum', shell: true };
+    const execScript =
+      'powershell dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart; dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart; Restart-Computer';
+    sudo.exec(execScript, options, error => {
+      if (error) {
+        callback({
+          success: false,
+          data: {}
+        });
+      } else {
+        callback({
+          success: true,
+          data: {}
+        });
+      }
+    });
+  };
+
+  /**
+   * @param {Function} callback
+   * installs linux kernal
+   */
+  installKernal = callback => {
+    const options = { name: 'Gigantum', shell: true };
+    const execScript =
+      'powershell Invoke-WebRequest -Uri https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi -OutFile wsl_update_x64.msi -UseBasicParsing; Start-Process .\\wsl_update_x64.msi -ArgumentList "/quiet" -Wait';
+    sudo.exec(execScript, options, error => {
+      if (error) {
+        callback({
+          success: false,
+          data: {}
+        });
+      } else {
+        callback({
+          success: true,
+          data: {}
+        });
+      }
+    });
+  };
+
+  /* End WSL2 Functions */
 
   /**
    * @param {Function} callback

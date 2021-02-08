@@ -1,0 +1,22 @@
+.Btn {
+  &__Status {
+    width: 160px;
+    padding: 5px;
+    border-radius: 4px;
+    border: 1px solid $primary;
+    margin: 9px;
+    font-size: 14px;
+    color: $primary;
+    outline: none;
+    cursor: pointer;
+
+    &:hover {
+      @include boxShadowDark();
+    }
+  }
+
+  &--primary {
+    color: white;
+    background: $primary;
+  }
+}

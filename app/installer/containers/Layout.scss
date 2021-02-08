@@ -1,58 +1,38 @@
 @import '~Styles/_imports.scss';
 
-.Layout__Body {
-  @include flex(flex-start, row);
-  height: 376px;
-  border-bottom: 2px solid $grey-border;
-}
+.Layout {
+  &__Body {
+    @include flex(flex-start, row);
+    height: 376px;
+    border-bottom: 2px solid $grey-border;
+  }
 
-.Layout__Faq {
-  margin: 37px 0 0 43px;
-  width: 226px;
-  position: relative;
-}
-.Layout__Main {
-  width: 366px;
-  font-size: 22px;
-  margin: 37px 51px 0 47px;
-  color: $slateBlue;
-  white-space: pre-line;
-  p {
+  &__Faq {
+    margin: 37px 0 0 43px;
+    width: 226px;
+    position: relative;
+  }
+  &__Main {
+    width: 366px;
     font-size: 22px;
-  }
-}
-.Layout__Status {
-  position: relative;
-  width: 312px;
-  border-left: 2px solid $grey-border;
-  &::before {
-    @include triangle('right', 15px, $grey-border);
-    top: calc(50% - 15px);
-    content: '';
-    position: absolute;
-    left: 0;
-  }
-}
-
-.Btn {
-  &__Status {
-    width: 160px;
-    padding: 5px;
-    border-radius: 4px;
-    border: 1px solid $primary;
-    margin: 9px;
-    font-size: 14px;
-    color: $primary;
-    outline: none;
-    cursor: pointer;
-
-    &:hover {
-      @include boxShadowDark();
+    margin: 37px 51px 0 47px;
+    color: $slateBlue;
+    white-space: pre-line;
+    p {
+      font-size: 22px;
     }
   }
 
-  &--primary {
-    color: white;
-    background: $primary;
+  &__Status {
+    position: relative;
+    width: 312px;
+    border-left: 2px solid $grey-border;
+    &::before {
+      @include triangle('right', 15px, $grey-border);
+      top: calc(50% - 15px);
+      content: '';
+      position: absolute;
+      left: 0;
+    }
   }
 }

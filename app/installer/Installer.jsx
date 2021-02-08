@@ -4,6 +4,7 @@ import React, { Component } from 'react';
 import {
   CHECKING,
   INSTALL_DOCKER,
+  INSTALL_WSL2,
   CONFIGURE_DOCKER,
   CONFIGURE_GIGANTUM,
   INSTALL_COMPLETE,
@@ -19,6 +20,7 @@ import InstallerClass from '../libs/Installer';
 // containers
 import Checking from './containers/Checking';
 import Error from './containers/Error';
+import InstallWSL2 from './containers/InstallWSL2';
 import InstallDocker from './containers/InstallDocker';
 import ConfigureDocker from './containers/ConfigureDocker';
 import ConfigureGigantum from './containers/ConfigureGigantum';
@@ -98,6 +100,14 @@ export default class Installer extends Component<Props> {
       ),
       [INSTALL_DOCKER]: (
         <InstallDocker
+          {...props}
+          {...state}
+          transition={transition}
+          interface={this.interface}
+        />
+      ),
+      [INSTALL_WSL2]: (
+        <InstallWSL2
           {...props}
           {...state}
           transition={transition}

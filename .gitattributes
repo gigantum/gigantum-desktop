@@ -5,3 +5,4 @@
 *.ico binary
 *.icns binary
 *.gif binary
+*.js text eol=lf

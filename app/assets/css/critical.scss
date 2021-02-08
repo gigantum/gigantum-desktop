@@ -9,6 +9,7 @@
 @import '_grid';
 @import '_animations';
 //atoms
+@import 'atoms/button.scss';
 @import 'atoms/loader.scss';
 @import 'atoms/download.scss';
 @import 'atoms/tooltip.scss';
@@ -21,6 +22,7 @@
 @import 'atoms/card.scss';
 @import 'atoms/dropdown.scss';
 @import 'atoms/readme.scss';
+@import 'atoms/spinner.scss';
 
 body * {
   font-family: 'NunitoSans', Arial, sans-serif;
