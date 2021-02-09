@@ -10,13 +10,20 @@ import pump from 'pump';
 import throughJSON from 'through-json';
 import through from 'through2';
 import log from 'electron-log';
-import Shell from 'node-powershell';
 
 // config
 import config from './config';
 
 const isMac = process.platform === 'darwin';
 const isWindows = process.platform === 'win32';
+
+class ShellMoc {
+  constructor(state) {
+    this.state = state;
+  }
+}
+
+const Shell = isWindows ? require('node-powershell') : ShellMoc;
 
 const ps = new Shell({
   executionPolicy: 'Bypass',

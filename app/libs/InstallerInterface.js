@@ -1,6 +1,5 @@
 // @flow
 import disk from 'check-disk-space';
-import Shell from 'node-powershell';
 import log from 'electron-log';
 import os from 'os';
 // libs
@@ -12,6 +11,14 @@ import Storage from '../storage/Storage';
 import wslStatus from './wslStatus';
 
 const isWindows = process.platform === 'win32';
+
+class ShellMoc {
+  constructor(state) {
+    this.state = state;
+  }
+}
+
+const Shell = isWindows ? require('node-powershell') : ShellMoc;
 
 class InstallerInterface {
   /**

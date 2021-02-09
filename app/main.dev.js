@@ -116,6 +116,7 @@ const installExtensions = async () => {
   return Promise.all(
     extensions.map(name => installer.default(installer[name], forceDownload))
   ).catch(error => {
+    console.log('this error');
     console.log(error);
   });
 };
