@@ -1,5 +1,4 @@
 import childProcess from 'child_process';
-import path from 'path';
 import os from 'os';
 
 const isWindows = process.platform === 'win32';
@@ -19,7 +18,7 @@ export default {
     }
     return childProcess.spawn(command, arr, {
       env: {
-        PATH: path,
+        PATH: process.env.PATH,
         HOME: os.homedir()
       }
     });

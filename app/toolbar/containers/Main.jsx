@@ -19,7 +19,7 @@ type Props = {
   messenger: {}
 };
 
-export default class Main extends Component<Props> {
+class Main extends Component<Props> {
   props: Props;
 
   state = {
@@ -108,3 +108,5 @@ export default class Main extends Component<Props> {
     );
   }
 }
+
+export default Main;
