@@ -50,10 +50,21 @@ class ToolbarInterface {
     };
     const dockerVersion = spawnWrapper.getSpawn('docker', ['-v']);
     dockerVersion.on('error', error => {
-      console.log(error);
+      console.log(error, error.message);
+    });
+
+    dockerVersion.stdout.setEncoding('utf8');
+    dockerVersion.stderr.setEncoding('utf8');
+    dockerVersion.stderr.on('data', data => {
+      console.log(`ps stderr: ${data}`);
+    });
+
+    dockerVersion.stdout.on('data', data => {
+      console.log(`ps stderr: ${data}`);
     });
 
     dockerVersion.on('close', code => {
+      console.log(code);
       if (code === 0) {
         gigantum.checkGigantumRunning(checkGigantumCallback);
       } else {

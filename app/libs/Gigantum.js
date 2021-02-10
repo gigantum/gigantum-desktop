@@ -573,6 +573,7 @@ class Gigantum extends Docker {
         response.error &&
         response.error.message &&
         response.error.message.indexOf('no such image') > -1;
+      console.log(response);
       if (isNotInstalled) {
         const imageData = {
           name: config.imageName,
@@ -589,6 +590,7 @@ class Gigantum extends Docker {
     };
 
     const fetchImageDataCallback = response => {
+      console.log(response);
       if (response.success) {
         this.imageSize = response.data.full_size;
         this.runGigantum(runGigantumCallback, true);
