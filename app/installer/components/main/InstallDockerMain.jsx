@@ -108,12 +108,11 @@ export default class InstallDockerMain extends Component<Props> {
           {isLinux && (
             <Fragment>
               <p>
-                To start using Docker you must <b>log out of your computer</b>{' '}
-                and then log back in.
+                To start using Docker you must <b>reboot your computer</b>.
               </p>
               <p>
-                Once logged in, open Gigantum to finish the installation
-                process.
+                Once rebooted and logged in, open Gigantum to finish the
+                installation process.
               </p>
             </Fragment>
           )}
