@@ -112,7 +112,7 @@ class MainMessenger {
     const isWsl2Supported = isWindows && Number(build) >= 19041;
 
     if (!install || (!wslConfigured && isWsl2Supported)) {
-      this.initializeInstalledWindow();
+      this.initializeInstallerWindow();
     }
   }
 

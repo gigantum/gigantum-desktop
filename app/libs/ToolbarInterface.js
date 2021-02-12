@@ -64,7 +64,6 @@ class ToolbarInterface {
     });
 
     dockerVersion.on('close', code => {
-      console.log(code);
       if (code === 0) {
         gigantum.checkGigantumRunning(checkGigantumCallback);
       } else {

@@ -69,14 +69,16 @@ class Installer {
       });
       const options = { name: 'Gigantum', shell: true };
       sudo.exec(
-        `groupadd docker && curl -fsSL https://get.docker.com -o get-docker.sh && sudo sh get-docker.sh && usermod -aG docker ${process.env.USER}`,
+        `apt-get install curl -y && curl -fsSL https://get.docker.com -o get-docker.sh && sudo sh get-docker.sh && usermod -aG docker ${process.env.USER}`,
         options,
         error => {
           if (error) {
             callback({
               success: false,
               finished: false,
-              data: {}
+              data: {
+                error
+              }
             });
           } else {
             callback({
