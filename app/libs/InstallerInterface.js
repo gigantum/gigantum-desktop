@@ -181,7 +181,7 @@ class InstallerInterface {
       } else if (response.success) {
         progressCallback({ success: true, progress: response.data.progress });
       } else {
-        log.warn('Error in download', response);
+        log.warn('Error in download');
         log.warn(response);
         progressCallback({ success: false });
       }

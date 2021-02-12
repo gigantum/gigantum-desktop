@@ -2,8 +2,6 @@ import childProcess from 'child_process';
 import os from 'os';
 import fixPath from 'fix-path';
 
-console.log(process.env.PATH);
-
 const isWindows = process.platform === 'win32';
 const isMac = process.platform === 'darwin';
 
