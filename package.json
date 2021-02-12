@@ -1,7 +1,7 @@
 {
   "name": "gigantum",
   "productName": "Gigantum",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "corejs": "2.6.11",
   "description": "The Gigantum Desktop app is used to run the Gigantum Client on your computer. Gigantum is an open platform for developing, executing, and sharing analysis via integrated repositories that bundle data, code, and environment configuration together.",
   "scripts": {
@@ -107,6 +107,9 @@
       "owner": "gigantum",
       "repo": "gigantum-desktop",
       "private": false
+    },
+    "win": {
+      "publisherName": "Gigantum"
     }
   },
   "repository": {
@@ -281,7 +284,7 @@
     "electron-log": "^2.2.17",
     "electron-updater": "^4.0.0",
     "fetch": "^1.1.0",
-    "fix-path": "^2.1.0",
+    "fix-path": "^3.0.0",
     "fsevents": "^2.1.3",
     "global": "^4.4.0",
     "history": "^4.7.2",

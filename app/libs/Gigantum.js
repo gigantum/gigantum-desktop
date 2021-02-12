@@ -6,12 +6,21 @@ import throughJSON from 'through-json';
 import through from 'through2';
 import uuidv4 from 'uuid/v4';
 import log from 'electron-log';
-import Shell from 'node-powershell';
 // config
 import utils from './utilities';
 import Docker from './Docker';
 import config from './config';
 import getContainerConfig from './containerConfig';
+
+const isWindows = process.platform === 'win32';
+
+class ShellMoc {
+  constructor(state) {
+    this.state = state;
+  }
+}
+
+const Shell = isWindows ? require('node-powershell') : ShellMoc;
 
 class Gigantum extends Docker {
   trackedContainer = null;
@@ -564,6 +573,7 @@ class Gigantum extends Docker {
         response.error &&
         response.error.message &&
         response.error.message.indexOf('no such image') > -1;
+
       if (isNotInstalled) {
         const imageData = {
           name: config.imageName,

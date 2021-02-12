@@ -4,7 +4,6 @@ import childProcess from 'child_process';
 import download from 'download';
 import fs from 'fs';
 import os from 'os';
-import Shell from 'node-powershell';
 import sudo from 'sudo-prompt';
 import si from 'systeminformation';
 // libs
@@ -15,6 +14,14 @@ import spawnWrapper from './spawnWrapper';
 const isLinux = process.platform === 'linux';
 const isMac = process.platform === 'darwin';
 const isWindows = process.platform === 'win32';
+
+class ShellMoc {
+  constructor(state) {
+    this.state = state;
+  }
+}
+
+const Shell = isWindows ? require('node-powershell') : ShellMoc;
 
 const mb = 1048576;
 let cores;
@@ -62,14 +69,16 @@ class Installer {
       });
       const options = { name: 'Gigantum', shell: true };
       sudo.exec(
-        `groupadd docker && curl -fsSL https://get.docker.com -o get-docker.sh && sudo sh get-docker.sh && usermod -aG docker ${process.env.USER}`,
+        `apt-get install curl -y && curl -fsSL https://get.docker.com -o get-docker.sh && sudo sh get-docker.sh && usermod -aG docker ${process.env.USER}`,
         options,
         error => {
           if (error) {
             callback({
               success: false,
               finished: false,
-              data: {}
+              data: {
+                error
+              }
             });
           } else {
             callback({
