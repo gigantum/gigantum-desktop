@@ -44,7 +44,7 @@ export default class Checking extends Component<Props> {
           });
         } else if (message && message.indexOf('WSL2 not configured.') > -1) {
           props.transition(INSTALL_WSL2, {
-            message: 'Configure Windows Subsystem'
+            message: 'Configure WSL 2'
           });
         } else {
           props.transition(INSTALL_DOCKER, { message: 'Install Docker' });

@@ -112,6 +112,7 @@ export default class Installer extends Component<Props> {
           {...state}
           transition={transition}
           interface={this.interface}
+          messenger={this.messenger}
         />
       ),
       [CONFIGURE_DOCKER]: (

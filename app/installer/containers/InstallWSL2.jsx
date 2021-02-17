@@ -128,6 +128,7 @@ class InstallWSL2 extends Component<Props> {
       <div data-tid="container">
         <Layout
           currentState={value}
+          section={this.machine.value}
           message={message}
           progress={1}
           main={<InstallWSL2Main machine={state.machine} />}
@@ -139,6 +140,7 @@ class InstallWSL2 extends Component<Props> {
               machine={state.machine}
               progress={state.progress}
               storage={props.storage}
+              messenger={props.messenger}
             />
           }
         />

@@ -66,7 +66,46 @@ const checkingAndInstall = [
 export default {
   [CHECKING]: checkingAndInstall,
   [INSTALL_DOCKER]: checkingAndInstall,
-  [INSTALL_WSL2]: checkingAndInstall,
+  INSTALL_WSL2_KERNEL_INSTALLING: [
+    {
+      question: 'What is WSL 2?',
+      answer:
+        'Windows Subsystem for Linux (WSL) is a compatibility layer for running Linux programs natively on Windows 10.'
+    },
+    {
+      question: 'Why do I need WSL 2?',
+      answer: 'In Windows, WSL 2 provides a Linux environment to run Docker.'
+    },
+    {
+      question: 'Why update?',
+      answer:
+        'Kernel updates will soon be automatically handled as part of Windows updates, but currently it is a manual process.'
+    }
+  ],
+  INSTALL_WSL2_KERNEL: [
+    {
+      question: 'Why is this needed?',
+      answer:
+        'Linux kernel updates will soon be automatically handled as part of Windows updates, but currently is a manual process.'
+    }
+  ],
+  [INSTALL_WSL2]: [
+    {
+      question: 'What is WSL 2?',
+      answer:
+        'Windows Subsystem for Linux (WSL) is a compatibility layer for running Linux programs natively on Windows 10.'
+    },
+    {
+      question: 'What is Hyper-V?',
+      answer:
+        'Microsoft Hyper-V is a native system to create virtual machines (VM) in Windows. If WSL 2 is not enabled, Docker will run inside a VM managed by Hyper-V.'
+    },
+    {
+      question: 'What should I choose?',
+      answer:
+        'In most cases you should choose WSL 2 unless you cannot use it (e.g. corporate policy). It is more efficient and the future of Docker Desktop on Windows.'
+    }
+  ],
   [CONFIGURE_DOCKER]: [
     {
       question: 'Why is this needed?',

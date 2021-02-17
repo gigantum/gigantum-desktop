@@ -4,7 +4,8 @@ import React, { Component } from 'react';
 import {
   INSTALL_DOCKER,
   CONFIGURE_DOCKER,
-  CONFIGURE_GIGANTUM
+  CONFIGURE_GIGANTUM,
+  INSTALL_WSL2
 } from '../machine/InstallerConstants';
 // containers
 import Layout from './Layout';
@@ -29,6 +30,8 @@ export default class Checking extends Component<Props> {
       progress = 3;
     } else if (message === 'Docker Install Failed') {
       currentState = INSTALL_DOCKER;
+    } else if (message === 'WSL2 Setup Failed') {
+      currentState = INSTALL_WSL2;
     }
 
     return (
