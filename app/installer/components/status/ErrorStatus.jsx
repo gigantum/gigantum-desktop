@@ -4,11 +4,13 @@ import React, { Component } from 'react';
 import {
   CONFIGURE_DOCKER,
   CONFIGURE_GIGANTUM,
+  INSTALL_WSL2,
   INSTALL_DOCKER,
   ERROR,
   TRY_AGAIN_INSTALL_DOCKER,
   TRY_AGAIN_CONFIGURE_GIGANTUM,
-  TRY_AGAIN_CONFIGURE_DOCKER
+  TRY_AGAIN_CONFIGURE_DOCKER,
+  TRY_AGAIN_INSTALL_WSL
 } from '../../machine/InstallerConstants';
 // assets
 import './Status.scss';
@@ -50,6 +52,7 @@ export default class ErrorStatus extends Component<Props> {
         'Configure Gigantum'
       ],
       [INSTALL_DOCKER]: [TRY_AGAIN_INSTALL_DOCKER, 'Install Docker'],
+      [INSTALL_WSL2]: [TRY_AGAIN_INSTALL_WSL, 'Install WSL2'],
       [ERROR]: [TRY_AGAIN_INSTALL_DOCKER, 'Install Docker']
     };
 

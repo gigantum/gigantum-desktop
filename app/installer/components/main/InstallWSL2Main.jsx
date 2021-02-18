@@ -8,6 +8,7 @@ import {
   ERROR
 } from '../../containers/machine/InstallWSL2Constants';
 // assets
+import utils from '../../../libs/utilities';
 import './InstallWSL2Main.scss';
 
 type Props = {
@@ -25,28 +26,39 @@ class InstallWSL2Main extends Component<Props> {
     const renderMap = {
       [PROMPT]: (
         <div className="Layout__Main">
-          Gigantum for Windows now runs on WSL2 (Windows Subsystem for Linux)
+          Gigantum can run on WSL 2 (Windows Subsystem for Linux 2)
           <div className="InstallDockerMain__subtext">
             <p>
-              WSL will significantly improve performance when using Gigantum and
-              allows compatability with versions of Windows that do not have
-              Hyper-V enabled.
+              Using WSL 2 to run Docker, instead of the legacy Hyper-V based
+              approach, can significantly improve performance. WSL 2 lets
+              Gigantum run with fewer resources and on{' '}
+              <span
+                role="presentation"
+                onClick={() =>
+                  utils.open(
+                    'https://docs.microsoft.com/en-us/windows/wsl/install-win10#step-2---check-requirements-for-running-wsl-2'
+                  )
+                }
+              >
+                more versions of Windows as well.
+              </span>
             </p>
-
-            <p>Enabling WSL will require a system restart. </p>
+            <p>
+              Enabling WSL2 will restart your computer. On boot Gigantum Desktop
+              will re-open to continue the installation process.
+            </p>
           </div>
         </div>
       ),
       [KERNAL_PROMPT]: (
         <div className="Layout__Main">
-          WSL2 has been enabled. The final step for configuring WSL2 is to
-          download an update to the Linux kernal. This action will not require a
-          system restart.
+          <p>WSL 2 has been enabled.</p>
+          <p>The Linux kernel used by WSL 2 now must be updated.</p>
         </div>
       ),
       [INSTALLING]: (
         <div className="Layout__Main">
-          Gigantum is configuring the Windows subsystem automatically.
+          Gigantum is updating your Linux kernel and configuring WSL 2.
           <div className="Layout__subtext">
             Note: This can take up to several minutes depending on your security
             software.

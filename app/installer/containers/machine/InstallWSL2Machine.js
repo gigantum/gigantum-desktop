@@ -12,27 +12,27 @@ const stateMachine = Machine({
   initial: PROMPT,
   states: {
     [PROMPT]: {
-      meta: { message: 'Configure Windows Subsystem' },
+      meta: { message: 'Configure WSL 2' },
       on: {
         SUCCESS: KERNAL_PROMPT,
         ERROR
       }
     },
     [KERNAL_PROMPT]: {
-      meta: { message: 'Configure Windows Subsystem' },
+      meta: { message: 'Configure WSL 2' },
       on: {
         SUCCESS: INSTALLING,
         ERROR
       }
     },
     [INSTALLING]: {
-      meta: { message: 'Configure Windows Subsystem' },
+      meta: { message: 'Configure WSL 2' },
       on: {
         ERROR
       }
     },
     [ERROR]: {
-      meta: { message: 'Configure Windows Subsystem' },
+      meta: { message: 'Configure WSL 2' },
       on: {}
     }
   }

@@ -28,7 +28,7 @@ const stateMachine = Machine({
       }
     },
     [INSTALL_WSL2]: {
-      meta: { message: 'Configure Windows Subsystem', additionalInfo: '' },
+      meta: { message: 'Configure WSL 2', additionalInfo: '' },
       on: {
         SUCCESS: CHECKING,
         ERROR

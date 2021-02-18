@@ -22,7 +22,8 @@ type Props = {
   startInstall: () => void,
   storage: {
     set: () => void
-  }
+  },
+  messenger: () => void
 };
 
 class CheckWSL2Status extends Component<Props> {
@@ -33,8 +34,9 @@ class CheckWSL2Status extends Component<Props> {
     handles install button
   */
   handleInstallButton = () => {
-    const { props } = this;
-    props.startInstall();
+    const { messenger, startInstall } = this.props;
+    messenger.setAutoLaunchOn();
+    startInstall();
   };
 
   /**
@@ -70,13 +72,13 @@ class CheckWSL2Status extends Component<Props> {
         <div className="Layout__Status InstallWSL2Status">
           <div className="InstallWSL2Status__body">
             <div className="InstallWSL2Status__subtext">
-              Installing the Kernal will require admin privileges. Gigantum will
-              ask for elevated privileges during the installation process.{' '}
+              Updating the kernel requires administrator privileges. You will be
+              prompted to enter your password after clicking “Update Kernel”.{' '}
               <span
                 role="presentation"
                 onClick={() =>
                   utils.open(
-                    'https://docs.docker.com/install/linux/docker-ce/debian/#install-using-the-convenience-script'
+                    'https://docs.microsoft.com/en-us/windows/wsl/install-win10'
                   )
                 }
               >
@@ -88,7 +90,7 @@ class CheckWSL2Status extends Component<Props> {
               className="Btn__Status Btn--primary"
               onClick={() => this.handleKernalButton()}
             >
-              Install Kernal Update
+              Update Kernel
             </button>
           </div>
         </div>
@@ -111,30 +113,20 @@ class CheckWSL2Status extends Component<Props> {
         <div className="Layout__Status InstallWSL2Status">
           <div className="InstallWSL2Status__body">
             <div className="InstallWSL2Status__subtext">
-              Alternatively, you can opt-out of WSL. This is not recommended and
-              will make Gigantum incompatible with some versions of Windows
-              (i.e. Windows Home Edition).
+              You can skip this step and use Hyper-V instead of WSL 2. If your
+              system supports it, running Docker on WSL 2 is recommended over
+              Hyper-V.
             </div>
             <button
               type="button"
               className="Btn__Status"
               onClick={() => this.handleOptOutButton()}
             >
-              Opt-out
+              Install w/ Hyper-V
             </button>
             <div className="InstallWSL2Status__subtext">
-              Enabling WSL will require admin privileges. Gigantum will ask for
-              elevated privileges during the installation process.{' '}
-              <span
-                role="presentation"
-                onClick={() =>
-                  utils.open(
-                    'https://docs.docker.com/install/linux/docker-ce/debian/#install-using-the-convenience-script'
-                  )
-                }
-              >
-                Learn More.
-              </span>
+              Enabling WSL 2 requires administrator privileges. You will be
+              prompted to enter your password after clicking “Enable & Restart”.
             </div>
             <button
               type="button"

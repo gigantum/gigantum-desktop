@@ -381,12 +381,31 @@ class Installer {
           data: {}
         });
       } else {
+        this.updateWSLSettings(callback);
+      }
+    });
+  };
+
+  /**
+   * @param {Function} callback
+   * Enables WSL in docker settings
+   */
+  updateWSLSettings = callback => {
+    if (isWindows) {
+      const settingsPath = `${os.homedir()}\\AppData\\Roaming\\Docker\\settings.json`;
+      if (fs.existsSync(settingsPath)) {
+        const settingsRawData = fs.readFileSync(settingsPath);
+        const settings = JSON.parse(settingsRawData);
+        settings.wslEngineEnabled = true;
+        const newSettings = JSON.stringify(settings);
+
+        fs.writeFileSync(settingsPath, newSettings);
         callback({
           success: true,
           data: {}
         });
       }
-    });
+    }
   };
 
   /* End WSL2 Functions */
