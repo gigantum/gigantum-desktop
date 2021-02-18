@@ -386,6 +386,10 @@ class Installer {
     });
   };
 
+  /**
+   * @param {Function} callback
+   * Enables WSL in docker settings
+   */
   updateWSLSettings = callback => {
     if (isWindows) {
       const settingsPath = `${os.homedir()}\\AppData\\Roaming\\Docker\\settings.json`;
