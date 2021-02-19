@@ -102,6 +102,9 @@ class Installer {
       }
 
       let downloadProgress = 0;
+      if (fs.existsSync(downloadedFile)) {
+        fs.unlinkSync(downloadedFile);
+      }
 
       download(downloadLink, downloadDirectory, { extract: true, strip: 1 })
         .on('response', response => {
@@ -110,6 +113,15 @@ class Installer {
           response.on('data', data => {
             count += 1;
             downloadProgress += data.length;
+            fs.appendFileSync(downloadedFile, data, err => {
+              if (err) {
+                callback({
+                  success: false,
+                  finished: false,
+                  data: { downloadedFile }
+                });
+              }
+            });
             // delay frequency of callback firing - causes UI to crash
             if (count % 50 === 0) {
               callback({

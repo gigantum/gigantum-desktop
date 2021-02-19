@@ -43,7 +43,6 @@ export default class ConfigureDocker extends Component<Props> {
   */
   configureDockerTransition = eventType => {
     const { state } = this;
-
     const newState = configureDockerMachine.transition(
       state.machine.value,
       eventType,
