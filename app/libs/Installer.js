@@ -99,7 +99,7 @@ class Installer {
 
       let downloadProgress = 0;
 
-      if (fs.existsSync(downloadedFile) && isMac) {
+      if (fs.existsSync(downloadedFile)) {
         fs.unlinkSync(downloadedFile);
       }
 
@@ -111,17 +111,15 @@ class Installer {
             count += 1;
             downloadProgress += data.length;
 
-            if (isMac) {
-              fs.appendFileSync(downloadedFile, data, err => {
-                if (err) {
-                  callback({
-                    success: false,
-                    finished: false,
-                    data: { downloadedFile }
-                  });
-                }
-              });
-            }
+            fs.appendFileSync(downloadedFile, data, err => {
+              if (err) {
+                callback({
+                  success: false,
+                  finished: false,
+                  data: { downloadedFile }
+                });
+              }
+            });
             // delay frequency of callback firing - causes UI to crash
             if (count % 50 === 0) {
               callback({
