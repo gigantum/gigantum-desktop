@@ -17,7 +17,9 @@ const isLinux = process.platform === 'linux';
 const isMac = process.platform === 'darwin';
 const isWindows = process.platform === 'win32';
 
-fixPath();
+if (isMac) {
+  fixPath();
+}
 
 const mb = 1048576;
 let cores;
@@ -65,7 +67,7 @@ class Installer {
       });
       const options = { name: 'Gigantum', shell: true };
       sudo.exec(
-        `groupadd docker && curl -fsSL https://get.docker.com -o get-docker.sh && sudo sh get-docker.sh && usermod -aG docker ${process.env.USER}`,
+        `apt-get install curl -y && curl -fsSL https://get.docker.com -o get-docker.sh && sudo sh get-docker.sh && usermod -aG docker ${process.env.USER}`,
         options,
         error => {
           if (error) {
@@ -97,6 +99,10 @@ class Installer {
 
       let downloadProgress = 0;
 
+      if (fs.existsSync(downloadedFile) && isMac) {
+        fs.unlinkSync(downloadedFile);
+      }
+
       download(downloadLink, downloadDirectory, { extract: true, strip: 1 })
         .on('response', response => {
           const totalSize = response.headers['content-length'];
@@ -104,6 +110,18 @@ class Installer {
           response.on('data', data => {
             count += 1;
             downloadProgress += data.length;
+
+            if (isMac) {
+              fs.appendFileSync(downloadedFile, data, err => {
+                if (err) {
+                  callback({
+                    success: false,
+                    finished: false,
+                    data: { downloadedFile }
+                  });
+                }
+              });
+            }
             // delay frequency of callback firing - causes UI to crash
             if (count % 50 === 0) {
               callback({
