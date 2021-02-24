@@ -92,14 +92,14 @@ class Installer {
         downloadedFile = `${downloadDirectory}/docker.dmg`;
       } else if (isWindows) {
         downloadLink =
-          'https://download.docker.com/win/stable/Docker for Windows Installer.exe';
+          'https://download.docker.com/win/stable/Docker Desktop Installer.exe';
         downloadDirectory = `${os.homedir()}\\Downloads`;
-        downloadedFile = `${downloadDirectory}\\Docker%20for%20Windows%20Installer.exe`;
+        downloadedFile = `${downloadDirectory}\\Docker%20Desktop%20Installer.exe`;
       }
 
       let downloadProgress = 0;
 
-      if (fs.existsSync(downloadedFile)) {
+      if (fs.existsSync(downloadedFile && isMac)) {
         fs.unlinkSync(downloadedFile);
       }
 
@@ -111,15 +111,17 @@ class Installer {
             count += 1;
             downloadProgress += data.length;
 
-            fs.appendFileSync(downloadedFile, data, err => {
-              if (err) {
-                callback({
-                  success: false,
-                  finished: false,
-                  data: { downloadedFile }
-                });
-              }
-            });
+            if (isMac) {
+              fs.appendFileSync(downloadedFile, data, err => {
+                if (err) {
+                  callback({
+                    success: false,
+                    finished: false,
+                    data: { downloadedFile }
+                  });
+                }
+              });
+            }
             // delay frequency of callback firing - causes UI to crash
             if (count % 50 === 0) {
               callback({
@@ -179,7 +181,7 @@ class Installer {
         executionPolicy: 'Bypass',
         noProfile: true
       });
-      ps.addCommand('Get-Process "Docker%20for%20Windows%20Installer"');
+      ps.addCommand('Get-Process "Docker%20Desktop%20Installer"');
       ps.invoke()
         .then(() => {
           callback({ success: true, data: {} });
@@ -304,7 +306,9 @@ class Installer {
           if (checkNotReady) {
             callback({ success: true });
           } else {
-            setTimeout(() => {
+            // have to check for timeout to avoid multiple calls overwhelming the process
+            this.timeout = setTimeout(() => {
+              this.timeout = null;
               this.checkIfDockerIsReady(
                 callback,
                 reconnectCount + 1,
@@ -317,7 +321,9 @@ class Installer {
           if (checkNotReady) {
             callback({ success: true });
           } else {
-            setTimeout(() => {
+            // have to check for timeout to avoid multiple calls overwhelming the process
+            this.timeout = setTimeout(() => {
+              this.timeout = null;
               this.checkIfDockerIsReady(
                 callback,
                 reconnectCount + 1,
@@ -326,11 +332,31 @@ class Installer {
             }, 1000);
           }
         });
+
+        if (isWindows) {
+          dockerPs.on('exit', code => {
+            if (code === 0) {
+              callback({ success: true });
+            } else if (code === 4294967295) {
+              // have to check for timeout to avoid multiple calls overwhelming the process
+              this.timeout = setTimeout(() => {
+                this.timeout = null;
+                this.checkIfDockerIsReady(
+                  callback,
+                  reconnectCount + 1,
+                  checkNotReady
+                );
+              }, 1000);
+            }
+          });
+        }
       } catch (error) {
         if (checkNotReady) {
           callback({ success: true });
         } else {
-          setTimeout(() => {
+          // have to check for timeout to avoid multiple calls overwhelming the process
+          this.timeout = setTimeout(() => {
+            this.timeout = null;
             this.checkIfDockerIsReady(
               callback,
               reconnectCount + 1,
