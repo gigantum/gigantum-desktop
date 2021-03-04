@@ -1,3 +1,80 @@
+## 2021-02-22
+
+### Gigantum Client (v1.5.0)
+
+Image Tag: 9213badf (371826067)
+
+Image ID: 465abf6565
+
+- **IMPROVEMENT**
+
+  - All available authentication providers now supported in the Client (#1613)
+  - Users with read-only permissions to a dataset will no longer be able to modify data files. (#1556)
+  - Updated cryptography package for CVE-2020-25659 (#1595)
+  - Adds more detailed output for git operations. (#1634)
+  - Adds error state on sync and publish buttons. (#1634)
+  - Adds error modal to view in more detail the errors associated with the failed operation. (#1634)
+  - Opens notification tray when failure occurs on a background job. (#1634)
+
+- **NEW**
+
+  - Adds the ability to configure a custom application that is then available in the Project launcher (#1625)
+  - Allows the user to Sync while a Project is running. (#1624)
+  - Adds uri decoding for more complex error messages. Messages can now be encoded in standard uri format and rendered correctly in the ui. (#1571)
+  - Add support for updated NVIDIA driver format supporting CUDA >= 11 (#1595)
+  - Adds seperate build paths for cloud client and local client. (#1562)
+  - Adds multiple status pages to the publish modal. This provides the user with an easier way of viewing feedback on a publish jobs failure or success. (#1567)
+  - Adds instructions for resolving installation issues with requirements packages. (#1572)
+  - Adds horizontal bar graph to datset summary for file type distribution. (#1500)
+
+- **FIX**
+  - Fixes collapsing records not allowing reload, and fixes issues with New Activity button. (#1600)
+  - Improves load and reload speed of the activity records. (#1600)
+  - Fixes setting the sticky state of the header when scrolled down. (#1600)
+  - Fixes issues with detail records having a min-height value that offsets the activiy records code view. (#1600)
+  - Fixes issue with configuring RStudio working directory at launch (#1606)
+  - Standardizes markdown for the application and fixes markdown not displaying correctly in the activitiy notes. (#1596)
+  - Fixes negative value appearing under `to download` in the dataset summary section. (#1597)
+
+## 2020-11-20
+
+### Gigantum Client (v1.4.0)
+
+Image Tag: ede4672f (374221886)
+
+Image ID: 25a4697f3c
+
+- **NEW**
+
+  - Client automatically configures using gigantum.com on first start if no server configs are present (#1511)
+  - Test case of package manager delete functionality. (#1497)
+  - On start, user data directories are migrated to new organization based on server id (#1469)
+  - Test case for the custom docker snippet interface. (#1522)
+  - Verify package lookups work with a broken build. (#1541)
+  - Test case to add python packages mentioned in requirements.txt (#1499)
+  - Sensitive files and dataset file cache directories are reorganized by server ID (#1536)
+  - Datasets supported in self-hosted servers with configurable server-side encryption (#1452)
+  - Server configuration is automatically discovered via new .well-known services (#1409)
+
+- **FIX**
+
+  - Fixes publish button not locking when publishing a dataset. (#1521)
+  - Fixes login attempt not passing server id when tokens are expired. (#1539)
+  - Fixed an issue causing sync state to be incorrectly set when publish modal was opened (#1540)
+  - Fixes parsing of error message on the login screen. (#1532)
+  - Refactors detail records to fix issues with more/less buttons not functioning as expected. (#1507)
+  - The UI will now poll for an API response if it is not immediately available. (#1525)
+  - Fixes datasets listing not left aligning, fixes alignment and spacing issues on the select server page. (#1454)
+  - Fixes login token expiration bug, clears out tokens and identity before attempting login. (#1538)
+  - Fixes css overflow issue introduced by issue 1489. (#1515)
+
+- **IMPROVEMENT**
+  - Added a more useful message on container launch when a sensitive file is missing locally. (#1531)
+  - Moves api query to QueryRenderer and adds react context to provide and consume context for neted components (#1454)
+  - Client configuration is now cached, reducing file IO during API calls (#1409)
+  - User data is now organized by server ID (#1409)
+  - Update authentiaction workflow to improve security and support multiple servers (#1505)
+
 ## 2020-11-04
 
 ### Gigantum Client (v1.4.0)

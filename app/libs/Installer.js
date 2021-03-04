@@ -5,6 +5,7 @@ import download from 'download';
 import fs from 'fs';
 import os from 'os';
 import sudo from 'sudo-prompt';
+import fixPath from 'fix-path';
 import si from 'systeminformation';
 // libs
 import Docker from './Docker';
@@ -14,6 +15,10 @@ import spawnWrapper from './spawnWrapper';
 const isLinux = process.platform === 'linux';
 const isMac = process.platform === 'darwin';
 const isWindows = process.platform === 'win32';
+
+if (isMac) {
+  fixPath();
+}
 
 class ShellMoc {
   constructor(state) {
@@ -110,6 +115,19 @@ class Installer {
           response.on('data', data => {
             count += 1;
             downloadProgress += data.length;
+
+            if (isMac) {
+              fs.appendFileSync(downloadedFile, data, err => {
+                if (err) {
+                  callback({
+                    success: false,
+                    finished: false,
+                    data: { downloadedFile }
+                  });
+                }
+              });
+            }
+
             // delay frequency of callback firing - causes UI to crash
             if (count % 50 === 0) {
               callback({
@@ -293,7 +311,9 @@ class Installer {
           if (checkNotReady) {
             callback({ success: true });
           } else {
-            setTimeout(() => {
+            // have to check for timeout to avoid multiple calls overwhelming the process
+            this.timeout = setTimeout(() => {
+              this.timeout = null;
               this.checkIfDockerIsReady(
                 callback,
                 reconnectCount + 1,
@@ -306,7 +326,9 @@ class Installer {
           if (checkNotReady) {
             callback({ success: true });
           } else {
-            setTimeout(() => {
+            // have to check for timeout to avoid multiple calls overwhelming the process
+            this.timeout = setTimeout(() => {
+              this.timeout = null;
               this.checkIfDockerIsReady(
                 callback,
                 reconnectCount + 1,
@@ -315,6 +337,24 @@ class Installer {
             }, 1000);
           }
         });
+
+        if (isWindows) {
+          dockerPs.on('exit', code => {
+            if (code === 0) {
+              callback({ success: true });
+            } else if (code === 4294967295) {
+              // have to check for timeout to avoid multiple calls overwhelming the process
+              this.timeout = setTimeout(() => {
+                this.timeout = null;
+                this.checkIfDockerIsReady(
+                  callback,
+                  reconnectCount + 1,
+                  checkNotReady
+                );
+              }, 1000);
+            }
+          });
+        }
       } catch (error) {
         if (checkNotReady) {
           callback({ success: true });
