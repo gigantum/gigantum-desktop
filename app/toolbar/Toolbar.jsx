@@ -15,7 +15,7 @@ type Props = {
   storage: object
 };
 
-export default class Routes extends Component<Props> {
+class Toolbar extends Component<Props> {
   toolbarMessenger = new ToolbarMessenger();
 
   toolbarInterface = new ToolbarInterface();
@@ -46,3 +46,5 @@ export default class Routes extends Component<Props> {
     );
   }
 }
+
+export default Toolbar;

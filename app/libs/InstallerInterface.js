@@ -299,7 +299,7 @@ class InstallerInterface {
      */
     const startDockerCallback = response => {
       if (response.success) {
-        installer.checkIfDockerIsReady(dockerisReadyCallback);
+        installer.checkIfDockerIsReady(dockerisReadyCallback, 0, false);
       } else {
         log.warn('Error in start docker cb');
         log.warn(response);

@@ -27,6 +27,7 @@ const toggleWindow = (toolbarWindow, tray) => {
   if (toolbarWindow.isVisible()) {
     toolbarWindow.hide();
   } else {
+    tray.setContextMenu(null);
     showToolbar(toolbarWindow, tray);
   }
 };

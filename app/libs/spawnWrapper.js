@@ -24,10 +24,7 @@ export default {
     }
     if (isMac) {
       return childProcess.spawn(command, arr, {
-        env: {
-          HOME: os.homedir(),
-          PATH: process.env.PATH
-        }
+        env: process.env
       });
     }
     try {
