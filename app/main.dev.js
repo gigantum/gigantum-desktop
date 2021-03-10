@@ -14,7 +14,8 @@ import { app, BrowserWindow, Menu, Tray, nativeImage } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import path from 'path';
 import isDev from 'electron-is-dev';
-import MenuBuilder from './menu';
+import MenuBuilder from './menu/menu';
+import createContextMenu from './menu/contextMenu';
 import Storage from './storage/Storage';
 import MainMessenger, {
   showToolbar,
@@ -182,6 +183,8 @@ app.on('ready', async () => {
   if (isDev) {
     autoUpdater.updateConfigPath = path.join(__dirname, 'dev-app-update.yml');
   }
+
+  createContextMenu(tray, toolbarWindow, mainMessenger);
 
   mainMessenger.listeners();
   toolbarWindow.checkForUpdates = () => checkForUpdates(mainMessenger, false);
