@@ -320,7 +320,7 @@
     "ssh2-exec": "^0.5.2",
     "stent": "^6.0.1",
     "sudo-prompt": "^9.0.0",
-    "systeminformation": "^4.14.8",
+    "systeminformation": "^5.3.1",
     "through-json": "^1.1.0",
     "through2": "^2.0.3",
     "truncate": "^2.1.0",
