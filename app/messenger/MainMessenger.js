@@ -83,7 +83,7 @@ const showToolbar = (toolbarWindow, tray) => {
       x = 0;
     }
     if (x > adjustedMax) {
-      x = adjustedMax;
+      x = adjustedMax - (window.screen.height - window.screen.availableHeight);
     }
   }
 

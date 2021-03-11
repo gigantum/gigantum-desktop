@@ -8,7 +8,7 @@ type Props = {
   progress: number
 };
 
-export default class ProgressBar extends Component<Props> {
+class ProgressBar extends Component<Props> {
   props: Props;
 
   render() {
@@ -41,3 +41,5 @@ export default class ProgressBar extends Component<Props> {
     );
   }
 }
+
+export default ProgressBar;
