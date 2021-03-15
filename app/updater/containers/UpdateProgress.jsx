@@ -22,17 +22,20 @@ export default class UpdateProgress extends Component<Props> {
       <div className="UpdateProgress">
         <Header message={message} />
         <div className="UpdateProgress__body">
-          <CircularProgressbar
-            value={progress}
-            text={`${Math.floor(progress)}%`}
-            styles={buildStyles({
-              strokeLinecap: 'butt',
-              textSize: '24px',
-              textColor: '#9b9c9e',
-              trailColor: '#e3e4e5',
-              pathColor: '#386e80'
-            })}
-          />
+          {progress === 0 && <div className="UpdateProgress__spinner" />}
+          {progress > 0 && (
+            <CircularProgressbar
+              value={progress}
+              text={`${Math.floor(progress)}%`}
+              styles={buildStyles({
+                strokeLinecap: 'butt',
+                textSize: '24px',
+                textColor: '#9b9c9e',
+                trailColor: '#e3e4e5',
+                pathColor: '#386e80'
+              })}
+            />
+          )}
           <div className="UpdateProgress__message">
             Downloading Gigantum Desktop
           </div>
