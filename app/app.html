@@ -100,6 +100,10 @@
       {
         const scripts = [];
 
+        if (process.platform === 'win32') {
+          document.getElementById('root').style.border = "1px solid black";
+        }
+
         // Dynamically insert the DLL script in development env in the
         // renderer process
         if (process.env.NODE_ENV === 'development') {
