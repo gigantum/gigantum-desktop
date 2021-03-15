@@ -56,7 +56,9 @@ class Running extends React.Component<Props> {
   */
   handleGigantumClose = closeDocker => {
     const { props } = this;
-    const hideWarning = props.storage.get('hide.dockerWarning');
+    const wslConfigured = props.storage.get('wslConfigured');
+    const hideWarning =
+      props.storage.get('hide.dockerWarning') || wslConfigured;
     const callback = response => {
       if (response.success) {
         if (isWindows && !hideWarning) {

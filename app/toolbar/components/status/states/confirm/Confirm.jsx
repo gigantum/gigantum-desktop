@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
-import utils from '../../../../../libs/utilities';
+// assets
+import quitDocker from 'Images/logos/quit-docker-windows.gif';
 // States
 import {
   CANCEL,
@@ -39,7 +40,8 @@ class Confirm extends React.Component<Props> {
   props: Props;
 
   state = {
-    isChecked: false
+    isChecked: false,
+    showQuitDocker: false
   };
 
   componentDidMount = () => {
@@ -134,6 +136,7 @@ class Confirm extends React.Component<Props> {
   confirmAction = confirm => {
     const { props, state } = this;
     const { category, storage, quittingApp } = props;
+    this.setState({ showQuitDocker: true });
     // TODO check config to see if setting is remembered
     const shouldCloseDockerConfig = removeWarning
       ? false
@@ -181,7 +184,7 @@ class Confirm extends React.Component<Props> {
         storage.set('hide.dockerWarning', true);
       }
       if (!confirm) {
-        utils.open('https://docs.gigantum.com/');
+        this.setState({ showQuitDocker: true });
       } else {
         props.transition(CONFIRM_WARNING, {
           message: 'Click to Start'
@@ -193,6 +196,7 @@ class Confirm extends React.Component<Props> {
   render() {
     const { props, state } = this;
     const { category } = props;
+    const { showQuitDocker } = state;
     let checkboxText =
       category === 'close.docker'
         ? 'Remember my selection next time'
@@ -202,6 +206,22 @@ class Confirm extends React.Component<Props> {
 
     const primaryText = category === 'warn.docker' ? 'Got it' : 'Yes';
     const secondaryText = category === 'warn.docker' ? 'Show me how' : 'No';
+
+    if (showQuitDocker) {
+      return (
+        <div className="Confirm__fixed">
+          <img alt="closeDocker" src={quitDocker} width="253" height="300" />
+          <button
+            type="button"
+            className="Btn__Confirm"
+            onClick={() => this.confirmAction(true)}
+          >
+            Got it
+          </button>
+        </div>
+      );
+    }
+
     return (
       <div className="Confirm">
         <div className="Confirm__message">{props.message}</div>
