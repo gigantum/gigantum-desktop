@@ -41,7 +41,6 @@ class CheckDockerStatus extends Component<Props> {
   };
 
   render() {
-    // const { progress } = props;
     const { machine, progress } = this.props;
     const progressKey = progress ? 'PROGRESS' : 'NO_PROGRESS';
     const imageCSS = classNames({
