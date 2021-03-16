@@ -1,0 +1,27 @@
+@import '~Styles/_imports.scss';
+
+.CircularProgress {
+  height: 100%;
+  margin: 0 0 40px 0;
+
+  &__body {
+    align-items: center;
+    height: 100%;
+    @include flex(center, column);
+
+    img {
+      margin-bottom: 40px;
+    }
+
+    span {
+      color: $primary;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+  }
+
+  .CircularProgressbar,
+  .CircularProgressbar-path {
+    transition: stroke-dashoffset 0.01s ease 0s !important;
+  }
+}
