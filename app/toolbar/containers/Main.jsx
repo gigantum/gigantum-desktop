@@ -65,8 +65,6 @@ class Main extends Component<Props> {
       state
     });
 
-    console.trace(eventType);
-
     this.runActions(newState);
     // TODO use category / installNeeded
 
