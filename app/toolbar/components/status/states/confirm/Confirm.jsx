@@ -136,13 +136,13 @@ class Confirm extends React.Component<Props> {
   confirmAction = confirm => {
     const { props, state } = this;
     const { category, storage, quittingApp } = props;
-    this.setState({ showQuitDocker: true });
     // TODO check config to see if setting is remembered
     const shouldCloseDockerConfig = removeWarning
       ? false
       : storage.get('close.dockerConfirm');
     const validateDockerClose = shouldCloseDockerConfig === undefined;
 
+    this.setState({ showQuitDocker: true });
     if (category === 'close.docker') {
       this.stopGigantumState();
       this.handleGigantumClose(confirm);
