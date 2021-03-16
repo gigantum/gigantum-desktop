@@ -1,7 +1,8 @@
 // @flow
+// vendor
 import React, { Component } from 'react';
-import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
-import 'react-circular-progressbar/dist/styles.css';
+// components
+import CircularProgress from '../progressbar/circular/CircularProgress';
 // assets
 import './Status.scss';
 import './ConfigureGigantumStatus.scss';
@@ -11,7 +12,7 @@ type Props = {
   progress: number
 };
 
-export default class ConfigureGigantumStatus extends Component<Props> {
+class ConfigureGigantumStatus extends Component<Props> {
   props: Props;
 
   componentDidMount = () => {
@@ -22,25 +23,13 @@ export default class ConfigureGigantumStatus extends Component<Props> {
   render() {
     const { props } = this;
     const { progress } = props;
+
     return (
       <div className="Layout__Status ConfigureGigantumStatus">
-        <div className="ConfigureGigantumStatus__body">
-          <CircularProgressbar
-            value={progress}
-            text={`${Math.floor(progress)}%`}
-            styles={buildStyles({
-              strokeLinecap: 'butt',
-              textSize: '24px',
-              textColor: '#9b9c9e',
-              trailColor: '#e3e4e5',
-              pathColor: '#386e80'
-            })}
-          />
-          <div className="CheckGigantumStatus__message">
-            Configuring Gigantum
-          </div>
-        </div>
+        <CircularProgress progress={progress} text="Configuring Gigantum" />
       </div>
     );
   }
 }
+
+export default ConfigureGigantumStatus;
