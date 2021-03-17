@@ -8,6 +8,8 @@ import DockerSrc from 'Images/logos/docker.png';
 import './Status.scss';
 import './InstallDockerStatus.scss';
 import utils from '../../../libs/utilities';
+// libs
+import wslStatus from '../../../libs/wslStatus';
 // constants
 import {
   PROMPT,
@@ -31,6 +33,20 @@ type Props = {
 export default class CheckDockerStatus extends Component<Props> {
   props: Props;
 
+  state = {
+    isWSL: null
+  };
+
+  componentDidMount() {
+    if (isWindows) {
+      wslStatus(
+        () => this.setState({ isWSL: true }),
+        () => this.setState({ isWSL: true }),
+        () => this.setState({ isWSL: false })
+      );
+    }
+  }
+
   /**
     @param {}
     handles install button
@@ -43,10 +59,12 @@ export default class CheckDockerStatus extends Component<Props> {
   render() {
     const { props } = this;
     const { progress } = props;
+    const { isWSL } = this.state;
     const progressKey = progress ? 'PROGRESS' : 'NO_PROGRESS';
     const imageCSS = classNames({
       InstallDockerStatus__image: true,
       'InstallDockerStatus__image--linux': isLinux,
+      'InstallDockerStatus__image--windows--wsl': isWindows && isWSL,
       'InstallDockerStatus__image--windows': isWindows,
       'InstallDockerStatus__image--mac': isMac
     });

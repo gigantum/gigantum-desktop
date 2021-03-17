@@ -34,11 +34,16 @@
   width: 200px;
   height: 200px;
   &--windows {
-    background: url('~Images/logos/windows-installer.gif') no-repeat center
+    background: url('~Images/logos/disable-wsl-container.png') no-repeat center
       center;
     background-size: cover;
     width: 259px;
     height: 180px;
+    &--wsl {
+      background: url('~Images/logos/enable-wsl-container.png') no-repeat center
+        center;
+      background-size: cover;
+    }
   }
   &--linux {
     background: url('~Images/icons/reboot-linux.svg') no-repeat center center;
