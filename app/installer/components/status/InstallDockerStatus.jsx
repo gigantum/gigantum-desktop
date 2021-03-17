@@ -1,15 +1,15 @@
 // @flow
 import React, { Component } from 'react';
 import classNames from 'classnames';
-import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
-import 'react-circular-progressbar/dist/styles.css';
 // assets
-import DockerSrc from 'Images/logos/docker.png';
+import dockerSrc from 'Images/logos/docker.png';
 import './Status.scss';
 import './InstallDockerStatus.scss';
 import utils from '../../../libs/utilities';
 // libs
 import wslStatus from '../../../libs/wslStatus';
+// components
+import CircularProgress from '../progressbar/circular/CircularProgress';
 // constants
 import {
   PROMPT,
@@ -30,7 +30,7 @@ type Props = {
   }
 };
 
-export default class CheckDockerStatus extends Component<Props> {
+class CheckDockerStatus extends Component<Props> {
   props: Props;
 
   state = {
@@ -57,9 +57,8 @@ export default class CheckDockerStatus extends Component<Props> {
   };
 
   render() {
-    const { props } = this;
-    const { progress } = props;
     const { isWSL } = this.state;
+    const { machine, progress } = this.props;
     const progressKey = progress ? 'PROGRESS' : 'NO_PROGRESS';
     const imageCSS = classNames({
       InstallDockerStatus__image: true,
@@ -68,28 +67,11 @@ export default class CheckDockerStatus extends Component<Props> {
       'InstallDockerStatus__image--windows': isWindows,
       'InstallDockerStatus__image--mac': isMac
     });
-    const spinnerMessage = isLinux
+    const spinnerText = isLinux
       ? 'Docker Install Complete'
       : 'Downloading Docker Installer';
     const progressMap = {
-      PROGRESS: (
-        <div className="Layout__Status InstallDockerStatus">
-          <div className="InstallDockerStatus__body">
-            <CircularProgressbar
-              value={progress}
-              text={`${Math.floor(progress)}%`}
-              styles={buildStyles({
-                strokeLinecap: 'butt',
-                textSize: '24px',
-                textColor: '#9b9c9e',
-                trailColor: '#e3e4e5',
-                pathColor: '#386e80'
-              })}
-            />
-            <div className="CheckDockerStatus__message">{spinnerMessage}</div>
-          </div>
-        </div>
-      ),
+      PROGRESS: <CircularProgress progress={progress} text={spinnerText} />,
       NO_PROGRESS: (
         <div className="Layout__Status InstallDockerStatus">
           <div className="InstallDockerStatus__noProgress" />
@@ -107,7 +89,7 @@ export default class CheckDockerStatus extends Component<Props> {
       [PROMPT]: (
         <div className="Layout__Status InstallDockerStatus">
           <div className="InstallDockerStatus__body">
-            <img alt="docker" src={DockerSrc} width="150" height="150" />
+            <img alt="docker" src={dockerSrc} width="150" height="150" />
             <button
               type="button"
               className="Btn__Status Btn--primary"
@@ -135,6 +117,8 @@ export default class CheckDockerStatus extends Component<Props> {
         </div>
       )
     };
-    return renderMap[props.machine.value];
+    return renderMap[machine.value];
   }
 }
+
+export default CheckDockerStatus;
