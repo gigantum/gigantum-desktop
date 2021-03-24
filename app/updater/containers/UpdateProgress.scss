@@ -2,10 +2,17 @@
 
 .UpdateProgress {
   height: 100%;
-}
-
-.UpdateProgress__body {
-  height: 80%;
-  @include flex(center, column);
-  align-items: center;
+  &__body {
+    height: 80%;
+    @include flex(center, column);
+    align-items: center;
+  }
+  &__spinner {
+    display: block;
+    background: url('~Images/loaders/spinner.svg') no-repeat center center;
+    width: 130px;
+    height: 130px;
+    background-size: 130px;
+    margin: 0 0 40px 0;
+  }
 }
