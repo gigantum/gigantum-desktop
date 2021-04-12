@@ -124,7 +124,7 @@ class InstallerInterface {
     let wsl2Supported = false;
     if (isWindows) {
       const build = os.release().split('.')[2];
-      wsl2Supported = Number(build) >= 19041;
+      wsl2Supported = Number(build) >= 18362;
     }
     if (isWindows && !wslConfigured && wsl2Supported) {
       // callback if WSL returns error, when WSL command doesn't exist
