@@ -413,6 +413,11 @@ class Installer {
           success: true,
           data: {}
         });
+      } else {
+        callback({
+          success: true,
+          data: {}
+        });
       }
     }
   };
