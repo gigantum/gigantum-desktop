@@ -84,8 +84,8 @@ const showToolbar = (toolbarWindow, tray) => {
     }
     if (x > adjustedMax) {
       x = adjustedMax;
-      y = display.workArea.height - windowPos.height;
     }
+    y = display.workArea.height - windowPos.height;
   }
 
   toolbarWindow.setVisibleOnAllWorkspaces(true);
