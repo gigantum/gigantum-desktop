@@ -7,7 +7,8 @@ import {
   CONFIGURE_DOCKER,
   CONFIGURE_GIGANTUM,
   INSTALL_DOCKER,
-  ERROR
+  ERROR,
+  INSTALL_WSL2
 } from '../../machine/InstallerConstants';
 // assets
 import './ErrorMain.scss';
@@ -52,6 +53,12 @@ export default class ErrorMain extends Component<Props> {
       [INSTALL_DOCKER]: (
         <p className="Layout__Main">
           There was an error installing docker. Please try again. If the issue
+          persists restart the application.
+        </p>
+      ),
+      [INSTALL_WSL2]: (
+        <p className="Layout__Main">
+          There was an error configuring WSL2. Please Try again. If the issue
           persists restart the application.
         </p>
       ),

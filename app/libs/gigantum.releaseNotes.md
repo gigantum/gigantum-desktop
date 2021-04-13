@@ -1,3 +1,56 @@
+## 2021-04-09
+
+### Gigantum Client (v1.5.1)
+
+Image Tag: d8367893 (341515353)
+
+Image ID: ce5fab921b
+
+- **FIX**
+
+  - Fixed a bug with how the error from downloading dataset files is being handled in backup mode. (#1693)
+  - Resolves issue with login redirecting on invalid sessions. **init**.py files will no longer be ignored by filebrowser upload. Messaging changed on Dataset overview type. (#1719)
+  - Error handling added for invalid Project imported via Share URL. (#1723)
+  - Fixed a bug that caused the 'Download All' button not to appear for datasets with read-only permissions. (#1679)
+  - Fixes issues with remote Dataset listing and remote import/delete following a recent code refactor (#1683)
+  - Fixed bug that prevented the use of non-Dockerhub registries for base images in custom base repositories. (#1729)
+
+- **NEW**
+
+  - Cleans up code and adds checks for serverId and for when share link widget should be enabled. (#1728)
+  - Blocks the downloading of dataset files when the remote gitlab server is in backup mode. (#1678)
+  - Fixes notification popping again afer task completion. (#1698)
+  - Adds error reporting to the notification tray, prevents error state where user cannot get out of visibility modal error screen. (#1698)
+  - Test case for creating and publishing a dataset. (#1654)
+  - Adds share link modal. Share link modal gives the user an interface to build a url for sharing with collaborators. Link will import the project, build project and launch devtool. If using jupyterLab drop there is an additional option to add a code file where the collaborator will be dropped into when jupyterLab opens. (#1713)
+  - Blocks collaborator remote options in the ui when the remote gitlab server is in backup mode. Adds check on remote operations and switches ui into backup mode that blocks all remote gitlab operations. (#1666)
+  - Adds option to provide specific git url when checking if backup is in progress instead of always using current server's git url, necessary for the /api/servers endpoint. (#1620)
+  - Adds logic to display backup in progress modal when a remote operation fails due to server being in backup mode. (#1696)
+  - Adds logic to block sync dropdown in datasets when backup mode is detected. (#1696)
+  - Add ability to run Gigantum Client with a user provided SSL certificate (#1697)
+  - Adding test support for team servers. (#1694)
+  - Adds check for backup-in-progress to remote dataset and projects listings pages. Blocks and alerts about failing import and deletion. (#1653)
+  - Adds check on visibilty change to catch backup error. Disables visibility change button when backup mode is detected. (#1671)
+  - Adds loader to side panel server icon when backup mode is detected. Adds info icon with explanation of why backup is running. (#1671)
+  - Handles launching devtools and custom applications from a share URL. Handles pop-up blocker when devtool is launched. (#1717)
+  - Adds locking to menu items when back up is in progress. (#1602)
+  - Adds locking to import remote projects on the import modal. Handes errors and checks for backup mode on failure. (#1673)
+  - Adds backup in progress modal that pops up when backup mode has been detected. (#1673)
+  - Adds polling when backup in progress is flagged as true, blocks remote operations and polls for backup to finish before allowing remote operations. (#1615)
+  - Adds check when polling fails. Checks for backup in progress and polls until backup returns true and updates relay store. (#1621)
+  - Adds interstitial screen that handles importing, building and launching a project. UI Displays progress and loads error messages if any system or input errors occur. UI will open juypyter, jupyterlab and rstudio for user when using this import link. (#1720)
+  - Adds error handling when repository name cannot be verified. Block repository creation when backup mode has been detected. (#1681)
+  - Adds backup-in-progress field to server endpoint and currentserver object. Checks if gitlab errors are due to an in-progress backup and provides appropriate error messaging if so. (#1604)
+  - Cleans up styling for interstial error states. Fixes redirect when a dev tool has not been included in the hash. (#1725)
+  - Adds first pass at import sharing, cleans up code from demo branch. Adds the ability to open a link and have a project import, build, launch and start development tool without any user actions. (#1700)
+  - Update test framework for Client 1.5.1 support. (#1727)
+
+- **IMPROVEMENT**
+  - Updates packages for security fixes and base container to Ubuntu 20.04 (#1715)
+  - Update check for available disk space due to changes to Docker. This also better supports more complex host/VM configurations. (#1708)
+  - When an error occurs during base repository indexing, the repos are now removed and re-cloned on restart. (#1729)
+  - When token validation fails, cached JWKs are removed and refetched. (#1729)
+
 ## 2021-02-22
 
 ### Gigantum Client (v1.5.0)
