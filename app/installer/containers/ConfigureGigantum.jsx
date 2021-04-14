@@ -29,6 +29,7 @@ export default class Checking extends Component<Props> {
           this.setState({ progress: 100 });
           setTimeout(() => {
             props.storage.set('install', true);
+            props.storage.set('wslConfigured', true);
             props.transition(SUCCESS, {
               message: 'Configuration Complete'
             });
