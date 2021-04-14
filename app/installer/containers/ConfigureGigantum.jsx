@@ -10,6 +10,8 @@ import ConfigureGigantumStatus from '../components/status/ConfigureGigantumStatu
 // assets
 import './Container.scss';
 
+const isWindows = process.platform === 'win32';
+
 export default class Checking extends Component<Props> {
   props: Props;
 
@@ -29,7 +31,9 @@ export default class Checking extends Component<Props> {
           this.setState({ progress: 100 });
           setTimeout(() => {
             props.storage.set('install', true);
-            props.storage.set('wslConfigured', true);
+            if (isWindows) {
+              props.storage.set('wslConfigured', true);
+            }
             props.transition(SUCCESS, {
               message: 'Configuration Complete'
             });
