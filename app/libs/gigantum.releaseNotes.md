@@ -1,3 +1,19 @@
+## 2021-04-16
+
+### Gigantum Client (v1.5.2)
+
+Image Tag: 5285aa47 (341515400)
+
+Image ID: 9b50d5d94c
+
+- **FIX**
+  - Fixes launch button on popup blocker not working in import screen. (#1740)
+  - Fixes popup blocker modal appearing when popups are not blocked on import screen. (#1740)
+  - Fixes typos and changes text added in backup feature. (#1741)
+  - Fixes css issues on import modal, and fixes import link bug crashing the app. (#1751)
+  - Removes header argument that was causing a CORS error. (#1752)
+  - Fixes an issue causing the error modal to always appear when importing via share URL (#1755)
+
 ## 2021-04-09
 
 ### Gigantum Client (v1.5.1)
