@@ -1,7 +1,8 @@
 import childProcess from 'child_process';
 
 export default (wslReadyCallback, wslEnabledCallback, wslDisabledCallback) => {
-  const wslCheck = childProcess.spawn('powershell', ['wsl', '-l', '-v']);
+  const wslCheck = childProcess.spawn('powershell', ['wsl', '-l']);
+  /* Runs if WSL command does not respond with error */
   wslCheck.on('close', code => {
     if (code === 0) {
       if (wslReadyCallback) {
@@ -9,6 +10,8 @@ export default (wslReadyCallback, wslEnabledCallback, wslDisabledCallback) => {
       }
     }
   });
+
+  /* If WSL response returns data, this determines wether WSL is installed despite exit code being non-0  */
   wslCheck.stderr.on('data', data => {
     const repositoryUninstalled =
       data

@@ -8,8 +8,8 @@ const hostDirectory = path.join(os.homedir(), 'gigantum');
 
 // gigantum image name
 const imageLabel = 'gigantum/labmanager';
-const imageTag = 'd8367893';
-const clientVersion = '1.5.1';
+const imageTag = '5285aa47';
+const clientVersion = '1.5.2';
 
 export default {
   containerName: `${imageLabel}-${imageTag}`.replace(/\/|:/g, '.'),
@@ -34,6 +34,6 @@ export default {
     'releaseNotes',
     'failed'
   ],
-  fileSize: 341515353,
+  fileSize: 341515400,
   version
 };

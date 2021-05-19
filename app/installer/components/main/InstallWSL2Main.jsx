@@ -52,8 +52,11 @@ class InstallWSL2Main extends Component<Props> {
       ),
       [KERNAL_PROMPT]: (
         <div className="Layout__Main">
-          <p>WSL 2 has been enabled.</p>
-          <p>The Linux kernel used by WSL 2 now must be updated.</p>
+          <p>WSL 2 is enabled on this machine.</p>
+          <p>
+            In order to use WSL 2 with Gigantum the Linux kernel must be
+            updated.
+          </p>
         </div>
       ),
       [INSTALLING]: (

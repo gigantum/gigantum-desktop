@@ -55,6 +55,18 @@ class InstallWSL2 extends Component<Props> {
 
   /**
    * @param {}
+   *  deny kernal instlal
+   */
+  denyKernal = () => {
+    const { props } = this;
+    props.storage.set('wslConfigured', true);
+    props.transition(SUCCESS, {
+      message: 'Checking For Docker'
+    });
+  };
+
+  /**
+   * @param {}
    *  changes state when installing begins
    */
   installKernal = () => {
@@ -135,6 +147,7 @@ class InstallWSL2 extends Component<Props> {
           status={
             <InstallWSL2Status
               startInstall={this.startInstall}
+              denyKernal={this.denyKernal}
               installKernal={this.installKernal}
               optOut={this.optOut}
               machine={state.machine}

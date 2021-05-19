@@ -14,6 +14,7 @@ import {
 } from '../../containers/machine/InstallWSL2Constants';
 
 type Props = {
+  denyKernal: () => void,
   installKernal: () => void,
   machine: {
     value: string
@@ -21,6 +22,7 @@ type Props = {
   optOut: () => void,
   startInstall: () => void,
   storage: {
+    get: () => void,
     set: () => void
   },
   messenger: () => void
@@ -34,7 +36,8 @@ class CheckWSL2Status extends Component<Props> {
     handles install button
   */
   handleInstallButton = () => {
-    const { messenger, startInstall } = this.props;
+    const { messenger, startInstall, storage } = this.props;
+    storage.set('promptKernal', true);
     messenger.setAutoLaunchOn();
     startInstall();
   };
@@ -46,6 +49,15 @@ class CheckWSL2Status extends Component<Props> {
   handleKernalButton = () => {
     const { props } = this;
     props.installKernal();
+  };
+
+  /**
+    @param {}
+    handles launch button
+  */
+  denyKernal = () => {
+    const { props } = this;
+    props.denyKernal();
   };
 
   /**
@@ -67,6 +79,7 @@ class CheckWSL2Status extends Component<Props> {
         </div>
       )
     };
+    const kernalPrompted = props.storage.get('promptKernal');
     const renderMap = {
       [KERNAL_PROMPT]: (
         <div className="Layout__Status InstallWSL2Status">
@@ -92,6 +105,15 @@ class CheckWSL2Status extends Component<Props> {
             >
               Update Kernel
             </button>
+            {!kernalPrompted && (
+              <button
+                type="button"
+                className="Btn__Status"
+                onClick={() => this.denyKernal()}
+              >
+                Opt-out of WSL2
+              </button>
+            )}
           </div>
         </div>
       ),

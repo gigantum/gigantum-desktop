@@ -155,7 +155,6 @@ class InstallerInterface {
           }
         });
       };
-      this.checkKernalInstall(res => console.log(res));
       wslStatus(wslAvailableCallback, wslAvailableCallback, noWSLCallback);
     } else {
       this.checkDocker(callback);
