@@ -47,6 +47,7 @@ if (!gotTheLock) {
 sentry();
 
 const isWindows = process.platform === 'win32';
+const isMac = process.platform === 'darwin';
 
 const urlPath = `file:///${__dirname}/app.html`;
 
@@ -131,9 +132,9 @@ app.on('ready', async () => {
   const storage = new Storage();
   const install = storage.get('install');
   const appPath = 'app.html';
-  const trayIcon = isWindows
-    ? `${__dirname}/assets/tray/iconWhite.png`
-    : `${__dirname}/assets/tray/iconTemplate.png`;
+  const trayIcon = isMac
+    ? `${__dirname}/assets/tray/iconTemplate.png`
+    : `${__dirname}/assets/tray/iconWhite.png`;
   const tray = new Tray(trayIcon);
 
   if (process.platform === 'linux') {
