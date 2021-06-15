@@ -1,3 +1,43 @@
+## 2021-06-15
+
+### Gigantum Client (v1.5.3)
+
+Image Tag: aaa9db6b (344240645)
+
+Image ID: 36e8ac4453
+
+- **FIX**
+
+  - /api/servers route is now explicitly not cached if this request reaches the UI to fix an edge case at startup (#1787)
+  - Made styling tweaks to the client version in the sidebar (#1802)
+  - Tests linking and working with an unpublished dataset. (#1764)
+  - Fixed issue with RStudio proxy when running the Client as a service (#1785)
+  - Resolved an issue allowing you to create repository during backup mode. Resolved an issue causing the backup modal not to appear during backup-caused error. The repository will now refetch after backup-mode is re-disabled in order to get collaborator info. (#1777)
+  - Fixes issue when synching with a linked unpublished dataset, project is running modal would appear blocking tests. Also is an issue for the user as it is confusing behaviour (#1786)
+  - Fixes progress typo in backup mode tooltip (#1786)
+  - Fixes typo on gigantum (#1786)
+
+- **NEW**
+
+  - Test to verify that you can delete a project from the server and republish it. (#1792)
+  - Verifies that a user can add, remove, and update a sensitive file and that sensitive files are NOT synced. (#1768)
+  - The client version will now be visible in the sidebar of the application (#1801)
+  - Tests linking and working with an unpublished dataset. (#1759)
+  - Test to verify that user can cancel a build successfully. (#1783)
+  - Test case that verifies the cleaning up of dataset files. (#1762)
+  - Verify if a dataset is linked to an existing project, after the project has already been imported by a collaborator, and then synced. (#1794)
+  - Verify deleting files and packages properly managed across users and syncs. (#1800)
+  - Test to import datasets by link and collaborating. (#1790)
+  - On token verification error, Auth well-known data is attempted to be refetched. (#1781)
+  - Verify publishing project from collaborator modal. (#1782)
+  - Test framework updated to support jupyterlab UI changes. (#1776)
+  - Refactoring code to support the UI element changes. (#1774)
+
+- **IMPROVEMENT**
+  - 'proxy.apparent_port' removed from config in favor of 'proxy.external_url' when configuring the Client as a service (#1785)
+  - HTTP->HTTPS redirect now supported when running the Client as a service with HTTPS configured (#1785)
+  - On token verification error, if error is due to an SSL issue a better message is provided to the UI. (#1781)
+
 ## 2021-04-16
 
 ### Gigantum Client (v1.5.2)
