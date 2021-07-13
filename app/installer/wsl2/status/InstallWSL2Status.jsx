@@ -2,8 +2,8 @@
 import React, { Component } from 'react';
 import 'react-circular-progressbar/dist/styles.css';
 // assets
-import './Status.scss';
 import './InstallWSL2Status.scss';
+// utils
 import utils from '../../../libs/utilities';
 // constants
 import {
@@ -11,7 +11,7 @@ import {
   KERNAL_PROMPT,
   INSTALLING,
   ERROR
-} from '../../containers/machine/InstallWSL2Constants';
+} from '../machine/InstallWSL2Constants';
 
 type Props = {
   denyKernal: () => void,
@@ -28,8 +28,7 @@ type Props = {
   messenger: () => void
 };
 
-class CheckWSL2Status extends Component<Props> {
-  props: Props;
+const CheckWSL2Status = ({}) => {
 
   /**
     @param {}

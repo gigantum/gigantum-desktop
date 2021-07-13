@@ -280,6 +280,64 @@ class Installer {
   };
 
   /**
+   * checks wsl2 compatibility
+   */
+  checkCompatibilityWSL = () =>
+    new Promise((resolve, reject) => {
+      if (isWindows) {
+        const build = os.release().split('.')[2];
+        const wsl2Supported = Number(build) >= 18362;
+        if (wsl2Supported) {
+          return resolve();
+        }
+        return reject(new Error('WSL_INCOMPATIBLE'));
+      }
+      return reject(new Error('WSL_INCOMPATIBLE'));
+    });
+
+  /**
+   * @param {Function} callback
+   * checks if linux kernal is installed
+   */
+  checkKernalInstall = () =>
+    new Promise((resolve, reject) => {
+      const ps = new Shell({
+        executionPolicy: 'Bypass',
+        noProfile: true
+      });
+      ps.addCommand(
+        '(gp HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\*).DisplayName -Contains "Windows Subsystem for Linux Update"'
+      );
+      ps.invoke()
+        .then(response => {
+          const formattedResponse = response.replace(/^\s+|\s+$/g, '');
+          if (formattedResponse !== 'True') {
+            ps.dispose();
+            return reject(new Error('KERNAL_UNINSTALLED'));
+          }
+          return resolve();
+        })
+        .catch(() => {
+          ps.dispose();
+          return reject(new Error('KERNAL_UNINSTALLED'));
+        });
+    });
+
+  /**
+   * checks wsl2 install status
+   */
+  checkWSLInstallStatus = () =>
+    new Promise((resolve, reject) => {
+      const wslCheck = childProcess.spawn('powershell', ['wsl', '-l']);
+      wslCheck.on('close', code => {
+        if (code === 0) {
+          return resolve();
+        }
+        return reject(new Error('WSL_UNINSTALLED'));
+      });
+    });
+
+  /**
    * @param {Function} callback
      @param {Number} reconnectCount
    * recursively checks docker ps untill it is ready

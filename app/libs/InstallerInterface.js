@@ -1,24 +1,21 @@
 // @flow
 import disk from 'check-disk-space';
 import log from 'electron-log';
-import os from 'os';
 // libs
 import Docker from './Docker';
 import Gigantum from './Gigantum';
 import Installer from './Installer';
 import spawnWrapper from './spawnWrapper';
-import Storage from '../storage/Storage';
-import wslStatus from './wslStatus';
 
 const isWindows = process.platform === 'win32';
 
-class ShellMoc {
-  constructor(state) {
-    this.state = state;
-  }
-}
+// class ShellMoc {
+//   constructor(state) {
+//     this.state = state;
+//   }
+// }
 
-const Shell = isWindows ? require('node-powershell') : ShellMoc;
+// const Shell = isWindows ? require('node-powershell') : ShellMoc;
 
 class InstallerInterface {
   /**
@@ -85,77 +82,55 @@ class InstallerInterface {
 
   /**
    * @param {Function} callback
-   * checks if linux kernal is installed
-   */
-  checkKernalInstall = callback => {
-    const isInstalled = () => {
-      const ps = new Shell({
-        executionPolicy: 'Bypass',
-        noProfile: true
-      });
-      ps.addCommand(
-        '(gp HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\*).DisplayName -Contains "Windows Subsystem for Linux Update"'
-      );
-      ps.invoke()
-        .then(response => {
-          const formattedResponse = response.replace(/^\s+|\s+$/g, '');
-          if (formattedResponse !== 'True') {
-            ps.dispose();
-            callback({ success: false });
-          } else {
-            callback({ success: true });
-          }
-          return null;
-        })
-        .catch(() => {
-          ps.dispose();
-        });
-    };
-    isInstalled();
-  };
-
-  /**
-   * @param {Function} callback
    * checks if docker is installed
    */
   check = callback => {
-    const storage = new Storage();
-    const wslConfigured = storage.get('wslConfigured');
-    let wsl2Supported = false;
+    // const storage = new Storage();
+    // const wslConfigured = storage.get('wslConfigured');
+    // let wsl2Supported = false;
+    // if (isWindows) {
+    //   const build = os.release().split('.')[2];
+    //   wsl2Supported = Number(build) >= 18362;
+    // }
+    // if (isWindows && !wslConfigured && wsl2Supported) {
+    //   // callback if WSL returns error, when WSL command doesn't exist
+    //   const noWSLCallback = () => {
+    //     callback({
+    //       success: false,
+    //       data: {
+    //         error: {
+    //           message: 'WSL2 not configured.'
+    //         }
+    //       }
+    //     });
+    //   };
+    //   // when wsl is available, checks kernal install
+    //   const wslAvailableCallback = () => {
+    //     this.checkKernalInstall(res => {
+    //       if (res.success) {
+    //         this.checkDocker(callback);
+    //       } else {
+    //         callback({
+    //           success: false,
+    //           data: {
+    //             error: {
+    //               message: 'WSL2 not configured.'
+    //             }
+    //           }
+    //         });
+    //       }
+    //     });
+    //   };
+    // wslStatus(wslAvailableCallback, wslAvailableCallback, noWSLCallback);
     if (isWindows) {
-      const build = os.release().split('.')[2];
-      wsl2Supported = Number(build) >= 18362;
-    }
-    if (isWindows && !wslConfigured && wsl2Supported) {
-      // callback if WSL returns error, when WSL command doesn't exist
-      const noWSLCallback = () => {
-        callback({
-          success: false,
-          data: {
-            error: {
-              message: 'WSL2 not configured.'
-            }
+      callback({
+        success: false,
+        data: {
+          error: {
+            message: 'Check WSL2'
           }
-        });
-      };
-      // when wsl is available, checks kernal install
-      const wslAvailableCallback = () => {
-        this.checkKernalInstall(res => {
-          if (res.success) {
-            this.checkDocker(callback);
-          } else {
-            callback({
-              success: false,
-              data: {
-                error: {
-                  message: 'WSL2 not configured.'
-                }
-              }
-            });
-          }
-        });
-      };
-      wslStatus(wslAvailableCallback, wslAvailableCallback, noWSLCallback);
+        }
+      });
     } else {
       this.checkDocker(callback);
     }

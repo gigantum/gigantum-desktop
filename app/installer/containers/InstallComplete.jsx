@@ -1,7 +1,7 @@
 // @flow
 import React, { Component } from 'react';
 // containers
-import Layout from './Layout';
+import Layout from './layout/Layout';
 // componenets
 import InstallCompleteMain from '../components/main/InstallCompleteMain';
 import InstallCompleteStatus from '../components/status/InstallCompleteStatus';
@@ -19,9 +19,10 @@ export default class Checking extends Component<Props> {
           currentState={machine.value}
           message={message}
           progress={4}
-          main={<InstallCompleteMain />}
-          status={<InstallCompleteStatus messenger={messenger} />}
-        />
+        >
+          <InstallCompleteMain />
+          <InstallCompleteStatus messenger={messenger} />
+        </Layout>
       </div>
     );
   }

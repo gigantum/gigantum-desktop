@@ -9,7 +9,7 @@ import {
   ERROR
 } from '../machine/InstallerConstants';
 // containers
-import Layout from './Layout';
+import Layout from './layout/Layout';
 // componenets
 import CheckDockerMain from '../components/main/CheckDockerMain';
 import CheckDockerStatus from '../components/status/CheckDockerStatus';
@@ -42,7 +42,7 @@ export default class Checking extends Component<Props> {
             message: 'Not Enough Disk Space',
             metaData: { spaceAvailable }
           });
-        } else if (message && message.indexOf('WSL2 not configured.') > -1) {
+        } else if (message && message.indexOf('Check WSL2') > -1) {
           props.transition(INSTALL_WSL2, {
             message: 'Configure WSL 2'
           });
@@ -64,9 +64,10 @@ export default class Checking extends Component<Props> {
           currentState={machine.value}
           message={message}
           progress={1}
-          main={<CheckDockerMain />}
-          status={<CheckDockerStatus />}
-        />
+        >
+          <CheckDockerMain />
+          <CheckDockerStatus />
+        </Layout>
       </div>
     );
   }
