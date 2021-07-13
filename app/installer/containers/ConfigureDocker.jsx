@@ -11,7 +11,7 @@ import {
   RESTARTING
 } from './machine/ConfigureDockerConstants';
 // containers
-import Layout from './Layout';
+import Layout from './layout/Layout';
 // componenets
 import ConfigureDockerMain from '../components/main/ConfigureDockerMain';
 import ConfigureDockerStatus from '../components/status/ConfigureDockerStatus';
@@ -145,22 +145,19 @@ export default class ConfigureDocker extends Component<Props> {
           currentState={machine.value}
           message={message}
           progress={2}
-          main={
-            <ConfigureDockerMain
-              machine={state.machine}
-              skipConfigure={state.skipConfigure}
-            />
-          }
-          status={
-            <ConfigureDockerStatus
-              machine={state.machine}
-              configured={state.configured}
-              configureDocker={this.configureDocker}
-              skipConfigure={state.skipConfigure}
-              progress={state.progress}
-            />
-          }
-        />
+        >
+          <ConfigureDockerMain
+            machine={state.machine}
+            skipConfigure={state.skipConfigure}
+          />
+          <ConfigureDockerStatus
+            machine={state.machine}
+            configured={state.configured}
+            configureDocker={this.configureDocker}
+            skipConfigure={state.skipConfigure}
+            progress={state.progress}
+          />
+        </Layout>
       </div>
     );
   }

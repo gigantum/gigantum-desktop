@@ -20,7 +20,7 @@ import InstallerClass from '../libs/Installer';
 // containers
 import Checking from './containers/Checking';
 import Error from './containers/Error';
-import InstallWSL2 from './containers/InstallWSL2';
+import InstallWSL2 from './wsl2/InstallWSL2';
 import InstallDocker from './containers/InstallDocker';
 import ConfigureDocker from './containers/ConfigureDocker';
 import ConfigureGigantum from './containers/ConfigureGigantum';
@@ -110,7 +110,7 @@ export default class Installer extends Component<Props> {
           {...props}
           {...state}
           transition={transition}
-          interface={this.interface}
+          installerInterface={this.interface}
           messenger={this.messenger}
         />
       ),

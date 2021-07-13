@@ -9,7 +9,7 @@ import {
   ERROR
 } from '../machine/InstallerConstants';
 // containers
-import Layout from './Layout';
+import Layout from './layout/Layout';
 // componenets
 import CheckDockerMain from '../components/main/CheckDockerMain';
 import CheckDockerStatus from '../components/status/CheckDockerStatus';
@@ -64,9 +64,10 @@ export default class Checking extends Component<Props> {
           currentState={machine.value}
           message={message}
           progress={1}
-          main={<CheckDockerMain />}
-          status={<CheckDockerStatus />}
-        />
+        >
+          <CheckDockerMain />
+          <CheckDockerStatus />
+        </Layout>
       </div>
     );
   }

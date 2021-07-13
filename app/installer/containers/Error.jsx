@@ -40,23 +40,20 @@ export default class Checking extends Component<Props> {
           currentState={currentState}
           message={message}
           progress={progress}
-          main={
-            <ErrorMain
-              metaData={metaData}
-              message={message}
-              transition={transition}
-              currentState={currentState}
-            />
-          }
-          status={
-            <ErrorStatus
-              metaData={metaData}
-              message={message}
-              transition={transition}
-              currentState={currentState}
-            />
-          }
-        />
+        >
+          <ErrorMain
+            metaData={metaData}
+            message={message}
+            transition={transition}
+            currentState={currentState}
+          />
+          <ErrorStatus
+            metaData={metaData}
+            message={message}
+            transition={transition}
+            currentState={currentState}
+          />
+        </Layout>
       </div>
     );
   }

@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 // constants
 import { ERROR, SUCCESS } from '../machine/InstallerConstants';
 // containers
-import Layout from './Layout';
+import Layout from './layout/Layout';
 // componenets
 import ConfigureGigantumMain from '../components/main/ConfigureGigantumMain';
 import ConfigureGigantumStatus from '../components/status/ConfigureGigantumStatus';
@@ -59,14 +59,15 @@ export default class Checking extends Component<Props> {
           currentState={machine.value}
           message={message}
           progress={3}
-          main={<ConfigureGigantumMain />}
-          status={
-            <ConfigureGigantumStatus
-              configureGigantum={this.configureGigantum}
-              progress={state.progress}
-            />
-          }
-        />
+        >
+          <ConfigureGigantumMain />
+
+          <ConfigureGigantumStatus
+            configureGigantum={this.configureGigantum}
+            progress={state.progress}
+          />
+
+        </Layout>
       </div>
     );
   }

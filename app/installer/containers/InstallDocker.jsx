@@ -6,7 +6,7 @@ import installDockerMachine from './machine/InstallDockerMachine';
 import { ERROR, SUCCESS } from '../machine/InstallerConstants';
 import { INSTALL } from './machine/InstallDockerConstants';
 // containers
-import Layout from './Layout';
+import Layout from './layout/Layout';
 // componenets
 import InstallDockerMain from '../components/main/InstallDockerMain';
 import InstallDockerStatus from '../components/status/InstallDockerStatus';
@@ -109,15 +109,16 @@ export default class InstallDocker extends Component<Props> {
           currentState={machine.value}
           message={message}
           progress={1}
-          main={<InstallDockerMain machine={state.machine} />}
-          status={
-            <InstallDockerStatus
-              startInstall={this.startInstall}
-              machine={state.machine}
-              progress={state.progress}
-            />
-          }
-        />
+        >
+          <InstallDockerMain machine={state.machine} />}
+
+          <InstallDockerStatus
+            startInstall={this.startInstall}
+            machine={state.machine}
+            progress={state.progress}
+          />
+
+        </Layout>
       </div>
     );
   }
