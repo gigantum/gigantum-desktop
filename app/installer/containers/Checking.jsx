@@ -42,7 +42,7 @@ export default class Checking extends Component<Props> {
             message: 'Not Enough Disk Space',
             metaData: { spaceAvailable }
           });
-        } else if (message && message.indexOf('WSL2 not configured.') > -1) {
+        } else if (message && message.indexOf('Check WSL2') > -1) {
           props.transition(INSTALL_WSL2, {
             message: 'Configure WSL 2'
           });
